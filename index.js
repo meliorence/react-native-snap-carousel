@@ -19,11 +19,6 @@ export default class Carousel extends Component {
          */
         itemWidth: PropTypes.number.isRequired,
         /**
-         * Width in pixels of the horizontal margin
-         * between your elements
-         */
-        itemHorizontalMargin: PropTypes.number.isRequired,
-        /**
          * Function returning a react element. The entry
          * data is the 1st parameter, its index is the 2nd
          */
@@ -32,6 +27,14 @@ export default class Carousel extends Component {
          * Style of each item's container
          */
         slideStyle: PropTypes.number.isRequired,
+        /**
+        * Global wrapper's style
+        */
+        containerCustomStyle: PropTypes.number,
+        /**
+        * Content container's style
+        */
+        contentContainerCustomStyle: PropTypes.number,
         /**
          * Delta x when swiping to trigger the snap
          */
@@ -46,6 +49,14 @@ export default class Carousel extends Component {
          * default ones. Can be used w/ animationFunc
          */
         animationOptions: PropTypes.object,
+        /**
+         * Scale factor of the inactive slides
+         */
+        inactiveSlideScale: PropTypes.number,
+        /**
+         * Opacity value of the inactive slides
+         */
+        inactiveSlideOpacity: PropTypes.number,
         /**
          * Index of the first item to display
          */
@@ -87,7 +98,11 @@ export default class Carousel extends Component {
         animationOptions: {
             easing: Easing.elastic(1)
         },
-        slideStyle: {}
+        slideStyle: {},
+        containerCustomStyle: null,
+        contentContainerCustomStyle: null,
+        inactiveSlideScale: 0.9,
+        inactiveSlideOpacity: 1
     }
 
     constructor (props) {
@@ -132,11 +147,11 @@ export default class Carousel extends Component {
     }
 
     _calcCardPositions (props = this.props) {
-        const { items, itemWidth, itemHorizontalMargin } = props;
+        const { items, sliderWidth, itemWidth } = props;
 
         items.forEach((item, index) => {
             this._positions[index] = {
-                start: (itemHorizontalMargin * (index + index === 0 ? 1 : 0)) + (index * itemWidth)
+                start: index * itemWidth
             };
             this._positions[index].end = this._positions[index].start + itemWidth;
         });
@@ -163,9 +178,10 @@ export default class Carousel extends Component {
     }
 
     _getCenterX (event) {
-        const { sliderWidth } = this.props;
+        const { sliderWidth, itemWidth } = this.props;
+        const containerSideMargin = (sliderWidth - itemWidth) / 2;
 
-        return event.nativeEvent.contentOffset.x + sliderWidth / 2;
+        return event.nativeEvent.contentOffset.x + sliderWidth / 2 - containerSideMargin;
     }
 
     _onScroll (event) {
@@ -248,7 +264,7 @@ export default class Carousel extends Component {
     }
 
     get items () {
-        const { items, renderItem, slideStyle } = this.props;
+        const { items, renderItem, slideStyle, inactiveSlideScale, inactiveSlideOpacity } = this.props;
         if (!this.state.interpolators || !this.state.interpolators.length) {
             return false;
         }
@@ -263,12 +279,12 @@ export default class Carousel extends Component {
                       {transform: [{
                           scale: animatedValue.interpolate({
                               inputRange: [0, 1],
-                              outputRange: [0.85, 1]
+                              outputRange: [inactiveSlideScale, 1]
                           })
                       }],
                     opacity: animatedValue.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [0.7, 1]
+                        outputRange: [inactiveSlideOpacity, 1]
                     })
                     }
                   ]}>
@@ -301,27 +317,44 @@ export default class Carousel extends Component {
 
     snapToItem (index, animated = true) {
         const itemsLength = this._positions.length;
+
         if (index >= itemsLength) {
             index = itemsLength - 1;
         } else if (index < 0) {
             index = 0;
         }
 
-        const snapX = this._positions[index].start - ((this.props.sliderWidth - this.props.itemWidth - (2 * this.props.itemHorizontalMargin)) / 2);
+        const snapX = this._positions[index].start;
         this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
     }
 
     render () {
+        const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle } = this.props;
+
+        const containerSideMargin = (sliderWidth - itemWidth) / 2;
+        const style = [
+            { paddingHorizontal: Platform.OS === 'ios' ? containerSideMargin : 0 },
+            containerCustomStyle || {}
+        ];
+        const contentContainerStyle = [
+            { paddingHorizontal: Platform.OS === 'android' ? containerSideMargin : 0 },
+            contentContainerCustomStyle || {}
+        ];
+
         return (
             <ScrollView
               {...this.props}
+              style={style}
+              contentContainerStyle={contentContainerStyle}
               ref={'scrollview'}
               horizontal={true}
               onScrollBeginDrag={this._onScrollBegin}
               onScrollEndDrag={this._onScrollEndDrag}
               onResponderRelease={this._onTouchRelease}
               onResponderMove={this._onTouchMove}
-              onScroll={this._onScroll}>
+              onScroll={this._onScroll}
+              scrollEventThrottle={50}
+              >
                 { this.items }
             </ScrollView>
         );
