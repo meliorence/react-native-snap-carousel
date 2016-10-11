@@ -1,11 +1,11 @@
 {
   "name": "react-native-snap-carousel",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simple carousel component with snapping effect on Android & iOS for React Native",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "github.com/exilz/react-native-snap-carousel"
+    "url": "github.com/archriss/react-native-snap-carousel"
   },
   "keywords": [
     "react",
@@ -21,6 +21,6 @@
     "snapping",
     "component"
   ],
-  "author": "Maxime Bertonnier",
+  "author": "Archriss",
   "license": "ISC"
 }
