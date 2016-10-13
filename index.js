@@ -83,7 +83,11 @@ export default class Carousel extends Component {
          * Snapping on android is kinda choppy, especially
          * when swiping quickly so you can disable it
          */
-        snapOnAndroid: PropTypes.bool
+        snapOnAndroid: PropTypes.bool,
+        /**
+         * For a callback on snapToItem
+         */
+        onSnapToItem: PropTypes.func,
     };
 
     static defaultProps = {
@@ -326,6 +330,7 @@ export default class Carousel extends Component {
 
         const snapX = this._positions[index].start;
         this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
+        this.props.onSnapToItem && this.props.onSnapToItem(index);
     }
 
     render () {
