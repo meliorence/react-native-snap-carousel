@@ -83,7 +83,11 @@ export default class Carousel extends Component {
          * Snapping on android is kinda choppy, especially
          * when swiping quickly so you can disable it
          */
-        snapOnAndroid: PropTypes.bool
+        snapOnAndroid: PropTypes.bool,
+        /**
+         * Fired when snapping to an item
+         */
+        onSnapToItem: PropTypes.func
     };
 
     static defaultProps = {
@@ -124,7 +128,7 @@ export default class Carousel extends Component {
         const { firstItem, autoplay } = this.props;
 
         this._initInterpolators(this.props);
-        this.snapToItem(firstItem, false);
+        this.snapToItem(firstItem, false, false);
         if (autoplay) {
             this.startAutoplay();
         }
@@ -315,17 +319,20 @@ export default class Carousel extends Component {
         clearInterval(this._autoplayInterval);
     }
 
-    snapToItem (index, animated = true) {
+    snapToItem (index, animated = true, fireCallback = true) {
         const itemsLength = this._positions.length;
 
         if (index >= itemsLength) {
             index = itemsLength - 1;
+            fireCallback = false;
         } else if (index < 0) {
             index = 0;
+            fireCallback = false;
         }
 
         const snapX = this._positions[index].start;
         this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
+        this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index);
     }
 
     render () {
