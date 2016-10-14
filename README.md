@@ -54,6 +54,7 @@ containerCustomStyle | Optional styles for Scrollview's global wrapper | Number 
 contentContainerCustomStyle | Optional styles for Scrollview's items container | Number | `null`
 inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
 inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
+onSnapToItem | Callback fired when navigating to an item | Function | `undefined`
 
 ## Methods
 
