@@ -331,8 +331,13 @@ export default class Carousel extends Component {
         }
 
         const snapX = this._positions[index].start;
-        this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
-        this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index);
+
+        // Make sure the component hasn't been unmounted
+        if (this.refs.scrollview) {
+            this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
+            this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index);
+        }
+
     }
 
     render () {
