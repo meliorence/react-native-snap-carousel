@@ -128,7 +128,9 @@ export default class Carousel extends Component {
         const { firstItem, autoplay } = this.props;
 
         this._initInterpolators(this.props);
-        this.snapToItem(firstItem, false, false);
+        setTimeout(() => {
+            this.snapToItem(firstItem, false, false);
+        }, 0);
         if (autoplay) {
             this.startAutoplay();
         }
