@@ -1,8 +1,8 @@
 # react-native-snap-carousel
 Simple carousel component with snapping effect on Android & iOS for React Native
 
-![react-native-snap-carousel](https://zippy.gfycat.com/BoringBasicKiskadee.gif)
-![react-native-snap-carousel](https://zippy.gfycat.com/IncompatibleVengefulBasenji.gif)
+![react-native-snap-carousel](https://media.giphy.com/media/l3vR0DUwSTf9uTkTm/giphy.gif)
+![react-native-snap-carousel](https://media.giphy.com/media/26tkngfBbcII0dPJS/giphy.gif)
 
 ## Usage
 
@@ -40,6 +40,7 @@ items | Array of items to loop on | Array | Required
 sliderWidth | The width in pixels of your slider | Number | Required
 itemWidth | Width in pixels of your items | Number | Required
 renderItem | Function returning a react element. The entry data is the 1st parameter, its index is the 2nd | Function | Required
+shouldOptimizeUpdates | whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
 slideStyle | Style of each item's container | Number | Required
 swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
 animationFunc | Animated animation to use. Provide the name of the method | String | `Timing`
@@ -61,6 +62,12 @@ onSnapToItem(slideIndex, itemData) | Callback fired when navigating to an item |
 * `startAutoplay (instantly = false)` Start the autoplay manually
 * `stopAutoplay ()` Stop the autoplay manually
 * `snapToItem (index, animated = true)` Snap to an item manually
+* `snapToNext (animated = true)` Snap to next item manually
+* `snapToPrev (animated = true)` Snap to previous item manually
+
+## Properties
+
+* `currentIndex` Current active item (`int`, starts at 0)
 
 ## Tips and tricks
 

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { ScrollView, Animated, Platform, Easing } from 'react-native';
+import shallowCompare from 'react-addons-shallow-compare';
 
 export default class Carousel extends Component {
 
@@ -27,6 +28,11 @@ export default class Carousel extends Component {
          * Style of each item's container
          */
         slideStyle: PropTypes.number.isRequired,
+        /**
+         * whether to implement a `shouldComponentUpdate`
+         * strategy to minimize updates
+         */
+        shouldOptimizeUpdates: PropTypes.bool,
         /**
         * Global wrapper's style
         */
@@ -91,6 +97,7 @@ export default class Carousel extends Component {
     };
 
     static defaultProps = {
+        shouldOptimizeUpdates: true,
         autoplay: false,
         autoplayInterval: 3000,
         autoplayDelay: 5000,
@@ -136,6 +143,14 @@ export default class Carousel extends Component {
         }
     }
 
+    shouldComponentUpdate (nextProps, nextState) {
+        if (this.props.shouldOptimizeUpdates === false) {
+            return true;
+        } else {
+            return shallowCompare(this, nextProps, nextState);
+        }
+    }
+
     componentWillUnmount () {
         this.stopAutoplay();
     }
@@ -153,7 +168,7 @@ export default class Carousel extends Component {
     }
 
     _calcCardPositions (props = this.props) {
-        const { items, sliderWidth, itemWidth } = props;
+        const { items, itemWidth } = props;
 
         items.forEach((item, index) => {
             this._positions[index] = {
@@ -288,16 +303,20 @@ export default class Carousel extends Component {
                               outputRange: [inactiveSlideScale, 1]
                           })
                       }],
-                    opacity: animatedValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [inactiveSlideOpacity, 1]
-                    })
-                    }
+                          opacity: animatedValue.interpolate({
+                              inputRange: [0, 1],
+                              outputRange: [inactiveSlideOpacity, 1]
+                          })
+                      }
                   ]}>
                     { renderItem(entry, index) }
                 </Animated.View>
             );
         });
+    }
+
+    get currentIndex () {
+        return this.state.activeItem;
     }
 
     startAutoplay (instantly = false) {
@@ -339,7 +358,26 @@ export default class Carousel extends Component {
             this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
             this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index, this.props.items[index]);
         }
+    }
 
+    snapToNext (animated = true) {
+        const itemsLength = this._positions.length;
+
+        let newIndex = this.currentIndex + 1;
+        if (newIndex > itemsLength - 1) {
+            newIndex = 0;
+        }
+        this.snapToItem(newIndex, animated);
+    }
+
+    snapToPrev (animated = true) {
+        const itemsLength = this._positions.length;
+
+        let newIndex = this.currentIndex - 1;
+        if (newIndex < 0) {
+            newIndex = itemsLength - 1;
+        }
+        this.snapToItem(newIndex, animated);
     }
 
     render () {
