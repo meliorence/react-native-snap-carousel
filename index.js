@@ -315,6 +315,10 @@ export default class Carousel extends Component {
         });
     }
 
+    get currentIndex () {
+        return this.state.activeItem;
+    }
+
     startAutoplay (instantly = false) {
         const { autoplayInterval, autoplayDelay } = this.props;
 
