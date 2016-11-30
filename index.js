@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { ScrollView, Animated, Platform, Easing } from 'react-native';
+import shallowCompare from 'react-addons-shallow-compare';
 
 export default class Carousel extends Component {
 
@@ -27,6 +28,11 @@ export default class Carousel extends Component {
          * Style of each item's container
          */
         slideStyle: PropTypes.number.isRequired,
+        /**
+         * whether to implement a `shouldComponentUpdate`
+         * strategy to minimize updates
+         */
+        shouldOptimizeUpdates: PropTypes.bool,
         /**
         * Global wrapper's style
         */
@@ -91,6 +97,7 @@ export default class Carousel extends Component {
     };
 
     static defaultProps = {
+        shouldOptimizeUpdates: true,
         autoplay: false,
         autoplayInterval: 3000,
         autoplayDelay: 5000,
@@ -133,6 +140,14 @@ export default class Carousel extends Component {
         }, 0);
         if (autoplay) {
             this.startAutoplay();
+        }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.shouldOptimizeUpdates === false) {
+            return true;
+        } else {
+            return shallowCompare(this, nextProps, nextState);
         }
     }
 
