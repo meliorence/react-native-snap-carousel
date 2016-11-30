@@ -143,7 +143,7 @@ export default class Carousel extends Component {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate (nextProps, nextState) {
         if (this.props.shouldOptimizeUpdates === false) {
             return true;
         } else {
@@ -168,7 +168,7 @@ export default class Carousel extends Component {
     }
 
     _calcCardPositions (props = this.props) {
-        const { items, sliderWidth, itemWidth } = props;
+        const { items, itemWidth } = props;
 
         items.forEach((item, index) => {
             this._positions[index] = {
@@ -303,11 +303,11 @@ export default class Carousel extends Component {
                               outputRange: [inactiveSlideScale, 1]
                           })
                       }],
-                    opacity: animatedValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [inactiveSlideOpacity, 1]
-                    })
-                    }
+                          opacity: animatedValue.interpolate({
+                              inputRange: [0, 1],
+                              outputRange: [inactiveSlideOpacity, 1]
+                          })
+                      }
                   ]}>
                     { renderItem(entry, index) }
                 </Animated.View>
