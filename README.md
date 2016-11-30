@@ -1,8 +1,8 @@
 # react-native-snap-carousel
 Simple carousel component with snapping effect on Android & iOS for React Native
 
-![react-native-snap-carousel](https://zippy.gfycat.com/BoringBasicKiskadee.gif)
-![react-native-snap-carousel](https://zippy.gfycat.com/IncompatibleVengefulBasenji.gif)
+![react-native-snap-carousel](https://media.giphy.com/media/l3vR0DUwSTf9uTkTm/giphy.gif)
+![react-native-snap-carousel](https://media.giphy.com/media/26tkngfBbcII0dPJS/giphy.gif)
 
 ## Usage
 
