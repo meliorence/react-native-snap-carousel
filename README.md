@@ -14,7 +14,7 @@ Pull requests are very welcome!
 
 ## Showcase
 
-![react-native-snap-carousel](https://media.giphy.com/media/l3vQZ3Uk1Ff9DOnQc/giphy.gif)
+![react-native-snap-carousel](https://media.giphy.com/media/3oriO25YTohDtgoofu/giphy.gif)
 ![react-native-snap-carousel](https://media.giphy.com/media/3o6ZsU9gWWrvYtogow/giphy.gif)
 ![react-native-snap-carousel](https://media.giphy.com/media/3o7TKUAlvi1tYLFCTK/giphy.gif)
 
