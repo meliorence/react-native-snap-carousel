@@ -1,8 +1,22 @@
 # react-native-snap-carousel
-Simple carousel component with snapping effect on Android & iOS for React Native
+Simple carousel component for React Native with **previews** and **snapping effect**. Compatible with Android & iOS.
+Pull requests are very welcome!
 
-![react-native-snap-carousel](http://i.giphy.com/3o7TKv7int6Xccq5nG.gif)
-![react-native-snap-carousel](http://i.giphy.com/3o6ZsVNAonZgDFC8AE.gif)
+## Table of contents
+
+1. [Showcase](#showcase)
+1. [Usage](#usage)
+1. [Props](#props)
+1. [Methods](#methods)
+1. [Properties](#properties)
+1. [Tips and tricks](#tips-and-tricks)
+1. [TODO](#todo)
+
+## Showcase
+
+![react-native-snap-carousel](https://media.giphy.com/media/l3vQZ3Uk1Ff9DOnQc/giphy.gif)
+![react-native-snap-carousel](https://media.giphy.com/media/3o6ZsU9gWWrvYtogow/giphy.gif)
+![react-native-snap-carousel](https://media.giphy.com/media/3o7TKUAlvi1tYLFCTK/giphy.gif)
 
 ## Usage
 
@@ -93,7 +107,7 @@ const styles = Stylesheet.create({
 
 ```
 
-## TODO :
+## TODO
 
 - [ ] Improve snap on Android
 - [ ] Handle changing props on-the-fly
