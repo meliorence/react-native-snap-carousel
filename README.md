@@ -9,6 +9,7 @@ Pull requests are very welcome!
 1. [Props](#props)
 1. [Methods](#methods)
 1. [Properties](#properties)
+1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [TODO](#todo)
 
@@ -82,6 +83,11 @@ onSnapToItem(slideIndex, itemData) | Callback fired when navigating to an item |
 ## Properties
 
 * `currentIndex` Current active item (`int`, starts at 0)
+
+## Example
+You can find the following example in the [/example](https://github.com/archriss/react-native-snap-carousel/tree/master/example) folder.
+
+![react-native-snap-carousel](http://i.imgur.com/FxMg5md.gif)
 
 ## Tips and tricks
 
