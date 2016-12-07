@@ -1,5 +1,5 @@
 # react-native-snap-carousel
-Simple carousel component for React Native with **previews** and **snapping effect**. Compatible with Android & iOS.
+Simple swiper component for React Native with **previews** and **snapping effect**. Compatible with Android & iOS.
 Pull requests are very welcome!
 
 ## Table of contents
@@ -14,6 +14,9 @@ Pull requests are very welcome!
 1. [TODO](#todo)
 
 ## Showcase
+
+You can try these examples live in **Archriss' showcase app** on [android](https://play.google.com/store/apps/details?id=fr.archriss.demo.app) and [ios](https://itunes.apple.com/lu/app/archriss-presentation-mobile/id1180954376?mt=8).
+Note that the app is still WIP.
 
 ![react-native-snap-carousel](http://i.imgur.com/Fope3uj.gif)
 ![react-native-snap-carousel](https://media.giphy.com/media/3o6ZsU9gWWrvYtogow/giphy.gif)
@@ -115,9 +118,11 @@ const styles = Stylesheet.create({
 
 ## TODO
 
+- [ ] Add 'loop' mode
+- [ ] Improve momemtum handling
 - [ ] Improve snap on Android
 - [ ] Handle changing props on-the-fly
 - [ ] Handle device orientation event
-- [ ] Add Vertical implementation
-- [x] Fix centering since it's a little off
+- [ ] Add vertical implementation
+- [x] Fix centering
 - [x] Handle passing 1 item only
