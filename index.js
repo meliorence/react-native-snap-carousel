@@ -147,17 +147,17 @@ export default class Carousel extends Component {
         if (this.props.shouldOptimizeUpdates === false) {
             return true;
         } else {
-            const { items, firstItem, autoplay } = nextProps;
-            if(items.length !== this.props.items.length) {
-                nextState.interpolators = this._initInterpolators(nextProps);
-                setTimeout(() => {
-                    this.snapToItem(firstItem, false, false);
-                }, 0);
-                if (autoplay) {
-                    this.startAutoplay();
-                }
-            }
             return shallowCompare(this, nextProps, nextState);
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { items, firstItem } = nextProps;
+        if(items.length !== this.props.items.length) {
+            this._positions = [];
+            this._calcCardPositions(nextProps);
+            this._initInterpolators(nextProps);
+            this.setState({activeItem: firstItem});
         }
     }
 
@@ -196,8 +196,6 @@ export default class Carousel extends Component {
             interpolators.push(new Animated.Value(index === firstItem ? 1 : 0));
         });
         this.setState({ interpolators });
-
-        return interpolators;
     }
 
     _getActiveItem (centerX, offset = 25) {
