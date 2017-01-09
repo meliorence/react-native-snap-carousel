@@ -151,6 +151,17 @@ export default class Carousel extends Component {
         }
     }
 
+    componentWillReceiveProps (nextProps) {
+        const { items, firstItem } = nextProps;
+
+        if (items.length !== this.props.items.length) {
+            this._positions = [];
+            this._calcCardPositions(nextProps);
+            this._initInterpolators(nextProps);
+            this.setState({ activeItem: firstItem });
+        }
+    }
+
     componentWillUnmount () {
         this.stopAutoplay();
     }
@@ -178,8 +189,8 @@ export default class Carousel extends Component {
         });
     }
 
-    _initInterpolators () {
-        const { items, firstItem } = this.props;
+    _initInterpolators (props = this.props) {
+        const { items, firstItem } = props;
         let interpolators = [];
 
         items.forEach((item, index) => {
