@@ -116,13 +116,18 @@ const styles = Stylesheet.create({
 
 ```
 
+### Momentum
+
+Since `1.5.0`, the snapping effect is now based on momentum instead of when you're releasing your finger. It means that the component will wait until the `ScrollView` isn't moving anymore to snap. By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long.
+You can adjust this value to your needs thanks to [this prop](https://facebook.github.io/react-native/docs/scrollview.html#decelerationrate).
+
 ## TODO
 
 - [ ] Add 'loop' mode
-- [ ] Improve momemtum handling
-- [ ] Improve snap on Android
 - [ ] Handle changing props on-the-fly
 - [ ] Handle device orientation event
 - [ ] Add vertical implementation
-- [x] Fix centering
 - [x] Handle passing 1 item only
+- [x] Improve momemtum handling
+- [x] Improve snap on Android
+- [x] Fix centering

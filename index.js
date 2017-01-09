@@ -406,17 +406,18 @@ export default class Carousel extends Component {
 
         return (
             <ScrollView
-              {...this.props}
+              decelerationRate={0.9}
               style={style}
               contentContainerStyle={contentContainerStyle}
               ref={'scrollview'}
               horizontal={true}
               onScrollBeginDrag={this._onScrollBegin}
-              onScrollEndDrag={this._onScrollEndDrag}
+              onMomentumScrollEnd={this._onScrollEndDrag}
               onResponderRelease={this._onTouchRelease}
               onResponderMove={this._onTouchMove}
               onScroll={this._onScroll}
               scrollEventThrottle={50}
+              {...this.props}
               >
                 { this.items }
             </ScrollView>
