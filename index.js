@@ -151,13 +151,14 @@ export default class Carousel extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps (nextProps) {
         const { items, firstItem } = nextProps;
-        if(items.length !== this.props.items.length) {
+
+        if (items.length !== this.props.items.length) {
             this._positions = [];
             this._calcCardPositions(nextProps);
             this._initInterpolators(nextProps);
-            this.setState({activeItem: firstItem});
+            this.setState({ activeItem: firstItem });
         }
     }
 
