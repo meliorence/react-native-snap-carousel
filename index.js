@@ -86,6 +86,12 @@ export default class Carousel extends Component {
          */
         enableSnap: PropTypes.bool,
         /**
+         * If enabled, snapping will be triggered once
+         * the ScrollView stops moving, not when the
+         * user releases his finger
+        */
+        enableMomentum: PropTypes.bool,
+        /**
          * Snapping on android is kinda choppy, especially
          * when swiping quickly so you can disable it
          */
@@ -103,6 +109,7 @@ export default class Carousel extends Component {
         autoplayDelay: 5000,
         firstItem: 0,
         enableSnap: true,
+        enableMomentum: true,
         snapOnAndroid: false,
         swipeThreshold: 20,
         animationFunc: 'timing',
@@ -217,9 +224,13 @@ export default class Carousel extends Component {
     }
 
     _onScroll (event) {
-        const { animationFunc, animationOptions } = this.props;
+        const { animationFunc, animationOptions, enableMomentum } = this.props;
         const { activeItem } = this.state;
         const newActiveItem = this._getActiveItem(this._getCenterX(event));
+
+        if (enableMomentum) {
+            clearTimeout(this._snapNoMomentumTimeout);
+        }
 
         if (activeItem !== newActiveItem) {
             Animated[animationFunc](
@@ -392,7 +403,7 @@ export default class Carousel extends Component {
     }
 
     render () {
-        const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle } = this.props;
+        const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle, enableMomentum } = this.props;
 
         const containerSideMargin = (sliderWidth - itemWidth) / 2;
         const style = [
@@ -412,7 +423,8 @@ export default class Carousel extends Component {
               ref={'scrollview'}
               horizontal={true}
               onScrollBeginDrag={this._onScrollBegin}
-              onMomentumScrollEnd={this._onScrollEndDrag}
+              onMomentumScrollEnd={enableMomentum ? this._onScrollEnd : undefined}
+              onScrollEndDrag={!enableMomentum ? this._onScrollEnd : undefined}
               onResponderRelease={this._onTouchRelease}
               onResponderMove={this._onTouchMove}
               onScroll={this._onScroll}
