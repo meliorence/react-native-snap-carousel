@@ -403,6 +403,17 @@ export default class Carousel extends Component {
                 this._ignoreNextMomentum = true;
             }
         }
+
+        if (autoplay) {
+            // Restart autoplay after a little while
+            // This could be done when releasing touch
+            // but the event is buggy on Android...
+            clearTimeout(this._enableAutoplayTimeout);
+            this._enableAutoplayTimeout =
+                setTimeout(() => {
+                    this.startAutoplay(true);
+                }, autoplayDelay + 1000);
+        }
     }
 
     snapToNext (animated = true) {
@@ -450,6 +461,7 @@ export default class Carousel extends Component {
               onScrollEndDrag={!enableMomentum ? this._onScrollEnd : undefined}
               onResponderRelease={this._onTouchRelease}
               onResponderMove={this._onTouchMove}
+              onMoveShouldSetResponder={() => true} // enables _onTouchMove on Android
               onScroll={this._onScroll}
               scrollEventThrottle={50}
               {...this.props}
