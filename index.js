@@ -136,6 +136,9 @@ export default class Carousel extends Component {
         this._initInterpolators = this._initInterpolators.bind(this);
         this._onTouchRelease = props.autoplay ? this._onTouchRelease.bind(this) : undefined;
         this._onTouchMove = props.autoplay ? this._onTouchMove.bind(this) : undefined;
+        // This bool aims at fixing an iOS bug due to scrolTo that triggers onMomentumScrollEnd.
+        // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
+        this._ignoreNextMomentum = false;
     }
 
     componentDidMount () {
@@ -143,7 +146,7 @@ export default class Carousel extends Component {
 
         this._initInterpolators(this.props);
         setTimeout(() => {
-            this.snapToItem(firstItem, false, false);
+            this.snapToItem(firstItem, false, false, true);
         }, 0);
         if (autoplay) {
             this.startAutoplay();
@@ -248,9 +251,15 @@ export default class Carousel extends Component {
     _onScrollBegin (event) {
         this._scrollStartX = event.nativeEvent.contentOffset.x;
         this._scrollStartActive = this.state.activeItem;
+        this._ignoreNextMomentum = false;
     }
 
-    _onScrollEndDrag (event) {
+    _onScrollEnd (event) {
+        if (this._ignoreNextMomentum) {
+            // iOS fix
+            this._ignoreNextMomentum = false;
+            return;
+        }
         this._scrollEndX = event.nativeEvent.contentOffset.x;
         this._scrollEndActive = this.state.activeItem;
 
@@ -379,6 +388,10 @@ export default class Carousel extends Component {
         if (this.refs.scrollview) {
             this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
             this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index, this.props.items[index]);
+            // iOS fix, check the note in the constructor
+            if (!initial && Platform.OS === 'ios') {
+                this._ignoreNextMomentum = true;
+            }
         }
     }
 
