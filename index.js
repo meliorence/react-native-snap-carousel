@@ -27,7 +27,7 @@ export default class Carousel extends Component {
         /**
          * Style of each item's container
          */
-        slideStyle: PropTypes.number.isRequired,
+        slideStyle: Animated.View.propTypes.style,
         /**
          * whether to implement a `shouldComponentUpdate`
          * strategy to minimize updates
@@ -36,11 +36,11 @@ export default class Carousel extends Component {
         /**
         * Global wrapper's style
         */
-        containerCustomStyle: PropTypes.number,
+        containerCustomStyle: Animated.View.propTypes.style,
         /**
         * Content container's style
         */
-        contentContainerCustomStyle: PropTypes.number,
+        contentContainerCustomStyle: Animated.View.propTypes.style,
         /**
          * Delta x when swiping to trigger the snap
          */
