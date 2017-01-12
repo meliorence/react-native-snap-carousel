@@ -131,11 +131,11 @@ export default class Carousel extends Component {
         this._positions = [];
         this._calcCardPositions(props);
         this._onScroll = this._onScroll.bind(this);
-        this._onScrollEndDrag = this._snapEnabled ? this._onScrollEndDrag.bind(this) : false;
+        this._onScrollEnd = this._snapEnabled ? this._onScrollEnd.bind(this) : false;
         this._onScrollBegin = this._snapEnabled ? this._onScrollBegin.bind(this) : false;
         this._initInterpolators = this._initInterpolators.bind(this);
-        this._onTouchRelease = props.autoplay ? this._onTouchRelease.bind(this) : undefined;
-        this._onTouchMove = props.autoplay ? this._onTouchMove.bind(this) : undefined;
+        this._onTouchRelease = this._onTouchRelease.bind(this);
+        this._onTouchMove = this._onTouchMove.bind(this);
         // This bool aims at fixing an iOS bug due to scrolTo that triggers onMomentumScrollEnd.
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
         this._ignoreNextMomentum = false;
@@ -274,22 +274,30 @@ export default class Carousel extends Component {
         if (this._autoplaying) {
             this.stopAutoplay();
         }
-        clearTimeout(this._enableAutoplayTimeout);
     }
 
-    _onTouchRelease () {
-        const { autoplayDelay } = this.props;
+    // Due to a bug, this event is only fired on iOS
+    // https://github.com/facebook/react-native/issues/6791
+    // it's fine since we're only fixing an iOS bug in it, so ...
+    _onTouchRelease (event) {
+        const { enableMomentum } = this.props;
 
-        setTimeout(() => {
-            this._enableAutoplayTimeout =
+        if (enableMomentum && Platform.OS === 'ios') {
+            this._snapNoMomentumTimeout =
                 setTimeout(() => {
-                    this.startAutoplay(true);
-                }, autoplayDelay);
-        }, 1000);
+                    this._snapScroll(0);
+                }, 100);
+        }
     }
 
     _snapScroll (deltaX) {
         const { swipeThreshold } = this.props;
+
+        // When using momentum and releasing the touch with
+        // no velocity, scrollEndActive will be undefined (iOS)
+        if (!this._scrollEndActive && Platform.OS === 'ios') {
+            this._scrollEndActive = this._scrollStartActive;
+        }
 
         if (this._scrollStartActive !== this._scrollEndActive) {
             // Snap to the new active item
@@ -371,7 +379,8 @@ export default class Carousel extends Component {
         clearInterval(this._autoplayInterval);
     }
 
-    snapToItem (index, animated = true, fireCallback = true) {
+    snapToItem (index, animated = true, fireCallback = true, initial = false) {
+        const { autoplayDelay, autoplay } = this.props;
         const itemsLength = this._positions.length;
 
         if (index >= itemsLength) {
@@ -388,6 +397,7 @@ export default class Carousel extends Component {
         if (this.refs.scrollview) {
             this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
             this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index, this.props.items[index]);
+
             // iOS fix, check the note in the constructor
             if (!initial && Platform.OS === 'ios') {
                 this._ignoreNextMomentum = true;
