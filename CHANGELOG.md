@@ -1,7 +1,15 @@
+## v1.6.0
+
+* Add `enableMomentum` prop
+* Fix an infinite-loop on iOS with momentum enabled
+* Fix the snapping effect when releasing touch without interia on iOS with momentum enabled
+* Fix autoplay on Android, it should start and stop properly and stop being triggered while swiping
+* Use `View.propTypes.style` instead of `PropTypes.number` in styles validation (thanks [@pesakitan22](https://github.com/pesakitan22) !)
+
 ## v1.5.0
 
-* Items length can now be changed on-the-fly (thanks @superical !)
-* Now handling momentum (thanks @FakeYou !)
+* Items length can now be changed on-the-fly (thanks [@superical](https://github.com/superical) !)
+* Now handling momentum (thanks [@FakeYou](https://github.com/FakeYou) !)
 
 ## v1.4.0
 
