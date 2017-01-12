@@ -68,6 +68,7 @@ autoplay | Trigger autoplay on mount | Boolean | `false`
 autoplayInterval | Delay in ms until navigating to the next item | `3000`
 autoplayDelay | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
 enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Number | `true`
+enableMomentum | See [#momentum](momentum) | Boolean | `true`
 snapOnAndroid | Snapping on android is kinda choppy, especially when swiping quickly so you can disable it | Boolean | `false`
 containerCustomStyle | Optional styles for Scrollview's global wrapper | Number | `null`
 contentContainerCustomStyle | Optional styles for Scrollview's items container | Number | `null`
@@ -118,7 +119,7 @@ const styles = Stylesheet.create({
 
 ### Momentum
 
-Since `1.5.0`, the snapping effect is now based on momentum instead of when you're releasing your finger. It means that the component will wait until the `ScrollView` isn't moving anymore to snap. By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long.
+Since `1.5.0`, the snapping effect can now be based on momentum instead of when you're releasing your finger. It means that the component will wait until the `ScrollView` isn't moving anymore to snap. By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long.
 You can adjust this value to your needs thanks to [this prop](https://facebook.github.io/react-native/docs/scrollview.html#decelerationrate).
 
 ## TODO
