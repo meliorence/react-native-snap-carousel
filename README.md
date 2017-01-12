@@ -68,7 +68,7 @@ autoplay | Trigger autoplay on mount | Boolean | `false`
 autoplayInterval | Delay in ms until navigating to the next item | `3000`
 autoplayDelay | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
 enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Number | `true`
-enableMomentum | See [#momentum](momentum) | Boolean | `true`
+enableMomentum | See [momentum](#momentum) | Boolean | `true`
 snapOnAndroid | Snapping on android is kinda choppy, especially when swiping quickly so you can disable it | Boolean | `false`
 containerCustomStyle | Optional styles for Scrollview's global wrapper | Number | `null`
 contentContainerCustomStyle | Optional styles for Scrollview's items container | Number | `null`
