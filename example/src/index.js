@@ -41,6 +41,7 @@ export default class example extends Component {
               items={ENTRIES2}
               inactiveSlideScale={1}
               inactiveSlideOpacity={1}
+              enableMomentum={false}              
               autoplay={true}
               autoplayDelay={500}
               autoplayInterval={2500}
@@ -68,7 +69,7 @@ export default class example extends Component {
                 <ScrollView style={mainStyles.scrollview}>
                     <Text style={mainStyles.title}>Example 1</Text>
                     { this.example1 }
-                    <Text style={mainStyles.title}>Example 2</Text>
+                    <Text style={mainStyles.title}>Example 2 (no momentum)</Text>
                     { this.example2 }
                 </ScrollView>
             </View>
