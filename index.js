@@ -130,12 +130,12 @@ export default class Carousel extends Component {
         };
         this._positions = [];
         this._calcCardPositions(props);
+        this._onTouchStart = this._onTouchStart.bind(this);
         this._onScroll = this._onScroll.bind(this);
         this._onScrollEnd = this._snapEnabled ? this._onScrollEnd.bind(this) : false;
         this._onScrollBegin = this._snapEnabled ? this._onScrollBegin.bind(this) : false;
         this._initInterpolators = this._initInterpolators.bind(this);
         this._onTouchRelease = this._onTouchRelease.bind(this);
-        this._onTouchMove = this._onTouchMove.bind(this);
         // This bool aims at fixing an iOS bug due to scrolTo that triggers onMomentumScrollEnd.
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
         this._ignoreNextMomentum = false;
@@ -248,6 +248,12 @@ export default class Carousel extends Component {
         }
     }
 
+    _onTouchStart () {
+        if (this._autoplaying) {
+            this.stopAutoplay();
+        }
+    }
+
     _onScrollBegin (event) {
         this._scrollStartX = event.nativeEvent.contentOffset.x;
         this._scrollStartActive = this.state.activeItem;
@@ -255,6 +261,8 @@ export default class Carousel extends Component {
     }
 
     _onScrollEnd (event) {
+        const { autoplayDelay, autoplay } = this.props;
+
         if (this._ignoreNextMomentum) {
             // iOS fix
             this._ignoreNextMomentum = false;
@@ -268,11 +276,16 @@ export default class Carousel extends Component {
         if (this._snapEnabled) {
             this._snapScroll(deltaX);
         }
-    }
 
-    _onTouchMove () {
-        if (this._autoplaying) {
-            this.stopAutoplay();
+        if (autoplay) {
+            // Restart autoplay after a little while
+            // This could be done when releasing touch
+            // but the event is buggy on Android...
+            clearTimeout(this._enableAutoplayTimeout);
+            this._enableAutoplayTimeout =
+                setTimeout(() => {
+                    this.startAutoplay(true);
+                }, autoplayDelay + 1000);
         }
     }
 
@@ -369,7 +382,9 @@ export default class Carousel extends Component {
             this._autoplaying = true;
             this._autoplayInterval =
                 setInterval(() => {
-                    this.snapToItem(this._nextItem);
+                    if (this._autoplaying) {
+                        this.snapToItem(this._nextItem);
+                    }
                 }, autoplayInterval);
         }, instantly ? 0 : autoplayDelay);
     }
@@ -380,7 +395,6 @@ export default class Carousel extends Component {
     }
 
     snapToItem (index, animated = true, fireCallback = true, initial = false) {
-        const { autoplayDelay, autoplay } = this.props;
         const itemsLength = this._positions.length;
 
         if (index >= itemsLength) {
@@ -402,17 +416,6 @@ export default class Carousel extends Component {
             if (!initial && Platform.OS === 'ios') {
                 this._ignoreNextMomentum = true;
             }
-        }
-
-        if (autoplay) {
-            // Restart autoplay after a little while
-            // This could be done when releasing touch
-            // but the event is buggy on Android...
-            clearTimeout(this._enableAutoplayTimeout);
-            this._enableAutoplayTimeout =
-                setTimeout(() => {
-                    this.startAutoplay(true);
-                }, autoplayDelay + 1000);
         }
     }
 
@@ -460,9 +463,8 @@ export default class Carousel extends Component {
               onMomentumScrollEnd={enableMomentum ? this._onScrollEnd : undefined}
               onScrollEndDrag={!enableMomentum ? this._onScrollEnd : undefined}
               onResponderRelease={this._onTouchRelease}
-              onResponderMove={this._onTouchMove}
-              onMoveShouldSetResponder={() => true} // enables _onTouchMove on Android
               onScroll={this._onScroll}
+              onTouchStart={this._onTouchStart}
               scrollEventThrottle={50}
               {...this.props}
               >
