@@ -1,3 +1,7 @@
+## v1.6.1
+
+* Due to some touch events being buggy, rework methods so the children will receive touch events on Android.
+
 ## v1.6.0
 
 * Add `enableMomentum` prop
