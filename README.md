@@ -47,7 +47,13 @@ import Carousel from 'react-native-snap-carousel';
           renderItem={this._renderItem}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
-          slideStyle={styles.slide} />
+          slideStyle={styles.slide}>
+          
+          {this.state.entries.map( (data, index) => (
+                this._renderItem(data, index)
+          ) )}
+          
+        </Carousel>
     }
 ```
 
@@ -57,10 +63,8 @@ import Carousel from 'react-native-snap-carousel';
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-items | Array of items to loop on | Array | Required
 sliderWidth | The width in pixels of your slider | Number | Required
 itemWidth | Width in pixels of your items | Number | Required
-renderItem | Function returning a react element. The entry data is the 1st parameter, its index is the 2nd | Function | Required
 shouldOptimizeUpdates | whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
 slideStyle | Style of each item's container | Number | Required
 swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
@@ -78,6 +82,8 @@ contentContainerCustomStyle | Optional styles for Scrollview's items container |
 inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
 inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
 onSnapToItem(slideIndex, itemData) | Callback fired when navigating to an item | Function | `undefined`
+items | Array of items to loop on | Array | /*Deprecated*/
+renderItem | Function returning a react element. The entry data is the 1st parameter, its index is the 2nd | Function | /*Deprecated*/
 
 ## Methods
 
@@ -123,12 +129,17 @@ const styles = Stylesheet.create({
 <Carousel
   itemWidth={itemWidth}
   slideStyle={styles.slide}
-  />
+ >
+    <View/>
+    <View/>
+    <View/>
+ </Carousel>
 
 ```
 
 ## TODO
 
+- [ ] Update example
 - [ ] Add 'loop' mode
 - [ ] Add 'preload' mode
 - [ ] Handle changing props on-the-fly
