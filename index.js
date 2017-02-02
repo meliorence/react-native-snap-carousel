@@ -7,14 +7,68 @@ export default class Carousel extends Component {
     static propTypes = {
         ...ScrollView.propTypes,
         /**
+        * Width in pixels of your elements
+        */
+        itemWidth: PropTypes.number.isRequired,
+        /**
          * Width in pixels of your slider according
          * to your styles
          */
         sliderWidth: PropTypes.number.isRequired,
         /**
-         * Width in pixels of your elements
-         */
-        itemWidth: PropTypes.number.isRequired,
+        * Animated animation to use. Provide the name
+        * of the method, defaults to timing
+        */
+        animationFunc: PropTypes.string,
+        /**
+        * Animation options to be merged with the
+        * default ones. Can be used w/ animationFunc
+        */
+        animationOptions: PropTypes.object,
+        /**
+        * Trigger autoplay
+        */
+        autoplay: PropTypes.bool,
+        /**
+        * Delay before enabling autoplay on startup and
+        * after releasing the touch
+        */
+        autoplayDelay: PropTypes.number,
+        /**
+        * Delay until navigating to the next item
+        */
+        autoplayInterval: PropTypes.number,
+        /**
+        * Global wrapper's style
+        */
+        containerCustomStyle: ScrollView.propTypes.style,
+        /**
+        * Content container's style
+        */
+        contentContainerCustomStyle: ScrollView.propTypes.style,
+        /**
+        * If enabled, snapping will be triggered once
+        * the ScrollView stops moving, not when the
+        * user releases his finger
+        */
+        enableMomentum: PropTypes.bool,
+        /**
+        * If enabled, releasing the touch will scroll
+        * to the center of the nearest/active item
+        */
+        enableSnap: PropTypes.bool,
+        /**
+        * Index of the first item to display
+        */
+        firstItem: PropTypes.number,
+        /**
+        * Opacity value of the inactive slides
+        */
+        inactiveSlideOpacity: PropTypes.number,
+        /**
+        * Scale factor of the inactive slides
+        */
+        inactiveSlideScale: PropTypes.number,
         /**
          * Style of each item's container
          */
@@ -25,68 +79,14 @@ export default class Carousel extends Component {
          */
         shouldOptimizeUpdates: PropTypes.bool,
         /**
-        * Global wrapper's style
-        */
-        containerCustomStyle: Animated.View.propTypes.style,
-        /**
-        * Content container's style
-        */
-        contentContainerCustomStyle: Animated.View.propTypes.style,
-        /**
-         * Delta x when swiping to trigger the snap
-         */
-        swipeThreshold: PropTypes.number,
-        /**
-         * Animated animation to use. Provide the name
-         * of the method, defaults to timing
-         */
-        animationFunc: PropTypes.string,
-        /**
-         * Animation options to be merged with the
-         * default ones. Can be used w/ animationFunc
-         */
-        animationOptions: PropTypes.object,
-        /**
-         * Scale factor of the inactive slides
-         */
-        inactiveSlideScale: PropTypes.number,
-        /**
-         * Opacity value of the inactive slides
-         */
-        inactiveSlideOpacity: PropTypes.number,
-        /**
-         * Index of the first item to display
-         */
-        firstItem: PropTypes.number,
-        /**
-         * Trigger autoplay
-         */
-        autoplay: PropTypes.bool,
-        /**
-         * Delay until navigating to the next item
-         */
-        autoplayInterval: PropTypes.number,
-        /**
-         * Delay before enabling autoplay on startup and
-         * after releasing the touch
-         */
-        autoplayDelay: PropTypes.number,
-        /**
-         * If enabled, releasing the touch will scroll
-         * to the center of the nearest/active item
-         */
-        enableSnap: PropTypes.bool,
-        /**
-         * If enabled, snapping will be triggered once
-         * the ScrollView stops moving, not when the
-         * user releases his finger
-        */
-        enableMomentum: PropTypes.bool,
-        /**
          * Snapping on android is kinda choppy, especially
          * when swiping quickly so you can disable it
          */
         snapOnAndroid: PropTypes.bool,
+        /**
+        * Delta x when swiping to trigger the snap
+        */
+        swipeThreshold: PropTypes.number,
         /**
          * Fired when snapping to an item
          */
@@ -94,24 +94,24 @@ export default class Carousel extends Component {
     };
 
     static defaultProps = {
-        shouldOptimizeUpdates: true,
-        autoplay: false,
-        autoplayInterval: 3000,
-        autoplayDelay: 5000,
-        firstItem: 0,
-        enableMomentum: false,
-        enableSnap: true,
-        snapOnAndroid: true,
-        swipeThreshold: 20,
         animationFunc: 'timing',
         animationOptions: {
             easing: Easing.elastic(1)
         },
-        slideStyle: {},
-        containerCustomStyle: null,
-        contentContainerCustomStyle: null,
+        autoplay: false,
+        autoplayDelay: 5000,
+        autoplayInterval: 3000,
+        containerCustomStyle: {},
+        contentContainerCustomStyle: {},
+        enableMomentum: false,
+        enableSnap: true,
+        firstItem: 0,
+        inactiveSlideOpacity: 1,
         inactiveSlideScale: 0.9,
-        inactiveSlideOpacity: 1
+        slideStyle: {},
+        shouldOptimizeUpdates: true,
+        snapOnAndroid: true,
+        swipeThreshold: 20
     }
 
     constructor (props) {
