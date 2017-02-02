@@ -29,10 +29,25 @@ export default StyleSheet.create({
         paddingTop: 50
     },
     title: {
-        marginVertical: 15,
+        marginTop: 15,
         backgroundColor: 'transparent',
-        color: 'rgba(255, 255, 255, 0.85)',
-        fontSize: 24,
+        color: 'rgba(255, 255, 255, 0.9)',
+        fontSize: 22,
+        fontWeight: 'bold',
         textAlign: 'center'
+    },
+    subtitle: {
+        marginTop: 5,
+        marginBottom: 15,
+        backgroundColor: 'transparent',
+        color: 'rgba(255, 255, 255, 0.75)',
+        fontSize: 16,
+        fontStyle: 'italic',
+        textAlign: 'center'
+    },
+    slider: {
+        marginBottom: 30
+    },
+    sliderContainer: {
     }
 });

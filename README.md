@@ -27,6 +27,9 @@ This app is going to be updated on a regular basis.
 
 ## Usage
 
+### Breaking change
+Since version 2.0.0, items are now **direct children of the <Carousel> component**. As a result, props `items` and `renderItem` have been removed.
+
 ```
 $ npm install --save react-native-snap-carousel
 ```
@@ -34,20 +37,36 @@ $ npm install --save react-native-snap-carousel
 ```javascript
 import Carousel from 'react-native-snap-carousel';
 
-    _renderItem (data, index) {
-        return (
-            ...
-        );
-    }
-
+    // Example with different children
     render () {
         <Carousel
           ref={'carousel'}
-          items={this.state.entries}
-          renderItem={this._renderItem}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
-          slideStyle={styles.slide} />
+        >
+            <View style={styles.slide1} />
+            <ListView style={styles.slide2} />
+            <Image style={styles.slide3} />
+        </Carousel>
+    }
+
+    // Example of appending the same component multiple times while looping through an array of data
+    render () {
+        const slides = this.state.entries.map((entry, index) => {
+            return (
+                <View key={`entry-${index}`} style={styles.slide}>
+                    <Text style={styles.title}>{ entry.title }</Text>
+                </View>
+            );
+        });
+
+        <Carousel
+          ref={'carousel'}
+          sliderWidth={sliderWidth}
+          itemWidth={itemWidth}
+        >
+            { slides }
+        </Carousel>
     }
 ```
 
@@ -57,27 +76,25 @@ import Carousel from 'react-native-snap-carousel';
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-items | Array of items to loop on | Array | Required
-sliderWidth | The width in pixels of your slider | Number | Required
-itemWidth | Width in pixels of your items | Number | Required
-renderItem | Function returning a react element. The entry data is the 1st parameter, its index is the 2nd | Function | Required
-shouldOptimizeUpdates | whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
-slideStyle | Style of each item's container | Number | Required
-swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
-animationFunc | Animated animation to use. Provide the name of the method | String | `Timing`
+**itemWidth** | Width in pixels of your items | Number | **Required**
+**sliderWidth** | The width in pixels of your slider | Number | **Required**
+animationFunc | Animated animation to use. Provide the name of the method | String | `timing`
 animationOptions | Animation options to be merged with the default ones. Can be used w/ animationFunc | Object | `{ easing: Easing.elastic(1) }`
-firstItem | Index of the first item to display | Number | `0`
 autoplay | Trigger autoplay on mount | Boolean | `false`
-autoplayInterval | Delay in ms until navigating to the next item | `3000`
 autoplayDelay | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
+autoplayInterval | Delay in ms until navigating to the next item | `3000`
+containerCustomStyle | Optional styles for Scrollview's global wrapper | ScrollView Style Object | `{}`
+contentContainerCustomStyle | Optional styles for Scrollview's items container | ScrollView Style Object | `{}`
+enableMomentum | See [momentum](#momentum) | Boolean | `false`
 enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Number | `true`
-enableMomentum | See [momentum](#momentum) | Boolean | `true`
-snapOnAndroid | Snapping on android is kinda choppy, especially when swiping quickly so you can disable it | Boolean | `false`
-containerCustomStyle | Optional styles for Scrollview's global wrapper | Number | `null`
-contentContainerCustomStyle | Optional styles for Scrollview's items container | Number | `null`
-inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
+firstItem | Index of the first item to display | Number | `0`
 inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
-onSnapToItem(slideIndex, itemData) | Callback fired when navigating to an item | Function | `undefined`
+inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
+shouldOptimizeUpdates | whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
+slideStyle | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | {}
+snapOnAndroid | Snapping on android is kinda choppy, especially when swiping quickly so you can disable it | Boolean | `true`
+swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
+onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function | `undefined`
 
 ## Methods
 
@@ -109,8 +126,9 @@ You can adjust this value to your needs thanks to [this prop](https://facebook.g
 If you need some **extra horizontal margin** between slides (besides the one resulting from the scale effect), you should add it as `paddingHorizontal` on the slide container. Make sure to take this into account when calculating item's width.
 
 ```javascript
+const sliderWidth = Dimensions.get('window').width * 0.75;
 const slideWidth = 250;
-const horizontalMargin = 40;
+const horizontalMargin = 20;
 const itemWidth = slideWidth + horizontalMargin * 2;
 
 const styles = Stylesheet.create({
@@ -121,16 +139,19 @@ const styles = Stylesheet.create({
 };
 
 <Carousel
+  sliderWidth={sliderWidth}
   itemWidth={itemWidth}
-  slideStyle={styles.slide}
-  />
+>
+    ...
+</Carousel>
 
 ```
 
 ## TODO
 
-- [ ] Add 'loop' mode
-- [ ] Add 'preload' mode
+- [ ] Known issue: updating children's length doesn't play well with autoplay
+- [ ] Implement 'loop' mode
+- [ ] Implement 'preload' mode
 - [ ] Handle changing props on-the-fly
 - [ ] Handle device orientation event
 - [ ] Add vertical implementation

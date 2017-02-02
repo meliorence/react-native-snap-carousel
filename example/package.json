@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "15.4.1",
     "react-native": "0.38.0",
-    "react-native-snap-carousel": "1.6.1"
+    "react-native-snap-carousel": "2.0.0"
   },
   "jest": {
     "preset": "react-native"

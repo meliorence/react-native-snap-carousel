@@ -3,73 +3,87 @@ import { View, ScrollView, Text, StatusBar } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { sliderWidth, itemWidth } from 'example/src/styles/SliderEntry.style';
 import SliderEntry from 'example/src/components/SliderEntry';
-import mainStyles from 'example/src/styles/index.style';
-import sliderStyles from 'example/src/styles/Slider.style';
+import styles from 'example/src/styles/index.style';
 import { ENTRIES1, ENTRIES2 } from 'example/src/static/entries';
 
 export default class example extends Component {
 
-    _renderItem (entry) {
-        return (
-            <SliderEntry {...entry} />
-        );
+    getSlides (entries) {
+        if (!entries) {
+            return false;
+        }
+
+        return entries.map((entry, index) => {
+            return (
+                <SliderEntry
+                  key={`carousel-entry-${index}`}
+                  even={(index + 1) % 2 === 0}
+                  {...entry}
+                />
+            );
+        });
     }
 
     get example1 () {
         return (
             <Carousel
-              items={ENTRIES1}
-              firstItem={2}
-              inactiveSlideScale={0.94}
-              inactiveSlideOpacity={0.6}
-              renderItem={this._renderItem}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
-              slideStyle={sliderStyles.slide}
-              containerCustomStyle={sliderStyles.slider}
-              contentContainerCustomStyle={sliderStyles.sliderContainer}
+              firstItem={1}
+              inactiveSlideScale={0.94}
+              inactiveSlideOpacity={0.6}
+              enableMomentum={true}
+              containerCustomStyle={styles.slider}
+              contentContainerCustomStyle={styles.sliderContainer}
               showsHorizontalScrollIndicator={false}
               snapOnAndroid={true}
               removeClippedSubviews={false}
-            />
+            >
+                { this.getSlides(ENTRIES1) }
+            </Carousel>
         );
     }
 
     get example2 () {
         return (
             <Carousel
-              items={ENTRIES2}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
               inactiveSlideScale={1}
               inactiveSlideOpacity={1}
-              enableMomentum={false}              
+              enableMomentum={false}
               autoplay={true}
               autoplayDelay={500}
               autoplayInterval={2500}
-              renderItem={this._renderItem}
-              sliderWidth={sliderWidth}
-              itemWidth={itemWidth}
-              slideStyle={sliderStyles.slide}
-              containerCustomStyle={sliderStyles.slider}
-              contentContainerCustomStyle={sliderStyles.sliderContainer}
+              containerCustomStyle={styles.slider}
+              contentContainerCustomStyle={styles.sliderContainer}
               showsHorizontalScrollIndicator={false}
               snapOnAndroid={true}
               removeClippedSubviews={false}
-            />
+              >
+                  { this.getSlides(ENTRIES2) }
+              </Carousel>
         );
     }
 
     render () {
         return (
-            <View style={mainStyles.container}>
+            <View style={styles.container}>
                 <StatusBar backgroundColor={'transparent'} barStyle={'light-content'} />
-                <View style={mainStyles.colorsContainer}>
-                    <View style={mainStyles.color1} />
-                    <View style={mainStyles.color2} />
+                <View style={styles.colorsContainer}>
+                    <View style={styles.color1} />
+                    <View style={styles.color2} />
                 </View>
-                <ScrollView style={mainStyles.scrollview}>
-                    <Text style={mainStyles.title}>Example 1</Text>
+                <ScrollView
+                  style={styles.scrollview}
+                  indicatorStyle={'white'}
+                  scrollEventThrottle={200}
+                >
+                    <Text style={styles.title}>Example 1</Text>
+                    <Text style={styles.subtitle}>Momentum | Scale | Opacity</Text>
                     { this.example1 }
-                    <Text style={mainStyles.title}>Example 2 (no momentum)</Text>
+                    <Text style={styles.title}>Example 2</Text>
+                    <Text style={styles.subtitle}>Autoplay | No momentum</Text>
                     { this.example2 }
                 </ScrollView>
             </View>
