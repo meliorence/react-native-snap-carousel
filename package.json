@@ -1,7 +1,7 @@
 {
   "name": "react-native-snap-carousel",
-  "version": "1.6.1",
-  "description": "Simple carousel component with snapping effect on Android & iOS for React Native",
+  "version": "2.0.0",
+  "description": "Swiper component for React Native with previews and snapping effect. Compatible with Android & iOS.",
   "main": "index.js",
   "repository": {
     "type": "git",
