@@ -1,6 +1,11 @@
+## v2.0.0
+
+* Items are now direct children of the <Carousel> component, which makes it easier to use (thanks [@Jonarod](https://github.com/Jonarod) !)
+* Props `items` and `renderItem` have been removed
+
 ## v1.6.1
 
-* Due to some touch events being buggy, rework methods so the children will receive touch events on Android.
+* Due to some touch events being buggy, rework methods so the children will receive touch events on Android
 
 ## v1.6.0
 
