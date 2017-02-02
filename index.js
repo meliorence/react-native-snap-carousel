@@ -7,10 +7,6 @@ export default class Carousel extends Component {
     static propTypes = {
         ...ScrollView.propTypes,
         /**
-         * Supply items to loop on
-         */
-        items: PropTypes.array,
-        /**
          * Width in pixels of your slider according
          * to your styles
          */
@@ -98,15 +94,14 @@ export default class Carousel extends Component {
     };
 
     static defaultProps = {
-        items:[],
         shouldOptimizeUpdates: true,
         autoplay: false,
         autoplayInterval: 3000,
         autoplayDelay: 5000,
         firstItem: 0,
+        enableMomentum: false,
         enableSnap: true,
-        enableMomentum: true,
-        snapOnAndroid: false,
+        snapOnAndroid: true,
         swipeThreshold: 20,
         animationFunc: 'timing',
         animationOptions: {
@@ -135,8 +130,6 @@ export default class Carousel extends Component {
         // This bool aims at fixing an iOS bug due to scrolTo that triggers onMomentumScrollEnd.
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
         this._ignoreNextMomentum = false;
-        this.props.children.map((data, index)=> this.props.items.push(index));
-
     }
 
     componentDidMount () {
@@ -152,7 +145,6 @@ export default class Carousel extends Component {
     }
 
     shouldComponentUpdate (nextProps, nextState) {
-
         if (this.props.shouldOptimizeUpdates === false) {
             return true;
         } else {
@@ -161,10 +153,10 @@ export default class Carousel extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
+        const { firstItem } = nextProps;
+        const { interpolators } = this.state;
 
-        const { items, firstItem } = nextProps;
-
-        if (items.length !== this.props.children.length) {
+        if (interpolators.length !== nextProps.children.length) {
             this._positions = [];
             this._calcCardPositions(nextProps);
             this._initInterpolators(nextProps);
@@ -379,7 +371,7 @@ export default class Carousel extends Component {
         // Make sure the component hasn't been unmounted
         if (this.refs.scrollview) {
             this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
-            this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index, this.props.items[index]);
+            this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index);
 
             // iOS fix, check the note in the constructor
             if (!initial && Platform.OS === 'ios') {
@@ -408,36 +400,40 @@ export default class Carousel extends Component {
         this.snapToItem(newIndex, animated);
     }
 
-
-    _children(children = this.props.children) {
-      return React.Children.map(children, (child) => child);
+    _children (children = this.props.children) {
+        return React.Children.map(children, (child) => child);
     }
 
-    _makeSceneKey(child, idx) {
-      return child.props.tabLabel + '_' + idx;
-    }
+    _childSlides () {
+        const { slideStyle, inactiveSlideScale, inactiveSlideOpacity } = this.props;
 
-    _childSlides() {
-      const { slideStyle, inactiveSlideScale, inactiveSlideOpacity } = this.props;
+        if (!this.state.interpolators || !this.state.interpolators.length) {
+            return false;
+        };
 
-      return this._children().map((child, idx) => {
-        const animatedValue = this.state.interpolators[idx];
-        let key = this._makeSceneKey(child, idx);
+        return this._children().map((child, index) => {
+            const animatedValue = this.state.interpolators[index];
 
-        return (
-          <Animated.View
-            key={`carousel-item-${child.key}`}
-            style={[
-                slideStyle,
-                {transform: [{
-                    scale: animatedValue.interpolate({ inputRange: [0, 1], outputRange: [inactiveSlideScale, 1] }) }],
-                    opacity: animatedValue.interpolate({ inputRange: [0, 1], outputRange: [inactiveSlideOpacity, 1] })
-                }
-            ]}>
-            {child}
-          </Animated.View>
-        )
-      })
+            if (!animatedValue) {
+                return false;
+            }
+
+            return (
+              <Animated.View
+                key={`carousel-item-${index}`}
+                style={[
+                    slideStyle,
+                    {
+                        opacity: animatedValue.interpolate({ inputRange: [0, 1], outputRange: [inactiveSlideOpacity, 1] }),
+                        transform: [{
+                            scale: animatedValue.interpolate({ inputRange: [0, 1], outputRange: [inactiveSlideScale, 1] })
+                        }]
+                    }
+                ]}>
+                    { child }
+              </Animated.View>
+            );
+        });
     }
 
     render () {
@@ -452,11 +448,6 @@ export default class Carousel extends Component {
             { paddingHorizontal: Platform.OS === 'android' ? containerSideMargin : 0 },
             contentContainerCustomStyle || {}
         ];
-
-        const { slideStyle, inactiveSlideScale, inactiveSlideOpacity } = this.props;
-        if (!this.state.interpolators || !this.state.interpolators.length) {
-            return false;
-        };
 
         return (
             <ScrollView
@@ -474,8 +465,7 @@ export default class Carousel extends Component {
               scrollEventThrottle={50}
               {...this.props}
               >
-                {this._childSlides()}
-
+                { this._childSlides() }
             </ScrollView>
         );
     }
