@@ -102,18 +102,7 @@ onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function 
 
 In order to use the following methods, you need to create a reference to the carousel's instance. There are two ways of doing it.
 
-#### ref as a string attribute
-```javascript
-<Carousel
-  // other props
-  ref={'carousel'}
-/>
-
-// methods can then be called this way
-onPress={() => { this.refs.carousel.snapToNext(); }}
-```
-
-#### ref as a callback method
+#### ref as a callback attribute (**recommended**)
 ```javascript
 <Carousel
   // other props
@@ -122,6 +111,17 @@ onPress={() => { this.refs.carousel.snapToNext(); }}
 
 // methods can then be called this way
 onPress={() => { this._carousel.snapToNext(); }}
+```
+
+#### ref as a string attribute ([legacy](http://stackoverflow.com/questions/37468913/why-ref-string-is-legacy))
+```javascript
+<Carousel
+  // other props
+  ref={'carousel'}
+/>
+
+// methods can then be called this way
+onPress={() => { this.refs.carousel.snapToNext(); }}
 ```
 
 ### Available methods
@@ -148,7 +148,7 @@ You can find the following example in the [/example](https://github.com/archriss
 Since `1.5.0`, the snapping effect can now be based on momentum instead of when you're releasing your finger. It means that the component will wait until the `ScrollView` isn't moving anymore to snap. By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long.
 You can adjust this value to your needs thanks to [this prop](https://facebook.github.io/react-native/docs/scrollview.html#decelerationrate).
 
-> As a rule of thumb, **we recommend setting `enableMomentum` to `false` and `decelerationRate` to `'fast'` when you are displaying only one main slide** (as in the showcase above), and to use the default values otherwise. This should help providing a better snap feeling.
+> As a rule of thumb, **we recommend setting `enableMomentum` to `false` (default) and `decelerationRate` to `'fast'` when you are displaying only one main slide** (as in the showcase above), and to use `true` and `'normal'` (default) otherwise. This should help providing a better snap feeling.
 
 ### Margin between slides
 If you need some **extra horizontal margin** between slides (besides the one resulting from the scale effect), you should add it as `paddingHorizontal` on the slide container. Make sure to take this into account when calculating item's width.
@@ -177,7 +177,7 @@ const styles = Stylesheet.create({
 
 ## TODO
 
-- [ ] Known issue: updating children's length doesn't play well with autoplay
+- [ ] Handle autoplay properly when updating children's length
 - [ ] Implement 'loop' mode
 - [ ] Implement 'preload' mode
 - [ ] Handle changing props on-the-fly
