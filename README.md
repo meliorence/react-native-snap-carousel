@@ -98,6 +98,34 @@ onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function 
 
 ## Methods
 
+### Reference to the component
+
+In order to use the following methods, you need to create a reference to the carousel's instance. There are two ways of doing it.
+
+#### ref as a string attribute
+```javascript
+<Carousel
+  // other props
+  ref={'carousel'}
+/>
+
+// methods can then be called this way
+onPress={() => { this.refs.carousel.snapToNext(); }}
+```
+
+#### ref as a callback method
+```javascript
+<Carousel
+  // other props
+  ref={(carousel) => { this._carousel = carousel; } }
+/>
+
+// methods can then be called this way
+onPress={() => { this._carousel.snapToNext(); }}
+```
+
+### Available methods
+
 * `startAutoplay (instantly = false)` Start the autoplay manually
 * `stopAutoplay ()` Stop the autoplay manually
 * `snapToItem (index, animated = true)` Snap to an item manually
