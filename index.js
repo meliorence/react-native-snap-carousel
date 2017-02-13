@@ -117,7 +117,8 @@ export default class Carousel extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            activeItem: props.firstItem
+            activeItem: props.firstItem,
+            interpolators: [],
         };
         this._positions = [];
         this._calcCardPositions(props);
@@ -156,7 +157,7 @@ export default class Carousel extends Component {
         const { firstItem } = nextProps;
         const { interpolators } = this.state;
 
-        if (interpolators.length !== nextProps.children.length) {
+        if (interpolators && interpolators.length !== nextProps.children.length) {
             this._positions = [];
             this._calcCardPositions(nextProps);
             this._initInterpolators(nextProps);
