@@ -1,3 +1,7 @@
+## v2.0.1
+
+* Fix un-handled exception with interpolators (thanks )[@chitezh](https://github.com/chitezh) !)
+
 ## v2.0.0
 
 * Items are now direct children of the <Carousel> component, which makes it easier to use (thanks [@Jonarod](https://github.com/Jonarod) !)
