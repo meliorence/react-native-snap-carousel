@@ -32,7 +32,7 @@ export default class example extends Component {
               firstItem={1}
               inactiveSlideScale={0.94}
               inactiveSlideOpacity={0.6}
-              enableMomentum={true}
+              enableMomentum={false}
               containerCustomStyle={styles.slider}
               contentContainerCustomStyle={styles.sliderContainer}
               showsHorizontalScrollIndicator={false}
@@ -51,7 +51,7 @@ export default class example extends Component {
               itemWidth={itemWidth}
               inactiveSlideScale={1}
               inactiveSlideOpacity={1}
-              enableMomentum={false}
+              enableMomentum={true}
               autoplay={true}
               autoplayDelay={500}
               autoplayInterval={2500}
@@ -80,10 +80,10 @@ export default class example extends Component {
                   scrollEventThrottle={200}
                 >
                     <Text style={styles.title}>Example 1</Text>
-                    <Text style={styles.subtitle}>Momentum | Scale | Opacity</Text>
+                    <Text style={styles.subtitle}>No momentum | Scale | Opacity</Text>
                     { this.example1 }
                     <Text style={styles.title}>Example 2</Text>
-                    <Text style={styles.subtitle}>Autoplay | No momentum</Text>
+                    <Text style={styles.subtitle}>Momentum | Autoplay</Text>
                     { this.example2 }
                 </ScrollView>
             </View>
