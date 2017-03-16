@@ -1,6 +1,10 @@
+## v2.0.2
+
+* Make sure that scroll indicator is hidden by default
+
 ## v2.0.1
 
-* Fix un-handled exception with interpolators (thanks )[@chitezh](https://github.com/chitezh) !)
+* Fix un-handled exception with interpolators (thanks [@chitezh](https://github.com/chitezh) !)
 
 ## v2.0.0
 

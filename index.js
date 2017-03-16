@@ -118,7 +118,7 @@ export default class Carousel extends Component {
         super(props);
         this.state = {
             activeItem: props.firstItem,
-            interpolators: [],
+            interpolators: []
         };
         this._positions = [];
         this._calcCardPositions(props);
@@ -464,6 +464,7 @@ export default class Carousel extends Component {
               onScroll={this._onScroll}
               onTouchStart={this._onTouchStart}
               scrollEventThrottle={50}
+              showsHorizontalScrollIndicator={false}
               {...this.props}
               >
                 { this._childSlides() }
