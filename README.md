@@ -5,6 +5,7 @@ Pull requests are very welcome!
 ## Table of contents
 
 1. [Showcase](#showcase)
+1. [Breaking change](#breaking-change)
 1. [Usage](#usage)
 1. [Props](#props)
 1. [Methods](#methods)
@@ -25,10 +26,10 @@ This app is going to be updated on a regular basis.
 ![react-native-snap-carousel](https://media.giphy.com/media/3o6ZsU9gWWrvYtogow/giphy.gif)
 ![react-native-snap-carousel](https://media.giphy.com/media/3o7TKUAlvi1tYLFCTK/giphy.gif)
 
-## Usage
-
-### Breaking change
+## Breaking change
 Since version 2.0.0, items are now **direct children of the <Carousel> component**. As a result, props `items` and `renderItem` have been removed.
+
+## Usage
 
 ```
 $ npm install --save react-native-snap-carousel
@@ -45,7 +46,7 @@ import Carousel from 'react-native-snap-carousel';
           itemWidth={itemWidth}
         >
             <View style={styles.slide1} />
-            <ListView style={styles.slide2} />
+            <Text style={styles.slide2} />
             <Image style={styles.slide3} />
         </Carousel>
     }
@@ -76,8 +77,8 @@ import Carousel from 'react-native-snap-carousel';
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-**itemWidth** | Width in pixels of your items | Number | **Required**
-**sliderWidth** | The width in pixels of your slider | Number | **Required**
+**itemWidth** | Width in pixels of your slides, **must be the same for all of them** | Number | **Required**
+**sliderWidth** | Width in pixels of your slider | Number | **Required**
 animationFunc | Animated animation to use. Provide the name of the method | String | `timing`
 animationOptions | Animation options to be merged with the default ones. Can be used w/ animationFunc | Object | `{ easing: Easing.elastic(1) }`
 autoplay | Trigger autoplay on mount | Boolean | `false`
