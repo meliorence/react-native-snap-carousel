@@ -74,10 +74,14 @@ export default class Carousel extends Component {
          */
         slideStyle: Animated.View.propTypes.style,
         /**
-         * whether to implement a `shouldComponentUpdate`
+         * Whether to implement a `shouldComponentUpdate`
          * strategy to minimize updates
          */
         shouldOptimizeUpdates: PropTypes.bool,
+        /**
+        * Whether the horizontal scroll indicator should be displayed
+        */
+        showScrollIndicator: PropTypes.bool,
         /**
          * Snapping on android is kinda choppy, especially
          * when swiping quickly so you can disable it
@@ -110,6 +114,7 @@ export default class Carousel extends Component {
         inactiveSlideScale: 0.9,
         slideStyle: {},
         shouldOptimizeUpdates: true,
+        showScrollIndicator: true,
         snapOnAndroid: true,
         swipeThreshold: 20
     }
@@ -438,7 +443,7 @@ export default class Carousel extends Component {
     }
 
     render () {
-        const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle, enableMomentum } = this.props;
+        const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle, enableMomentum, showScrollIndicator } = this.props;
 
         const containerSideMargin = (sliderWidth - itemWidth) / 2;
         const style = [
@@ -464,6 +469,7 @@ export default class Carousel extends Component {
               onScroll={this._onScroll}
               onTouchStart={this._onTouchStart}
               scrollEventThrottle={50}
+              showsHorizontalScrollIndicator={showScrollIndicator}
               {...this.props}
               >
                 { this._childSlides() }

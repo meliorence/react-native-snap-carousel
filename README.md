@@ -90,7 +90,8 @@ enableSnap | If enabled, releasing the touch will scroll to the center of the ne
 firstItem | Index of the first item to display | Number | `0`
 inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
 inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
-shouldOptimizeUpdates | whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
+shouldOptimizeUpdates | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
+showScrollIndicator | Whether the horizontal scroll indicator should be displayed | Boolean | `true`
 slideStyle | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | {}
 snapOnAndroid | Snapping on android is kinda choppy, especially when swiping quickly so you can disable it | Boolean | `true`
 swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
