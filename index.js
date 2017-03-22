@@ -157,7 +157,7 @@ export default class Carousel extends Component {
         const { firstItem } = nextProps;
         const { interpolators } = this.state;
 
-        if (interpolators && interpolators.length !== nextProps.children.length) {
+        if (interpolators && interpolators.length !== React.Children.count(nextProps.children)) {
             this._positions = [];
             this._calcCardPositions(nextProps);
             this._initInterpolators(nextProps);
@@ -184,7 +184,7 @@ export default class Carousel extends Component {
     _calcCardPositions (props = this.props) {
         const { itemWidth } = props;
 
-        this.props.children.map((item, index) => {
+        this._children().map((item, index) => {
             this._positions[index] = {
                 start: index * itemWidth
             };
@@ -196,7 +196,7 @@ export default class Carousel extends Component {
         const { firstItem } = props;
         let interpolators = [];
 
-        this.props.children.map((item, index) => {
+        this._children().map((item, index) => {
             interpolators.push(new Animated.Value(index === firstItem ? 1 : 0));
         });
         this.setState({ interpolators });
