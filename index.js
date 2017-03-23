@@ -154,10 +154,11 @@ export default class Carousel extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        const { firstItem } = nextProps;
         const { interpolators } = this.state;
+        const { firstItem } = nextProps;
+        const childrenLength = React.Children.count(nextProps.children);
 
-        if (interpolators && interpolators.length !== nextProps.children.length) {
+        if (childrenLength && interpolators.length !== childrenLength) {
             this._positions = [];
             this._calcCardPositions(nextProps);
             this._initInterpolators(nextProps);
@@ -184,11 +185,11 @@ export default class Carousel extends Component {
     _calcCardPositions (props = this.props) {
         const { itemWidth } = props;
 
-        this.props.children.map((item, index) => {
+        this._children(props).map((item, index) => {
             this._positions[index] = {
-                start: index * itemWidth
+                start: index * itemWidth,
+                end: index * itemWidth + itemWidth
             };
-            this._positions[index].end = this._positions[index].start + itemWidth;
         });
     }
 
@@ -196,7 +197,7 @@ export default class Carousel extends Component {
         const { firstItem } = props;
         let interpolators = [];
 
-        this.props.children.map((item, index) => {
+        this._children(props).map((item, index) => {
             interpolators.push(new Animated.Value(index === firstItem ? 1 : 0));
         });
         this.setState({ interpolators });
@@ -278,7 +279,7 @@ export default class Carousel extends Component {
             this._enableAutoplayTimeout =
                 setTimeout(() => {
                     this.startAutoplay(true);
-                }, autoplayDelay + 1000);
+                }, autoplayDelay + 200);
         }
     }
 
@@ -286,12 +287,10 @@ export default class Carousel extends Component {
     // https://github.com/facebook/react-native/issues/6791
     // it's fine since we're only fixing an iOS bug in it, so ...
     _onTouchRelease (event) {
-        const { enableMomentum } = this.props;
-
-        if (enableMomentum && Platform.OS === 'ios') {
+        if (this.props.enableMomentum && Platform.OS === 'ios') {
             this._snapNoMomentumTimeout =
                 setTimeout(() => {
-                    this._snapScroll(0);
+                    this.snapToItem(this.state.activeItem);
                 }, 100);
         }
     }
@@ -301,7 +300,7 @@ export default class Carousel extends Component {
 
         // When using momentum and releasing the touch with
         // no velocity, scrollEndActive will be undefined (iOS)
-        if (!this._scrollEndActive && Platform.OS === 'ios') {
+        if (!this._scrollEndActive && this._scrollEndActive !== 0 && Platform.OS === 'ios') {
             this._scrollEndActive = this._scrollStartActive;
         }
 
@@ -359,6 +358,10 @@ export default class Carousel extends Component {
     snapToItem (index, animated = true, fireCallback = true, initial = false) {
         const itemsLength = this._positions.length;
 
+        if (!index) {
+            index = 0;
+        }
+
         if (index >= itemsLength) {
             index = itemsLength - 1;
             fireCallback = false;
@@ -367,7 +370,7 @@ export default class Carousel extends Component {
             fireCallback = false;
         }
 
-        const snapX = this._positions[index].start;
+        const snapX = itemsLength && this._positions[index].start;
 
         // Make sure the component hasn't been unmounted
         if (this.refs.scrollview) {
@@ -401,8 +404,8 @@ export default class Carousel extends Component {
         this.snapToItem(newIndex, animated);
     }
 
-    _children (children = this.props.children) {
-        return React.Children.map(children, (child) => child);
+    _children (props = this.props) {
+        return React.Children.map(props.children, (child) => child);
     }
 
     _childSlides () {
@@ -463,8 +466,7 @@ export default class Carousel extends Component {
               onResponderRelease={this._onTouchRelease}
               onScroll={this._onScroll}
               onTouchStart={this._onTouchStart}
-              scrollEventThrottle={50}
-              showsHorizontalScrollIndicator={false}
+              scrollEventThrottle={100}
               {...this.props}
               >
                 { this._childSlides() }

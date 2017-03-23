@@ -1,3 +1,10 @@
+## v2.0.3
+
+* Prevent error when carousel has only one child (thanks [@kevinvandijk](https://github.com/kevinvandijk) !)
+* Fix issue when appending dynamic slides (the first one was ignored)
+* Fix edge case that prevented the first slide from being focused when swiping back with momentum enabled
+* Bump example's RN version to 0.42.3
+
 ## v2.0.2
 
 * Make sure that scroll indicator is hidden by default
