@@ -69,7 +69,11 @@ export default class example extends Component {
     render () {
         return (
             <View style={styles.container}>
-                <StatusBar backgroundColor={'transparent'} barStyle={'light-content'} />
+                <StatusBar
+                  translucent={true}
+                  backgroundColor={'rgba(0, 0, 0, 0.3)'}
+                  barStyle={'light-content'}
+                />
                 <View style={styles.colorsContainer}>
                     <View style={styles.color1} />
                     <View style={styles.color2} />
