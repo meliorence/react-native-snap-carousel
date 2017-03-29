@@ -10,9 +10,9 @@ Pull requests are very welcome!
 1. [Props](#props)
 1. [Methods](#methods)
 1. [Properties](#properties)
-1. [RTL support](#rtl-support)
 1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
+1. [RTL support](#rtl-support)
 1. [TODO](#todo)
 1. [Credits](#credits)
 
@@ -26,7 +26,7 @@ You can try these examples live in **Archriss' showcase app** on [Android](https
 
 > Since it has been asked multiple times, please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
 
-App currently uses version 1.4.0 of the plugin. Especially, this means that you should expect **slider's layout to break with RTL devices** (see #38) since support was added in version 2.1.0.
+App currently uses version 1.4.0 of the plugin. Especially, this means that you should expect **slider's layout to break with RTL devices** (see [#38](https://github.com/archriss/react-native-snap-carousel/issues/38)) since support was added in version 2.1.0.
 
 ## Breaking change
 Since version 2.0.0, items are now **direct children of the <Carousel> component**. As a result, props `items` and `renderItem` have been removed.
@@ -75,30 +75,56 @@ import Carousel from 'react-native-snap-carousel';
 
 ## Props
 
-> In addition to these props, you can provide **any prop from the [ScrollView component](https://facebook.github.io/react-native/docs/scrollview.html)**.
+### Required
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 **itemWidth** | Width in pixels of your slides, **must be the same for all of them** | Number | **Required**
 **sliderWidth** | Width in pixels of your slider | Number | **Required**
+
+### Behavior
+
+Prop | Description | Type | Default
+------ | ------ | ------ | ------
 activeSlideOffset | From slider's center, minimum slide distance to be scrolled before being set to active | Number | `25`
-animationFunc | Animated animation to use. Provide the name of the method | String | `timing`
-animationOptions | Animation options to be merged with the default ones. Can be used w/ animationFunc | Object | `{ easing: Easing.elastic(1) }`
-autoplay | Trigger autoplay on mount | Boolean | `false`
-autoplayDelay | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
-autoplayInterval | Delay in ms until navigating to the next item | `3000`
-containerCustomStyle | Optional styles for Scrollview's global wrapper | ScrollView Style Object | `{}`
-contentContainerCustomStyle | Optional styles for Scrollview's items container | ScrollView Style Object | `{}`
 enableMomentum | See [momentum](#momentum) | Boolean | `false`
 enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Number | `true`
 firstItem | Index of the first item to display | Number | `0`
-inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
-inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
 shouldOptimizeUpdates | whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
-slideStyle | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | {}
 snapOnAndroid | Snapping on android is kinda choppy, especially when swiping quickly so you can disable it | Boolean | `true`
 swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
+
+### Autoplay
+
+Prop | Description | Type | Default
+------ | ------ | ------ | ------
+autoplay | Trigger autoplay on mount | Boolean | `false`
+autoplayDelay | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
+autoplayInterval | Delay in ms until navigating to the next item | Number |  `3000`
+
+### Style and animation
+
+Prop | Description | Type | Default
+------ | ------ | ------ | ------
+animationFunc | Animated animation to use. Provide the name of the method | String | `timing`
+animationOptions | Animation options to be merged with the default ones. Can be used w/ animationFunc | Object | `{ easing: Easing.elastic(1) }`
+containerCustomStyle | Optional styles for Scrollview's global wrapper | ScrollView Style Object | `{}`
+contentContainerCustomStyle | Optional styles for Scrollview's items container | ScrollView Style Object | `{}`
+inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
+inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
+slideStyle | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | {}
+
+### Callbacks
+
+Prop | Description | Type | Default
+------ | ------ | ------ | ------
 onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function | `undefined`
+
+### `ScrollView`
+
+In addition to these props, you can use **any prop from the [ScrollView component](https://facebook.github.io/react-native/docs/scrollview.html)**.
+
+Here are a few useful ones:`removeClippedSubviews`, `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios)
 
 ## Methods
 
@@ -142,18 +168,6 @@ onPress={() => { this.refs.carousel.snapToNext(); }}
 
 * `currentIndex` Current active item (`int`, starts at 0)
 
-## RTL support
-
-### Experimental feature
-
-Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`.
-
-As such, this feature should be considered experimental since it might break with newer versions of React Native.
-
-### Known issue
-
-There is one kown issue with RTL layouts: during init, the last slide will shortly be seen. You can work around this by delaying slider's visibility with a small timer (FYI, version 0.43.0 of React Native [introduced a `display` style prop](https://github.com/facebook/react-native/commit/4d69f4b2d1cf4f2e8265fe5758f28086f1b67500) that could either be set to `flex` or `none`).
-
 ## Example
 You can find the following example in the [/example](https://github.com/archriss/react-native-snap-carousel/tree/master/example) folder.
 
@@ -192,6 +206,18 @@ const styles = Stylesheet.create({
 </Carousel>
 
 ```
+
+## RTL support
+
+### Experimental feature
+
+Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`.
+
+As such, this feature should be considered experimental since it might break with newer versions of React Native.
+
+### Known issue
+
+There is one kown issue with RTL layouts: during init, the last slide will shortly be seen. You can work around this by delaying slider's visibility with a small timer (FYI, version 0.43.0 of React Native [introduced a `display` style prop](https://github.com/facebook/react-native/commit/4d69f4b2d1cf4f2e8265fe5758f28086f1b67500) that could either be set to `flex` or `none`).
 
 ## TODO
 
