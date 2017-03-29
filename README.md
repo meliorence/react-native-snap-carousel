@@ -1,5 +1,5 @@
 # react-native-snap-carousel
-Swiper component for React Native with **previews** and **snapping effect**. Compatible with Android & iOS.
+Swiper component for React Native with **previews**, **snapping effect** and **RTL support**. Compatible with Android & iOS.
 Pull requests are very welcome!
 
 ## Table of contents
@@ -10,6 +10,7 @@ Pull requests are very welcome!
 1. [Props](#props)
 1. [Methods](#methods)
 1. [Properties](#properties)
+1. [RTL support](#rtl-support)
 1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [TODO](#todo)
@@ -18,13 +19,14 @@ Pull requests are very welcome!
 ## Showcase
 
 You can try these examples live in **Archriss' showcase app** on [Android](https://play.google.com/store/apps/details?id=fr.archriss.demo.app) and [iOS](https://itunes.apple.com/lu/app/archriss-presentation-mobile/id1180954376?mt=8).
-This app is going to be updated on a regular basis.
-
-> Since it has been asked multiple times, please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
 
 ![react-native-snap-carousel](http://i.imgur.com/Fope3uj.gif)
 ![react-native-snap-carousel](https://media.giphy.com/media/3o6ZsU9gWWrvYtogow/giphy.gif)
 ![react-native-snap-carousel](https://media.giphy.com/media/3o7TKUAlvi1tYLFCTK/giphy.gif)
+
+> Since it has been asked multiple times, please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
+
+App currently uses version 1.4.0 of the plugin. Especially, this means that you should expect **slider's layout to break with RTL devices** (see #38) since support was added in version 2.1.0.
 
 ## Breaking change
 Since version 2.0.0, items are now **direct children of the <Carousel> component**. As a result, props `items` and `renderItem` have been removed.
@@ -41,7 +43,7 @@ import Carousel from 'react-native-snap-carousel';
     // Example with different children
     render () {
         <Carousel
-          ref={'carousel'}
+          ref={(carousel) => { this._carousel = carousel; }}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
         >
@@ -62,7 +64,7 @@ import Carousel from 'react-native-snap-carousel';
         });
 
         <Carousel
-          ref={'carousel'}
+          ref={(carousel) => { this._carousel = carousel; }}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
         >
@@ -79,6 +81,7 @@ Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 **itemWidth** | Width in pixels of your slides, **must be the same for all of them** | Number | **Required**
 **sliderWidth** | Width in pixels of your slider | Number | **Required**
+activeSlideOffset | From slider's center, minimum slide distance to be scrolled before being set to active | Number | `25`
 animationFunc | Animated animation to use. Provide the name of the method | String | `timing`
 animationOptions | Animation options to be merged with the default ones. Can be used w/ animationFunc | Object | `{ easing: Easing.elastic(1) }`
 autoplay | Trigger autoplay on mount | Boolean | `false`
@@ -107,7 +110,7 @@ In order to use the following methods, you need to create a reference to the car
 ```javascript
 <Carousel
   // other props
-  ref={(carousel) => { this._carousel = carousel; } }
+  ref={(carousel) => { this._carousel = carousel; }}
 />
 
 // methods can then be called this way
@@ -135,7 +138,21 @@ onPress={() => { this.refs.carousel.snapToNext(); }}
 
 ## Properties
 
+> You need a reference to the carousel's instance (see [above](#reference-to-the-component) if needed).
+
 * `currentIndex` Current active item (`int`, starts at 0)
+
+## RTL support
+
+### Experimental feature
+
+Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`.
+
+As such, this feature should be considered experimental since it might break with newer versions of React Native.
+
+### Known issue
+
+There is one kown issue with RTL layouts: during init, the last slide will shortly be seen. You can work around this by delaying slider's visibility with a small timer (FYI, version 0.43.0 of React Native [introduced a `display` style prop](https://github.com/facebook/react-native/commit/4d69f4b2d1cf4f2e8265fe5758f28086f1b67500) that could either be set to `flex` or `none`).
 
 ## Example
 You can find the following example in the [/example](https://github.com/archriss/react-native-snap-carousel/tree/master/example) folder.
@@ -178,12 +195,13 @@ const styles = Stylesheet.create({
 
 ## TODO
 
-- [ ] Handle autoplay properly when updating children's length
 - [ ] Implement 'loop' mode
 - [ ] Implement 'preload' mode
+- [ ] Add vertical implementation
 - [ ] Handle changing props on-the-fly
 - [ ] Handle device orientation event
-- [ ] Add vertical implementation
+- [ ] Handle autoplay properly when updating children's length
+- [x] Add RTL support
 - [x] Improve momemtum handling
 - [x] Improve snap on Android
 - [x] Handle passing 1 item only
