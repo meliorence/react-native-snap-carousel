@@ -23,6 +23,11 @@ export default class Carousel extends Component {
          */
         sliderWidth: PropTypes.number.isRequired,
         /**
+        * From slider's center, minimum slide distance
+        * to be scrolled before being set to active
+        */
+        activeSlideOffset: PropTypes.number,
+        /**
         * Animated animation to use. Provide the name
         * of the method, defaults to timing
         */
@@ -101,6 +106,7 @@ export default class Carousel extends Component {
     };
 
     static defaultProps = {
+        activeSlideOffset: 25,
         animationFunc: 'timing',
         animationOptions: {
             easing: Easing.elastic(1)
@@ -241,10 +247,12 @@ export default class Carousel extends Component {
         this.setState({ interpolators });
     }
 
-    _getActiveItem (centerX, offset = 25) {
+    _getActiveItem (centerX) {
+        const { activeSlideOffset } = this.props;
+
         for (let i = 0; i < this._positions.length; i++) {
             const { start, end } = this._positions[i];
-            if (centerX + offset >= start && centerX - offset <= end) {
+            if (centerX + activeSlideOffset >= start && centerX - activeSlideOffset <= end) {
                 return i;
             }
         }
