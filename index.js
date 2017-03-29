@@ -1,6 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import { ScrollView, Animated, Platform, Easing } from 'react-native';
+import { ScrollView, Animated, Platform, Easing, I18nManager } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
+
+// React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
+// See https://github.com/facebook/react-native/issues/11960
+// Handling it requires a bunch of hacks
+// NOTE: the following variable is not declared in the constructor
+// otherwise it is undefined at init, which messes with custom indexes
+const IS_RTL = I18nManager.isRTL;
 
 export default class Carousel extends Component {
 
@@ -15,6 +22,11 @@ export default class Carousel extends Component {
          * to your styles
          */
         sliderWidth: PropTypes.number.isRequired,
+        /**
+        * From slider's center, minimum slide distance
+        * to be scrolled before being set to active
+        */
+        activeSlideOffset: PropTypes.number,
         /**
         * Animated animation to use. Provide the name
         * of the method, defaults to timing
@@ -94,6 +106,7 @@ export default class Carousel extends Component {
     };
 
     static defaultProps = {
+        activeSlideOffset: 25,
         animationFunc: 'timing',
         animationOptions: {
             easing: Easing.elastic(1)
@@ -117,7 +130,7 @@ export default class Carousel extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            activeItem: props.firstItem,
+            activeItem: this._getFirstItem(props.firstItem),
             interpolators: []
         };
         this._positions = [];
@@ -135,14 +148,17 @@ export default class Carousel extends Component {
 
     componentDidMount () {
         const { firstItem, autoplay } = this.props;
+        const _firstItem = this._getFirstItem(firstItem);
 
         this._initInterpolators(this.props);
+
         setTimeout(() => {
-            this.snapToItem(firstItem, false, false, true);
+            this.snapToItem(_firstItem, false, false, true);
+
+            if (autoplay) {
+                this.startAutoplay();
+            }
         }, 0);
-        if (autoplay) {
-            this.startAutoplay();
-        }
     }
 
     shouldComponentUpdate (nextProps, nextState) {
@@ -154,15 +170,21 @@ export default class Carousel extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        const { interpolators } = this.state;
+        const { activeItem, interpolators } = this.state;
         const { firstItem } = nextProps;
+        const _firstItem = this._getFirstItem(firstItem, nextProps);
         const childrenLength = React.Children.count(nextProps.children);
+        const newActiveItem = activeItem || activeItem === 0 ? activeItem : _firstItem;
 
         if (childrenLength && interpolators.length !== childrenLength) {
             this._positions = [];
             this._calcCardPositions(nextProps);
             this._initInterpolators(nextProps);
-            this.setState({ activeItem: firstItem });
+            this.setState({ activeItem: newActiveItem });
+
+            if (IS_RTL) {
+                this.snapToItem(newActiveItem, false, false, true);
+            }
         }
     }
 
@@ -176,37 +198,61 @@ export default class Carousel extends Component {
         return enableSnap && (Platform.OS === 'ios' || snapOnAndroid);
     }
 
-    get _nextItem () {
-        const { activeItem } = this.state;
+    get currentIndex () {
+        return this.state.activeItem;
+    }
 
-        return this._positions[activeItem + 1] ? activeItem + 1 : 0;
+    _getCustomIndex (index, props = this.props) {
+        const itemsLength = this._children(props).length;
+
+        if (!itemsLength || (!index && index !== 0)) {
+            return 0;
+        }
+
+        return IS_RTL ?
+            itemsLength - index - 1 :
+            index;
+    }
+
+    _getFirstItem (index, props = this.props) {
+        const itemsLength = this._children(props).length;
+
+        if (index > itemsLength - 1 || index < 0) {
+            return 0;
+        }
+
+        return index;
     }
 
     _calcCardPositions (props = this.props) {
         const { itemWidth } = props;
 
         this._children(props).map((item, index) => {
+            const _index = this._getCustomIndex(index, props);
             this._positions[index] = {
-                start: index * itemWidth,
-                end: index * itemWidth + itemWidth
+                start: _index * itemWidth,
+                end: _index * itemWidth + itemWidth
             };
         });
     }
 
     _initInterpolators (props = this.props) {
         const { firstItem } = props;
+        const _firstItem = this._getFirstItem(firstItem, props);
         let interpolators = [];
 
         this._children(props).map((item, index) => {
-            interpolators.push(new Animated.Value(index === firstItem ? 1 : 0));
+            interpolators.push(new Animated.Value(index === _firstItem ? 1 : 0));
         });
         this.setState({ interpolators });
     }
 
-    _getActiveItem (centerX, offset = 25) {
+    _getActiveItem (centerX) {
+        const { activeSlideOffset } = this.props;
+
         for (let i = 0; i < this._positions.length; i++) {
             const { start, end } = this._positions[i];
-            if (centerX + offset >= start && centerX - offset <= end) {
+            if (centerX + activeSlideOffset >= start && centerX - activeSlideOffset <= end) {
                 return i;
             }
         }
@@ -311,13 +357,21 @@ export default class Carousel extends Component {
             // Snap depending on delta
             if (deltaX > 0) {
                 if (deltaX > swipeThreshold) {
-                    this.snapToItem(this._scrollStartActive + 1);
+                    if (IS_RTL) {
+                        this.snapToItem(this._scrollStartActive - 1);
+                    } else {
+                        this.snapToItem(this._scrollStartActive + 1);
+                    }
                 } else {
                     this.snapToItem(this._scrollEndActive);
                 }
             } else if (deltaX < 0) {
                 if (deltaX < -swipeThreshold) {
-                    this.snapToItem(this._scrollStartActive - 1);
+                    if (IS_RTL) {
+                        this.snapToItem(this._scrollStartActive + 1);
+                    } else {
+                        this.snapToItem(this._scrollStartActive - 1);
+                    }
                 } else {
                     this.snapToItem(this._scrollEndActive);
                 }
@@ -326,10 +380,6 @@ export default class Carousel extends Component {
                 this.snapToItem(this._scrollEndActive);
             }
         }
-    }
-
-    get currentIndex () {
-        return this.state.activeItem;
     }
 
     startAutoplay (instantly = false) {
@@ -344,7 +394,7 @@ export default class Carousel extends Component {
             this._autoplayInterval =
                 setInterval(() => {
                     if (this._autoplaying) {
-                        this.snapToItem(this._nextItem);
+                        this.snapToNext();
                     }
                 }, autoplayInterval);
         }, instantly ? 0 : autoplayDelay);
@@ -373,8 +423,8 @@ export default class Carousel extends Component {
         const snapX = itemsLength && this._positions[index].start;
 
         // Make sure the component hasn't been unmounted
-        if (this.refs.scrollview) {
-            this.refs.scrollview.scrollTo({x: snapX, y: 0, animated});
+        if (this._scrollview) {
+            this._scrollview.scrollTo({ x: snapX, y: 0, animated });
             this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index);
 
             // iOS fix, check the note in the constructor
@@ -405,7 +455,7 @@ export default class Carousel extends Component {
     }
 
     _children (props = this.props) {
-        return React.Children.map(props.children, (child) => child);
+        return React.Children.toArray(props.children);
     }
 
     _childSlides () {
@@ -445,12 +495,14 @@ export default class Carousel extends Component {
 
         const containerSideMargin = (sliderWidth - itemWidth) / 2;
         const style = [
+            containerCustomStyle || {},
             { paddingHorizontal: Platform.OS === 'ios' ? containerSideMargin : 0 },
-            containerCustomStyle || {}
+            // LTR hack; see https://github.com/facebook/react-native/issues/11960
+            { flexDirection: IS_RTL ? 'row-reverse' : 'row' }
         ];
         const contentContainerStyle = [
-            { paddingHorizontal: Platform.OS === 'android' ? containerSideMargin : 0 },
-            contentContainerCustomStyle || {}
+            contentContainerCustomStyle || {},
+            { paddingHorizontal: Platform.OS === 'android' ? containerSideMargin : 0 }
         ];
 
         return (
@@ -458,7 +510,7 @@ export default class Carousel extends Component {
               decelerationRate={0.9}
               style={style}
               contentContainerStyle={contentContainerStyle}
-              ref={'scrollview'}
+              ref={(scrollview) => { this._scrollview = scrollview; }}
               horizontal={true}
               onScrollBeginDrag={this._onScrollBegin}
               onMomentumScrollEnd={enableMomentum ? this._onScrollEnd : undefined}
