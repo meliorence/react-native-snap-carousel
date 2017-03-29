@@ -1,3 +1,9 @@
+## v2.1.0
+* Add RTL support
+* Keep current active item when adding slides dynamically
+* Prevent invalid `firstItem` number
+* Add prop `activeSlideOffset`
+
 ## v2.0.3
 
 * Prevent error when carousel has only one child (thanks [@kevinvandijk](https://github.com/kevinvandijk) !)
