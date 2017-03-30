@@ -9,7 +9,7 @@
 	"dependencies": {
 		"react": "15.4.2",
 		"react-native": "0.42.3",
-		"react-native-snap-carousel": "file:.."
+		"react-native-snap-carousel": "2.1.0"
 	},
 	"devDependencies": {
 		"babel-jest": "19.0.0",
