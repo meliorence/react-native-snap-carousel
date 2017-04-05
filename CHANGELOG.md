@@ -1,3 +1,7 @@
+## v2.1.1
+* Ensure compatibility with RN 0.43 (previous version of plugin's dependency `react-addons-shallow-compare` was breaking with React 16)
+* Fix issue with padding on iOS that could cause the carousel to snap back when its last item was clicked
+
 ## v2.1.0
 * Add RTL support
 * Keep current active item when adding slides dynamically
