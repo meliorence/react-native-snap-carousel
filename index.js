@@ -494,23 +494,26 @@ export default class Carousel extends Component {
         const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle, enableMomentum } = this.props;
 
         const containerSideMargin = (sliderWidth - itemWidth) / 2;
+
         const style = [
             containerCustomStyle || {},
-            { paddingHorizontal: Platform.OS === 'ios' ? containerSideMargin : 0 },
             // LTR hack; see https://github.com/facebook/react-native/issues/11960
             { flexDirection: IS_RTL ? 'row-reverse' : 'row' }
         ];
         const contentContainerStyle = [
             contentContainerCustomStyle || {},
-            { paddingHorizontal: Platform.OS === 'android' ? containerSideMargin : 0 }
+            { paddingHorizontal: containerSideMargin }
         ];
 
         return (
             <ScrollView
-              decelerationRate={0.9}
+              decelerationRate={enableMomentum ? 0.9 : 'normal'}
+              scrollEventThrottle={100}
+              overScrollMode={'never'}
+              {...this.props}
+              ref={(scrollview) => { this._scrollview = scrollview; }}
               style={style}
               contentContainerStyle={contentContainerStyle}
-              ref={(scrollview) => { this._scrollview = scrollview; }}
               horizontal={true}
               onScrollBeginDrag={this._onScrollBegin}
               onMomentumScrollEnd={enableMomentum ? this._onScrollEnd : undefined}
@@ -518,9 +521,7 @@ export default class Carousel extends Component {
               onResponderRelease={this._onTouchRelease}
               onScroll={this._onScroll}
               onTouchStart={this._onTouchStart}
-              scrollEventThrottle={100}
-              {...this.props}
-              >
+            >
                 { this._childSlides() }
             </ScrollView>
         );
