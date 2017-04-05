@@ -1,44 +1,34 @@
 {
-  "name": "react-native-snap-carousel",
-  "version": "2.1.0",
-  "description": "Swiper component for React Native with previews and snapping effect. Compatible with Android & iOS.",
-  "main": "index.js",
-  "repository": {
+    "name": "react-native-snap-carousel",
+    "version": "2.1.0",
+    "description": "Swiper component for React Native with previews and snapping effect. Compatible with Android & iOS.",
+    "main": "index.js",
+    "repository": {
     "type": "git",
-    "url": "github.com/archriss/react-native-snap-carousel"
-  },
-  "keywords": [
-    "react",
-    "native",
-    "carousel",
-    "slider",
-    "swiper",
-    "items",
-    "snap",
-    "android",
-    "ios",
-    "simple",
-    "snapping",
-    "component"
-  ],
-  "author": "Archriss",
-  "license": "ISC",
-  "dependencies": {
-    "react-addons-shallow-compare": "latest"
-  },
-  "devDependencies": {
-    "babel-eslint": "^6.1.2",
-    "babel-preset-react-native": "^1.9.0",
-    "eslint": "^3.6.1",
-    "eslint-config-standard": "^5.3.5",
-    "eslint-config-standard-react": "^3.0.0",
-    "eslint-plugin-promise": "^2.0.0",
-    "eslint-plugin-react": "^6.3.0",
-    "eslint-plugin-standard": "^2.0.0"
-  },
-  "peerDependencies": {
-    "react": "*",
-    "react-addons-shallow-compare": "*",
-    "react-native": "*"
-  }
+        "url": "github.com/archriss/react-native-snap-carousel"
+    },
+    "keywords": [
+        "react",
+        "native",
+        "carousel",
+        "slider",
+        "swiper",
+        "items",
+        "snap",
+        "android",
+        "ios",
+        "simple",
+        "snapping",
+        "component",
+        "rtl"
+    ],
+    "author": "Archriss",
+    "license": "ISC",
+    "dependencies": {
+        "react-addons-shallow-compare": "15.5.0"
+    },
+    "peerDependencies": {
+       "react": "*",
+        "react-native": "*"
+    }
 }
