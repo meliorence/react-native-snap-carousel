@@ -102,7 +102,12 @@ export default class Carousel extends Component {
         /**
          * Fired when snapping to an item
          */
-        onSnapToItem: PropTypes.func
+        onSnapToItem: PropTypes.func,
+        /**
+         * If you want to set the side margin of the scroller
+         * This is not optimal, I may or may not work in your case
+         */
+        carouselSideMargin: PropTypes.number,
     };
 
     static defaultProps = {
@@ -124,7 +129,8 @@ export default class Carousel extends Component {
         slideStyle: {},
         shouldOptimizeUpdates: true,
         snapOnAndroid: true,
-        swipeThreshold: 20
+        swipeThreshold: 20,
+        carouselSideMargin: null
     }
 
     constructor (props) {
@@ -490,10 +496,12 @@ export default class Carousel extends Component {
         });
     }
 
-    render () {
-        const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle, enableMomentum } = this.props;
+     getContainerSideMargin = (sliderWidth, itemWidth) => (sliderWidth - itemWidth) / 2;
 
-        const containerSideMargin = (sliderWidth - itemWidth) / 2;
+    render () {
+        const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle, enableMomentum, carouselSideMargin } = this.props;
+
+        const containerSideMargin = carouselSideMargin || this.getContainerSideMargin(sliderWidth, itemWidth);
 
         const style = [
             containerCustomStyle || {},

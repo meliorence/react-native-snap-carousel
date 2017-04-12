@@ -113,6 +113,7 @@ contentContainerCustomStyle | Optional styles for Scrollview's items container |
 inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
 inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
 slideStyle | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | {}
+carouselSideMargin | Optional number for carousel container | Number | `(sliderWidth - itemWidth) / 2` 
 
 ### Callbacks
 
