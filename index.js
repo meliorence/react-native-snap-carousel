@@ -132,7 +132,7 @@ export default class Carousel extends Component {
         this.state = {
             activeItem: this._getFirstItem(props.firstItem),
             interpolators: [],
-            oldItemIndex: 0
+            oldItemIndex: this._getFirstItem(props.firstItem)
         };
         this._positions = [];
         this._calcCardPositions(props);
@@ -419,9 +419,8 @@ export default class Carousel extends Component {
         } else if (index < 0) {
             index = 0;
             fireCallback = false;
-        }
-        else if(index === this.state.oldItemIndex) {
-          fireCallback = false;
+        } else if (index === this.state.oldItemIndex) {
+            fireCallback = false;
         }
 
         const snapX = itemsLength && this._positions[index].start;
@@ -431,7 +430,7 @@ export default class Carousel extends Component {
             this._scrollview.scrollTo({ x: snapX, y: 0, animated });
             this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index);
             this.setState({oldItemIndex: index});
-            
+
             // iOS fix, check the note in the constructor
             if (!initial && Platform.OS === 'ios') {
                 this._ignoreNextMomentum = true;
