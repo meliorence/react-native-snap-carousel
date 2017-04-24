@@ -108,6 +108,7 @@ Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 animationFunc | Animated animation to use. Provide the name of the method | String | `timing`
 animationOptions | Animation options to be merged with the default ones. Can be used w/ animationFunc | Object | `{ easing: Easing.elastic(1) }`
+carouselHorizontalPadding | Override container's inner padding (needed for slides's centering). **Warning: be aware that overriding the default value can mess with carousel's behavior.**  | Number | `(sliderWidth - itemWidth) / 2`
 containerCustomStyle | Optional styles for Scrollview's global wrapper | ScrollView Style Object | `{}`
 contentContainerCustomStyle | Optional styles for Scrollview's items container | ScrollView Style Object | `{}`
 inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
