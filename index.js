@@ -51,6 +51,12 @@ export default class Carousel extends Component {
         */
         autoplayInterval: PropTypes.number,
         /**
+         * Override container's inner padding
+         * WARNING: current padding calculation is necessary for slide's centering
+         * Be aware that using this prop can mess with carousel's behavior
+         */
+        carouselHorizontalPadding: PropTypes.number,
+        /**
         * Global wrapper's style
         */
         containerCustomStyle: ScrollView.propTypes.style,
@@ -114,6 +120,7 @@ export default class Carousel extends Component {
         autoplay: false,
         autoplayDelay: 5000,
         autoplayInterval: 3000,
+        carouselHorizontalPadding: null,
         containerCustomStyle: {},
         contentContainerCustomStyle: {},
         enableMomentum: false,
@@ -429,7 +436,7 @@ export default class Carousel extends Component {
         if (this._scrollview) {
             this._scrollview.scrollTo({ x: snapX, y: 0, animated });
             this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index);
-            this.setState({oldItemIndex: index});
+            this.setState({ oldItemIndex: index });
 
             // iOS fix, check the note in the constructor
             if (!initial && Platform.OS === 'ios') {
@@ -495,9 +502,16 @@ export default class Carousel extends Component {
     }
 
     render () {
-        const { sliderWidth, itemWidth, containerCustomStyle, contentContainerCustomStyle, enableMomentum } = this.props;
+        const {
+            sliderWidth,
+            itemWidth,
+            containerCustomStyle,
+            contentContainerCustomStyle,
+            enableMomentum,
+            carouselHorizontalPadding
+        } = this.props;
 
-        const containerSideMargin = (sliderWidth - itemWidth) / 2;
+        const containerSideMargin = carouselHorizontalPadding || (sliderWidth - itemWidth) / 2;
 
         const style = [
             containerCustomStyle || {},
