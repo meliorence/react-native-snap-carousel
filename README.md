@@ -42,15 +42,17 @@ import Carousel from 'react-native-snap-carousel';
 
     // Example with different children
     render () {
-        <Carousel
-          ref={(carousel) => { this._carousel = carousel; }}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidth}
-        >
-            <View style={styles.slide1} />
-            <Text style={styles.slide2} />
-            <Image style={styles.slide3} />
-        </Carousel>
+        return (
+            <Carousel
+              ref={(carousel) => { this._carousel = carousel; }}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+            >
+                <View style={styles.slide1} />
+                <Text style={styles.slide2} />
+                <Image style={styles.slide3} />
+            </Carousel>
+        );
     }
 
     // Example of appending the same component multiple times while looping through an array of data
@@ -63,13 +65,15 @@ import Carousel from 'react-native-snap-carousel';
             );
         });
 
-        <Carousel
-          ref={(carousel) => { this._carousel = carousel; }}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidth}
-        >
-            { slides }
-        </Carousel>
+        return (
+            <Carousel
+              ref={(carousel) => { this._carousel = carousel; }}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+            >
+                { slides }
+            </Carousel>
+        );
     }
 ```
 
@@ -184,28 +188,63 @@ You can adjust this value to your needs thanks to [this prop](https://facebook.g
 > As a rule of thumb, **we recommend setting `enableMomentum` to `false` (default) and `decelerationRate` to `'fast'` when you are displaying only one main slide** (as in the showcase above), and to use `true` and `0.9` otherwise. This should help providing a better snap feeling.
 
 ### Margin between slides
-If you need some **extra horizontal margin** between slides (besides the one resulting from the scale effect), you should add it as `paddingHorizontal` on the slide container. Make sure to take this into account when calculating item's width.
+If you need some **extra horizontal margin** between slides (besides the one resulting from the scale effect), you should add it as `paddingHorizontal` on slide's container. Make sure to take this into account when calculating item's width.
 
 ```javascript
-const sliderWidth = Dimensions.get('window').width * 0.75;
-const slideWidth = 250;
 const horizontalMargin = 20;
+const slideWidth = 280;
+
+const sliderWidth = Dimensions.get('window').width;
 const itemWidth = slideWidth + horizontalMargin * 2;
+const itemHeight = 200;
 
 const styles = Stylesheet.create({
     slide: {
-        width: itemWidth
+        width: itemWidth,
+        height: itemHeight
         // other styles for your item's container
     }
 };
 
-<Carousel
-  sliderWidth={sliderWidth}
-  itemWidth={itemWidth}
->
-    ...
-</Carousel>
+return (
+    <Carousel
+      sliderWidth={sliderWidth}
+      itemWidth={itemWidth}
+    >
+        <View style={styles.slide} />
+        <View style={styles.slide} />
+        <View style={styles.slide} />
+    </Carousel>
+);
 
+```
+
+### Understanding styles
+
+Here is a screenshot that should help you understand how each of the above variables is used.
+
+![react-native-snap-carousel info](http://i.imgur.com/PMi6aBd.jpg)
+
+### Fullscreen slides
+
+While the plugin hasn't been designed with this use case in mind, you can easily implement fullscreen slides. The following code should serve as a good starting point.
+
+```javascript
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
+
+return (
+    <Carousel
+      sliderWidth={viewportWidth}
+      itemWidth={viewportWidth}
+      slideStyle={{ width: viewportWidth }}
+      inactiveSlideOpacity={1}
+      inactiveSlideScale={1}
+    >
+        <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
+        <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
+        <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
+    </Carousel>
+);
 ```
 
 ## RTL support
