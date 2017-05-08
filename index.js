@@ -276,7 +276,7 @@ export default class Carousel extends Component {
 
     _onScroll (event) {
         const { animationFunc, animationOptions, enableMomentum } = this.props;
-        const { activeItem } = this.state;
+        let { activeItem } = this.state;
         const newActiveItem = this._getActiveItem(this._getCenterX(event));
 
         if (enableMomentum) {
@@ -284,6 +284,8 @@ export default class Carousel extends Component {
         }
 
         if (activeItem !== newActiveItem) {
+            activeItem = this.state.interpolators[activeItem] === undefined ? activeItem - 1 : activeItem;
+
             Animated[animationFunc](
                 this.state.interpolators[activeItem],
                 { ...animationOptions, toValue: 0 }
