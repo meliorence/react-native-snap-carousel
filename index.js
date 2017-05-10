@@ -275,9 +275,13 @@ export default class Carousel extends Component {
     }
 
     _onScroll (event) {
-        const { animationFunc, animationOptions, enableMomentum } = this.props;
+        const { animationFunc, animationOptions, enableMomentum, onScroll } = this.props;
         const { activeItem } = this.state;
         const newActiveItem = this._getActiveItem(this._getCenterX(event));
+        
+        if (onScroll) {
+            onScroll(event)
+        }
 
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
