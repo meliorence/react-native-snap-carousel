@@ -531,6 +531,7 @@ export default class Carousel extends Component {
             <ScrollView
               decelerationRate={enableMomentum ? 0.9 : 'normal'}
               scrollEventThrottle={100}
+              showsHorizontalScrollIndicator={false}
               overScrollMode={'never'}
               {...this.props}
               ref={(scrollview) => { this._scrollview = scrollview; }}
