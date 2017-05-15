@@ -280,7 +280,7 @@ export default class Carousel extends Component {
         const newActiveItem = this._getActiveItem(this._getCenterX(event));
         
         if (onScroll) {
-            onScroll(event)
+            onScroll(event);
         }
 
         if (enableMomentum) {
