@@ -1,3 +1,7 @@
+## v2.1.3
+* Default value for `showsHorizontalScrollIndicator` is now `false`
+* Expose `ScrollView`'s `onSscroll` prop (thanks [@radko93](https://github.com/radko93))
+
 ## v2.1.2
 * Do not trigger `onSnapToItem` when snapping back to the same slide (thanks [@rgabs](https://github.com/rgabs))
 * Add prop `carouselHorizontalPadding` to override container's inner padding (thanks [@skeie](https://github.com/skeie))
