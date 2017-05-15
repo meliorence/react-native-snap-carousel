@@ -129,7 +129,7 @@ onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function 
 
 In addition to these props, you can use **any prop from the [ScrollView component](https://facebook.github.io/react-native/docs/scrollview.html)**.
 
-Here are a few useful ones:`removeClippedSubviews`, `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios)
+Here are a few useful ones:`removeClippedSubviews`, `showsHorizontalScrollIndicator`, `onScroll`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios)
 
 ## Methods
 
