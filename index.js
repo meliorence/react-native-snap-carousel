@@ -106,6 +106,10 @@ export default class Carousel extends Component {
         */
         swipeThreshold: PropTypes.number,
         /**
+         * Interface for ScrollView's `onScroll` callback
+         */
+        onScrollViewScroll: PropTypes.func,
+        /**
          * Fired when snapping to an item
          */
         onSnapToItem: PropTypes.func
@@ -275,16 +279,16 @@ export default class Carousel extends Component {
     }
 
     _onScroll (event) {
-        const { animationFunc, animationOptions, enableMomentum, onScroll } = this.props;
+        const { animationFunc, animationOptions, enableMomentum, onScrollViewScroll } = this.props;
         const { activeItem } = this.state;
         const newActiveItem = this._getActiveItem(this._getCenterX(event));
-        
-        if (onScroll) {
-            onScroll(event);
-        }
 
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
+        }
+
+        if (onScrollViewScroll) {
+            onScrollViewScroll(event);
         }
 
         if (activeItem !== newActiveItem) {
