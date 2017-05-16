@@ -1,6 +1,9 @@
+## v2.1.4
+* Add prop `onScrollViewScroll`
+
 ## v2.1.3
 * Default value for `showsHorizontalScrollIndicator` is now `false`
-* Expose `ScrollView`'s `onSscroll` prop (thanks [@radko93](https://github.com/radko93))
+* ~~Expose `ScrollView`'s `onSscroll` prop (thanks [@radko93](https://github.com/radko93))~~ (not working)
 
 ## v2.1.2
 * Do not trigger `onSnapToItem` when snapping back to the same slide (thanks [@rgabs](https://github.com/rgabs))
