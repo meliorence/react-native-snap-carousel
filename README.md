@@ -123,13 +123,16 @@ slideStyle | Optional style for each item's container (the one whose scale and o
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
+onScrollViewScroll(event) | Callback fired while scrolling; direct equivalent of `ScrollView`'s `onScroll` | Function | `undefined`
 onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function | `undefined`
 
 ### `ScrollView`
 
 In addition to these props, you can use **any prop from the [ScrollView component](https://facebook.github.io/react-native/docs/scrollview.html)**.
 
-Here are a few useful ones:`removeClippedSubviews`, `showsHorizontalScrollIndicator`, `onScroll`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios)
+Here are a few useful ones:`removeClippedSubviews`, `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
+
+> Since `onScroll` is overriden by plugin's implementation, you should use prop `onScrollViewScroll` if you need a callback while scrolling.
 
 ## Methods
 
