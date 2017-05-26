@@ -183,10 +183,14 @@ export default class Carousel extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { activeItem, interpolators } = this.state;
-        const { firstItem } = nextProps;
+        const { firstItem, itemWidth } = nextProps;
         const _firstItem = this._getFirstItem(firstItem, nextProps);
         const childrenLength = React.Children.count(nextProps.children);
         const newActiveItem = activeItem || activeItem === 0 ? activeItem : _firstItem;
+
+        if(itemWidth && itemWidth !== this.props.itemWidth) {
+            this._calcCardPositions(nextProps);
+        }
 
         if (childrenLength && interpolators.length !== childrenLength) {
             this._positions = [];
