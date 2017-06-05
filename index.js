@@ -119,7 +119,8 @@ export default class Carousel extends Component {
         activeSlideOffset: 25,
         animationFunc: 'timing',
         animationOptions: {
-            easing: Easing.elastic(1)
+            easing: Easing.elastic(1),
+            duration: 600
         },
         autoplay: false,
         autoplayDelay: 5000,
@@ -142,8 +143,8 @@ export default class Carousel extends Component {
         super(props);
         this.state = {
             activeItem: this._getFirstItem(props.firstItem),
-            interpolators: [],
-            oldItemIndex: this._getFirstItem(props.firstItem)
+            oldItemIndex: this._getFirstItem(props.firstItem),
+            interpolators: []
         };
         this._positions = [];
         this._onTouchStart = this._onTouchStart.bind(this);
@@ -152,8 +153,8 @@ export default class Carousel extends Component {
         this._onScrollBegin = this._snapEnabled ? this._onScrollBegin.bind(this) : false;
         this._initInterpolators = this._initInterpolators.bind(this);
         this._onTouchRelease = this._onTouchRelease.bind(this);
-        this._onLayout = this._onLayout.bind(this);        
-        // This bool aims at fixing an iOS bug due to scrolTo that triggers onMomentumScrollEnd.
+        this._onLayout = this._onLayout.bind(this);
+        // This bool aims at fixing an iOS bug due to scrollTo that triggers onMomentumScrollEnd.
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
         this._ignoreNextMomentum = false;
     }
@@ -184,11 +185,12 @@ export default class Carousel extends Component {
     componentWillReceiveProps (nextProps) {
         const { activeItem, interpolators } = this.state;
         const { firstItem, itemWidth } = nextProps;
-        const _firstItem = this._getFirstItem(firstItem, nextProps);
-        const childrenLength = React.Children.count(nextProps.children);
-        const newActiveItem = activeItem || activeItem === 0 ? activeItem : _firstItem;
 
-        if(itemWidth && itemWidth !== this.props.itemWidth) {
+        const childrenLength = React.Children.count(nextProps.children);
+        const nextFirstItem = this._getFirstItem(firstItem, nextProps);
+        const nextActiveItem = activeItem || activeItem === 0 ? activeItem : nextFirstItem;
+
+        if (itemWidth && itemWidth !== this.props.itemWidth) {
             this._calcCardPositions(nextProps);
         }
 
@@ -196,16 +198,20 @@ export default class Carousel extends Component {
             this._positions = [];
             this._calcCardPositions(nextProps);
             this._initInterpolators(nextProps);
-            this.setState({ activeItem: newActiveItem });
+
+            this.setState({ activeItem: nextActiveItem });
 
             if (IS_RTL) {
-                this.snapToItem(newActiveItem, false, false, true);
+                this.snapToItem(nextActiveItem, false, false, false);
             }
         }
     }
 
     componentWillUnmount () {
         this.stopAutoplay();
+        clearTimeout(this._enableAutoplayTimeout);
+        clearTimeout(this._autoplayTimeout);
+        clearTimeout(this._snapNoMomentumTimeout);
     }
 
     get _snapEnabled () {
@@ -296,15 +302,18 @@ export default class Carousel extends Component {
         }
 
         if (activeItem !== newActiveItem) {
-            Animated[animationFunc](
-                this.state.interpolators[activeItem],
-                { ...animationOptions, toValue: 0 }
-            ).start();
             this.setState({ activeItem: newActiveItem });
-            Animated[animationFunc](
-                this.state.interpolators[newActiveItem],
-                { ...animationOptions, toValue: 1 }
-            ).start();
+
+            Animated.parallel([
+                Animated[animationFunc](
+                    this.state.interpolators[activeItem],
+                    { ...animationOptions, toValue: 0 }
+                ),
+                Animated[animationFunc](
+                    this.state.interpolators[newActiveItem],
+                    { ...animationOptions, toValue: 1 }
+                )
+            ]).start();
         }
     }
 
@@ -316,7 +325,7 @@ export default class Carousel extends Component {
 
     _onScrollBegin (event) {
         this._scrollStartX = event.nativeEvent.contentOffset.x;
-        this._scrollStartActive = this.state.activeItem;
+        this._scrollStartActive = this.currentIndex;
         this._ignoreNextMomentum = false;
     }
 
@@ -329,7 +338,7 @@ export default class Carousel extends Component {
             return;
         }
         this._scrollEndX = event.nativeEvent.contentOffset.x;
-        this._scrollEndActive = this.state.activeItem;
+        this._scrollEndActive = this.currentIndex;
 
         const deltaX = this._scrollEndX - this._scrollStartX;
 
@@ -356,14 +365,14 @@ export default class Carousel extends Component {
         if (this.props.enableMomentum && Platform.OS === 'ios') {
             this._snapNoMomentumTimeout =
                 setTimeout(() => {
-                    this.snapToItem(this.state.activeItem);
+                    this.snapToItem(this.currentIndex);
                 }, 100);
         }
     }
 
     _onLayout (event) {
         this._calcCardPositions();
-        this.snapToItem(this.state.activeItem, false, true, false);
+        this.snapToItem(this.currentIndex, false, false, false);
     }
 
     _snapScroll (deltaX) {
@@ -414,15 +423,17 @@ export default class Carousel extends Component {
             return;
         }
 
-        setTimeout(() => {
-            this._autoplaying = true;
-            this._autoplayInterval =
-                setInterval(() => {
-                    if (this._autoplaying) {
-                        this.snapToNext();
-                    }
-                }, autoplayInterval);
-        }, instantly ? 0 : autoplayDelay);
+        clearTimeout(this._autoplayTimeout);
+        this._autoplayTimeout =
+            setTimeout(() => {
+                this._autoplaying = true;
+                this._autoplayInterval =
+                    setInterval(() => {
+                        if (this._autoplaying) {
+                            this.snapToNext();
+                        }
+                    }, autoplayInterval);
+            }, instantly ? 0 : autoplayDelay);
     }
 
     stopAutoplay () {
@@ -451,9 +462,9 @@ export default class Carousel extends Component {
 
         // Make sure the component hasn't been unmounted
         if (this._scrollview) {
+            this.setState({ oldItemIndex: index });
             this._scrollview.scrollTo({ x: snapX, y: 0, animated });
             this.props.onSnapToItem && fireCallback && this.props.onSnapToItem(index);
-            this.setState({ oldItemIndex: index });
 
             // iOS fix, check the note in the constructor
             if (!initial && Platform.OS === 'ios') {
@@ -543,7 +554,7 @@ export default class Carousel extends Component {
         return (
             <ScrollView
               decelerationRate={enableMomentum ? 0.9 : 'normal'}
-              scrollEventThrottle={100}
+              scrollEventThrottle={16}
               showsHorizontalScrollIndicator={false}
               overScrollMode={'never'}
               {...this.props}
