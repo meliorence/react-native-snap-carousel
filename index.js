@@ -552,6 +552,7 @@ export default class Carousel extends Component {
               onResponderRelease={this._onTouchRelease}
               onScroll={this._onScroll}
               onTouchStart={this._onTouchStart}
+              onLayout={this._calcCardPositions()}
             >
                 { this._childSlides() }
             </ScrollView>
