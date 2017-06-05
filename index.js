@@ -157,6 +157,11 @@ export default class Carousel extends Component {
         // This bool aims at fixing an iOS bug due to scrollTo that triggers onMomentumScrollEnd.
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
         this._ignoreNextMomentum = false;
+
+        // Deprecation warning
+        if (props.onScrollViewScroll) {
+            console.warn('react-native-snap-carousel: Prop `onScrollViewScroll` is deprecated. Please use `onScroll` instead');
+        }
     }
 
     componentDidMount () {
@@ -288,7 +293,7 @@ export default class Carousel extends Component {
     }
 
     _onScroll (event) {
-        const { animationFunc, animationOptions, enableMomentum, onScrollViewScroll } = this.props;
+        const { animationFunc, animationOptions, enableMomentum, onScroll, onScrollViewScroll } = this.props;
         const { activeItem } = this.state;
         const newActiveItem = this._getActiveItem(this._getCenterX(event));
 
@@ -296,6 +301,11 @@ export default class Carousel extends Component {
             clearTimeout(this._snapNoMomentumTimeout);
         }
 
+        if (onScroll) {
+            onScroll(event);
+        }
+
+        // Deprecated
         if (onScrollViewScroll) {
             onScrollViewScroll(event);
         }
@@ -370,8 +380,14 @@ export default class Carousel extends Component {
     }
 
     _onLayout (event) {
+        const { onLayout } = this.props;
+
         this._calcCardPositions();
         this.snapToItem(this.currentIndex, false, false);
+
+        if (onLayout) {
+            onLayout(event);
+        }
     }
 
     _snapScroll (deltaX) {
@@ -562,11 +578,11 @@ export default class Carousel extends Component {
               style={style}
               contentContainerStyle={contentContainerStyle}
               horizontal={true}
-              onScrollBeginDrag={this._onScrollBegin}
-              onMomentumScrollEnd={enableMomentum ? this._onScrollEnd : undefined}
-              onScrollEndDrag={!enableMomentum ? this._onScrollEnd : undefined}
-              onResponderRelease={this._onTouchRelease}
               onScroll={this._onScroll}
+              onScrollBeginDrag={this._onScrollBegin}
+              onScrollEndDrag={!enableMomentum ? this._onScrollEnd : undefined}
+              onMomentumScrollEnd={enableMomentum ? this._onScrollEnd : undefined}
+              onResponderRelease={this._onTouchRelease}
               onTouchStart={this._onTouchStart}
               onLayout={this._onLayout}
             >
