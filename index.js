@@ -146,7 +146,6 @@ export default class Carousel extends Component {
             oldItemIndex: this._getFirstItem(props.firstItem)
         };
         this._positions = [];
-        this._calcCardPositions(props);
         this._onTouchStart = this._onTouchStart.bind(this);
         this._onScroll = this._onScroll.bind(this);
         this._onScrollEnd = this._snapEnabled ? this._onScrollEnd.bind(this) : false;
