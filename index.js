@@ -543,6 +543,7 @@ export default class Carousel extends Component {
 
         const style = [
             containerCustomStyle || {},
+            { width: sliderWidth },
             // LTR hack; see https://github.com/facebook/react-native/issues/11960
             { flexDirection: IS_RTL ? 'row-reverse' : 'row' }
         ];
