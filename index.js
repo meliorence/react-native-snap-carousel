@@ -184,25 +184,24 @@ export default class Carousel extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { activeItem, interpolators } = this.state;
-        const { firstItem, itemWidth } = nextProps;
+        const { firstItem, sliderWidth, itemWidth } = nextProps;
 
         const childrenLength = React.Children.count(nextProps.children);
         const nextFirstItem = this._getFirstItem(firstItem, nextProps);
         const nextActiveItem = activeItem || activeItem === 0 ? activeItem : nextFirstItem;
 
-        if (itemWidth && itemWidth !== this.props.itemWidth) {
-            this._calcCardPositions(nextProps);
-        }
+        const hasNewItemWidth = itemWidth && itemWidth !== this.props.itemWidth;
+        const hasNewSliderWidth = sliderWidth && sliderWidth !== this.props.sliderWidth;
 
-        if (childrenLength && interpolators.length !== childrenLength) {
+        if ((childrenLength && interpolators.length !== childrenLength) || hasNewSliderWidth || hasNewItemWidth) {
             this._positions = [];
             this._calcCardPositions(nextProps);
             this._initInterpolators(nextProps);
 
             this.setState({ activeItem: nextActiveItem });
 
-            if (IS_RTL) {
-                this.snapToItem(nextActiveItem, false, false, false);
+            if (hasNewSliderWidth || hasNewItemWidth || IS_RTL) {
+                this.snapToItem(nextActiveItem, false, false);
             }
         }
     }
@@ -372,7 +371,7 @@ export default class Carousel extends Component {
 
     _onLayout (event) {
         this._calcCardPositions();
-        this.snapToItem(this.currentIndex, false, false, false);
+        this.snapToItem(this.currentIndex, false, false);
     }
 
     _snapScroll (deltaX) {
