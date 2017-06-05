@@ -146,13 +146,13 @@ export default class Carousel extends Component {
             oldItemIndex: this._getFirstItem(props.firstItem)
         };
         this._positions = [];
-        this._calcCardPositions(props);
         this._onTouchStart = this._onTouchStart.bind(this);
         this._onScroll = this._onScroll.bind(this);
         this._onScrollEnd = this._snapEnabled ? this._onScrollEnd.bind(this) : false;
         this._onScrollBegin = this._snapEnabled ? this._onScrollBegin.bind(this) : false;
         this._initInterpolators = this._initInterpolators.bind(this);
         this._onTouchRelease = this._onTouchRelease.bind(this);
+        this._onLayout = this._onLayout.bind(this);        
         // This bool aims at fixing an iOS bug due to scrolTo that triggers onMomentumScrollEnd.
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
         this._ignoreNextMomentum = false;
@@ -361,6 +361,11 @@ export default class Carousel extends Component {
         }
     }
 
+    _onLayout (event) {
+        this._calcCardPositions();
+        this.snapToItem(this.state.activeItem, false, true, false);
+    }
+
     _snapScroll (deltaX) {
         const { swipeThreshold } = this.props;
 
@@ -552,6 +557,7 @@ export default class Carousel extends Component {
               onResponderRelease={this._onTouchRelease}
               onScroll={this._onScroll}
               onTouchStart={this._onTouchStart}
+              onLayout={this._onLayout}
             >
                 { this._childSlides() }
             </ScrollView>
