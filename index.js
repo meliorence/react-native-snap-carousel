@@ -530,9 +530,15 @@ export default class Carousel extends Component {
     }
 
     _onSnapToItemDebounced (index) {
-        if (this._scrollview && this._canExecuteCallback) {
-            this._canExecuteCallback = false;
-            this.props.onSnapToItem && this.props.onSnapToItem(index);
+        const { enableMomentum, onSnapToItem } = this.props;
+
+        if (this._scrollview) {
+            if (enableMomentum) {
+                onSnapToItem && onSnapToItem(index);
+            } else if (this._canExecuteCallback) {
+                this._canExecuteCallback = false;
+                onSnapToItem && onSnapToItem(index);
+            }
         }
     }
 
@@ -592,9 +598,11 @@ export default class Carousel extends Component {
             });
 
             if (enableMomentum) {
-                // Callback can be fired here when relying on 'onMomentumScrollEnd'
                 this.setState({ oldItemIndex: index });
-                fireCallback && this._onSnapToItemDebounced && this._onSnapToItemDebounced(index);
+                // Callback can be fired here when relying on 'onMomentumScrollEnd'
+                if (fireCallback) {
+                    this._onSnapToItemDebounced(index);
+                }
             } else {
                 // Callback needs to be fired while scrolling when relying on 'onScrollEndDrag'
                 // Thus we need a flag on top of the debounce function to avoid calling it too often
