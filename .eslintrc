@@ -1,11 +1,20 @@
 {
-    "parser"  : "babel-eslint",
-    "extends" : [
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "plugins": ["react"],
+        "extends": ["eslint:recommended", "plugin:react/recommended"]
+    },
+    "extends": [
         "standard",
         "standard-react"
-     ],
-    "env" : {
-        "browser" : true
+    ],
+    "env": {
+        "browser": true
     },
     "globals": {
         "__DEV__": false
@@ -17,8 +26,11 @@
         "jsx-indent-props": [0, 4],
         "react/jsx-curly-spacing": [0, "never"],
         "react/jsx-boolean-value": [0, "never"],
-        "semi" : [2, "always"],
+        "semi": [2, "always"],
         "operator-linebreak": [2, "after"],
-        "no-warning-comments": [1, { "terms": ["todo", "fixme", "xxx"], "location": "start" }]
+        "no-warning-comments": [1, {
+            "terms": ["todo", "fixme", "xxx"],
+            "location": "start"
+        }]
     }
 }
