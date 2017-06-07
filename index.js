@@ -29,12 +29,12 @@ export default class Carousel extends Component {
         * Width in pixels of the carousel itself
         * Required with 'horizontal' mode
         */
-        sliderWidth: PropTypes.number.isRequired,
+        sliderWidth: PropTypes.number,
         /**
         * Height in pixels of the carousel itself
         * Required with 'horizontal' mode
         */
-        sliderHeight: PropTypes.number.isRequired,
+        sliderHeight: PropTypes.number,
         /**
         * From slider's center, minimum slide distance
         * to be scrolled before being set to active
@@ -218,9 +218,15 @@ export default class Carousel extends Component {
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
         this._ignoreNextMomentum = false;
 
-        // Deprecation warning
+        // Warnings
         if (props.onScrollViewScroll) {
             console.warn('react-native-snap-carousel: Prop `onScrollViewScroll` is deprecated. Please use `onScroll` instead');
+        }
+        if (!props.vertical && (!props.sliderWidth || !props.itemWidth)) {
+            console.warn('react-native-snap-carousel: You need to specify both `sliderWidth` and `itemWidth` for horizontal carousels');
+        }
+        if (props.vertical && (!props.sliderHeight || !props.itemHeight)) {
+            console.warn('react-native-snap-carousel: You need to specify both `sliderHeight` and `itemHeight` for vertical carousels');
         }
     }
 
