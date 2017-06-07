@@ -1,3 +1,7 @@
+## v2.2.1
+* Do not mark `sliderWidth` and `sliderHeight` as required
+* Add warnings when properties specific to carousel's orientation haven't been set
+
 ## v2.2.0
 * Implement vertical mode (prop `vertical`)
 * Make sure that current active item is properly updated when snapping
