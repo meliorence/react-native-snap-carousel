@@ -2,7 +2,7 @@
 * Implement vertical mode (prop `vertical`)
 * Make sure that current active item is properly updated when snapping
 * Prevent issues when 'sliderWidth' is smaller than viewport's width
-* Recalculate card positions on layout to handle rotation (thanks [@andrewpope](https://github.com/andrewpope)); make sure to read [this note] (https://github.com/archriss/react-native-snap-carousel#handling-device-rotation)
+* Recalculate card positions on layout to handle rotation (thanks [@andrewpope](https://github.com/andrewpope)); make sure to read [this note](https://github.com/archriss/react-native-snap-carousel#handling-device-rotation)
 * Refresh card positions if slider and/or item's dimensions are updated (thanks [@hoangnm](https://github.com/hoangnm))
 * Add props `scrollEndDragThrottleValue` and `snapCallbackDebounceValue`
 * Expose `View`'s `onLayout` prop
