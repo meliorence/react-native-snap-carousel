@@ -1,9 +1,19 @@
+## v2.2.0
+* Implement vertical mode (prop `vertical`)
+* Make sure that current active item is properly updated when snapping
+* Prevent issues when 'sliderWidth' is smaller than viewport's width
+* Recalculate card positions on layout to handle rotation (thanks [@andrewpope](https://github.com/andrewpope)); make sure to read [this note] (https://github.com/archriss/react-native-snap-carousel#handling-device-rotation)
+* Refresh card positions if slider and/or item's dimensions are updated (thanks [@hoangnm](https://github.com/hoangnm))
+* Add props `scrollEndDragThrottleValue` and `snapCallbackDebounceValue`
+* Expose `View`'s `onLayout` prop
+* Deprecate prop `onScrollViewScroll`
+
 ## v2.1.4
 * Add prop `onScrollViewScroll`
 
 ## v2.1.3
 * Default value for `showsHorizontalScrollIndicator` is now `false`
-* ~~Expose `ScrollView`'s `onSscroll` prop (thanks [@radko93](https://github.com/radko93))~~ (not working)
+* Expose `ScrollView`'s `onSscroll` prop (thanks [@radko93](https://github.com/radko93))
 
 ## v2.1.2
 * Do not trigger `onSnapToItem` when snapping back to the same slide (thanks [@rgabs](https://github.com/rgabs))
