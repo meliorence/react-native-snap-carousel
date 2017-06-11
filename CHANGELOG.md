@@ -1,3 +1,6 @@
+## v2.2.2
+* Fix issue that prevented inactive styles of first and last items to be applied when using `snapToPrev` and `snapToNext` methods
+
 ## v2.2.1
 * Do not mark `sliderWidth` and `sliderHeight` as required
 * Add warnings when properties specific to carousel's orientation haven't been set
