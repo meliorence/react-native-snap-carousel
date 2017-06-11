@@ -187,6 +187,7 @@ export default class Carousel extends Component {
             interpolators: []
         };
         this._positions = [];
+        this._isComingBack = false;
         this._canExecuteCallback = props.onSnapToItem !== undefined;
         this._initInterpolators = this._initInterpolators.bind(this);
         this._onScroll = this._onScroll.bind(this);
@@ -393,7 +394,15 @@ export default class Carousel extends Component {
         }
 
         if (activeItem !== newActiveItem) {
+            // Prevent issues with `snapToPrev()` on the first slide and `snapToNext()` on the last one
+            // since intermediate slides would otherwise be set as active items
+            // With debounced callback, inactive animation would then be ignored
+            if (this._isComingBack && newActiveItem !== 0 && newActiveItem !== this._positions.length - 1) {
+                return;
+            }
+
             this.setState({ activeItem: newActiveItem });
+            this._isComingBack = false;
 
             if (!enableMomentum) {
                 this._onSnapToItemDebounced(newActiveItem);
@@ -628,6 +637,7 @@ export default class Carousel extends Component {
         let newIndex = this.currentIndex + 1;
         if (newIndex > itemsLength - 1) {
             newIndex = 0;
+            this._isComingBack = true;
         }
         this.snapToItem(newIndex, animated);
     }
@@ -638,6 +648,7 @@ export default class Carousel extends Component {
         let newIndex = this.currentIndex - 1;
         if (newIndex < 0) {
             newIndex = itemsLength - 1;
+            this._isComingBack = true;
         }
         this.snapToItem(newIndex, animated);
     }
