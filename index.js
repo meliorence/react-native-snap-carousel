@@ -417,7 +417,9 @@ export default class Carousel extends Component {
                     this.state.interpolators[newActiveItem],
                     { ...animationOptions, toValue: 1 }
                 )
-            ]).start();
+            ], {
+                stopTogether: false,
+            }).start();
         }
     }
 
