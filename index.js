@@ -408,18 +408,24 @@ export default class Carousel extends Component {
                 this._onSnapToItemDebounced(newActiveItem);
             }
 
-            Animated.parallel([
-                Animated[animationFunc](
-                    this.state.interpolators[activeItem],
-                    { ...animationOptions, toValue: 0 }
-                ),
-                Animated[animationFunc](
-                    this.state.interpolators[newActiveItem],
-                    { ...animationOptions, toValue: 1 }
-                )
-            ], {
-                stopTogether: false,
-            }).start();
+            let animations = []
+            if (this.state.interpolators[activeItem]) {
+                 animations.push(
+                     Animated[animationFunc](
+
+                         this.state.interpolators[activeItem],
+
+                         { ...animationOptions, toValue: 0 }
+
+                 ))
+            }
+            
+            animations.push(Animated[animationFunc](
+                this.state.interpolators[newActiveItem],
+                { ...animationOptions, toValue: 1 }
+            ))
+
+            Animated.parallel(animations).start();
         }
     }
 
