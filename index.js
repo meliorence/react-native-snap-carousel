@@ -380,6 +380,7 @@ export default class Carousel extends Component {
         const scrollOffset = this._getScrollOffset(event);
         const newActiveItem = this._getActiveItem(scrollOffset);
         const itemsLength = this._positions.length;
+        let animations = [];
 
         this._currentContentOffset = scrollOffset;
 
@@ -396,18 +397,25 @@ export default class Carousel extends Component {
                 }
             });
 
-            Animated.parallel([
-                Animated[animationFunc](
-                    this.state.interpolators[activeItem],
-                    { isInteraction: false, ...animationOptions, toValue: 0 }
-                ),
-                Animated[animationFunc](
-                    this.state.interpolators[newActiveItem],
-                    { isInteraction: false, ...animationOptions, toValue: 1 }
-                )
-            ], {
-                stopTogether: false
-            }).start();
+            // With dynamically removed items, `activeItem` and
+            // `newActiveItem`'s interpolators might be `undefined`
+            if (this.state.interpolators[activeItem]) {
+                animations.push(
+                    Animated[animationFunc](
+                        this.state.interpolators[activeItem],
+                        { isInteraction: false, ...animationOptions, toValue: 0 }
+                    )
+                );
+            }
+            if (this.state.interpolators[newActiveItem]) {
+                animations.push(
+                    Animated[animationFunc](
+                        this.state.interpolators[newActiveItem],
+                        { isInteraction: false, ...animationOptions, toValue: 1 }
+                    )
+                );
+            }
+            Animated.parallel(animations, { stopTogether: false }).start();
 
             if (activeItem === 0 || activeItem === itemsLength - 1) {
                 this._hasFiredEdgeItemCallback = false;
