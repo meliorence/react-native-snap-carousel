@@ -292,6 +292,10 @@ export default class Carousel extends Component {
         return this.state.activeItem;
     }
 
+    get currentScrollPosition () {
+        return this._currentContentOffset;
+    }
+
     _getCustomIndex (index, props = this.props) {
         const childrenLength = this._children(props).length;
 
