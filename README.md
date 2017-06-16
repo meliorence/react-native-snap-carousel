@@ -12,8 +12,8 @@ Pull requests are very welcome!
 1. [Properties](#properties)
 1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
-1. [RTL support](#rtl-support)
-1. [ScrollView's limitations](#scrollviews-limitations)
+1. [Known issues](#known-issues)
+1. [RTL support (experimental)](#rtl-support-experimental)
 1. [TODO](#todo)
 1. [Credits](#credits)
 
@@ -97,9 +97,8 @@ activeSlideOffset | From slider's center, minimum slide distance to be scrolled 
 enableMomentum | See [momentum](#momentum). **Warning: this prop can't be changed dynamically.** | Boolean | `false`
 enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item. **Warning: this prop can't be changed dynamically.** | Number | `true`
 firstItem | Index of the first item to display | Number | `0`
-scrollEndDragThrottleValue | When momentum is disabled, this throttle helps smoothing slides' snapping by providing a bit of inertia when touch is released. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
+scrollEndDragDebounceValue | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released.. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
 shouldOptimizeUpdates | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
-snapCallbackDebounceValue | This defines the timeframe during which multiple callback calls should be "grouped" into a single one. **Note that this will delay callback's execution.** | Number | `250`
 snapOnAndroid | Snapping on android is kinda choppy, especially when swiping quickly so you can disable it. **Warning: this prop can't be changed dynamically.** | Boolean | `true`
 swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
 vertical | Layout slides vertically instead of horizontally | Boolean | `false`
@@ -171,17 +170,22 @@ onPress={() => { this.refs.carousel.snapToNext(); }}
 
 ### Available methods
 
-* `startAutoplay (instantly = false)` Start the autoplay manually
-* `stopAutoplay ()` Stop the autoplay manually
-* `snapToItem (index, animated = true)` Snap to an item manually
-* `snapToNext (animated = true)` Snap to next item manually
-* `snapToPrev (animated = true)` Snap to previous item manually
+Method | Description
+------ | ------
+`startAutoplay (instantly = false)` | Start the autoplay manually
+`stopAutoplay ()` | Stop the autoplay manually
+`snapToItem (index, animated = true)` | Snap to an item manually
+`snapToNext (animated = true)` | Snap to next item manually
+`snapToPrev (animated = true)` | Snap to previous item manually
 
 ## Properties
 
 > You need a reference to the carousel's instance (see [above](#reference-to-the-component) if needed).
 
-* `currentIndex` Current active item (`int`, starts at 0)
+Property | Description
+------ | ------
+`currentIndex` | Current active item (`int`, starts at 0)
+`currentScrollPosition` | Underlying `ScrollView`'s current content offset (`int`, starts at 0)
 
 ## Example
 You can find the following example in the [/example](https://github.com/archriss/react-native-snap-carousel/tree/master/example) folder.
@@ -195,7 +199,7 @@ You can find the following example in the [/example](https://github.com/archriss
 Since `1.5.0`, the snapping effect can now be based on momentum instead of when you're releasing your finger. It means that the component will wait until the `ScrollView` isn't moving anymore to snap. By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long.
 You can adjust this value to your needs thanks to [this prop](https://facebook.github.io/react-native/docs/scrollview.html#decelerationrate).
 
-Make also sure to play with the props `scrollEndDragThrottleValue` and `snapCallbackDebounceValue`; they can help achieving a better snap feeling, especially when momentum is disabled.
+Make sure to also play with prop `scrollEndDragDebounceValue` since it can help achieving a better snap feeling when momentum is disabled.
 
 > As a rule of thumb, **we recommend setting `enableMomentum` to `false` (default) and `decelerationRate` to `'fast'` when you are displaying only one main slide** (as in the showcase above), and to use `true` and `0.9` otherwise.
 
@@ -230,13 +234,6 @@ return (
 );
 
 ```
-
-### Understanding styles
-
-Here is a screenshot that should help you understand how each of the above variables is used.
-
-![react-native-snap-carousel info](http://i.imgur.com/PMi6aBd.jpg)
-
 
 ### Handling device rotation
 
@@ -301,6 +298,29 @@ return (
 );
 ```
 
+### Understanding styles
+
+Here is a screenshot that should help you understand how each of the above variables is used.
+
+![react-native-snap-carousel info](http://i.imgur.com/PMi6aBd.jpg)
+
+## Known issues
+
+### ScrollView's limitations
+
+Note that this plugin is built on top of React Native's `ScrollView`. Unfortunately, its implementation shows flaws that affect the plugin, the main ones being the following:
+- there is no `scrollEnd` event
+- `scrollTo` method doesn't accept any callback
+- Android's `scrollTo` animation is quite brutal.
+
+We're trying to work around these issues, but the result is not always as smooth as we'd want it to be. Keep that in mind and go spam [React Native's Feature Request](https://react-native.canny.io/feature-requests) ;-)
+
+### Unreliable callbacks
+
+When `enableMomentum` is disabled, providing a reliable callback is really tricky since no `scrollEnd` event has been exposed yet for the `ScrollView` component. We can only rely on the `scrollDragEnd` event, which comes with a huge bunch of issues. See [#34](https://github.com/archriss/react-native-snap-carousel/issues/34) for more information.
+
+Version 2.3.0 tackled these issues with a bunch of flags and hacks. But you could still be facing the following one: **when you build a debug version of your app without enabling JS remote debugging**, timers will desynchronize and callbacks will be a complete mess. Try to either enable remote debugging or build a production version of your app, and everything should get back to normal.
+
 ### Error with Jest
 
 You might encounter the following error when using the plugin in conjonction with Jest: `TypeError: Cannot read property 'style' of undefined at Object.<anonymous>`.
@@ -309,26 +329,15 @@ As you can see [here](https://github.com/facebook/react-native/blob/master/jest/
 
 The easiest workaround is to add `jest.unmock('ScrollView')` before importing the component in your test file (thanks [@hoangnm](https://github.com/hoangnm) for the tip!).
 
-## RTL support
+### RTL layouts
 
-### Experimental feature
+There is one kown issue with RTL layouts: during init, the last slide will shortly be seen. You can work around this by delaying slider's visibility with a small timer (FYI, version 0.43.0 of React Native [introduced a `display` style prop](https://github.com/facebook/react-native/commit/4d69f4b2d1cf4f2e8265fe5758f28086f1b67500) that could either be set to `flex` or `none`).
+
+## RTL support (experimental)
 
 Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`.
 
 As such, this feature should be considered experimental since it might break with newer versions of React Native.
-
-### Known issue
-
-There is one kown issue with RTL layouts: during init, the last slide will shortly be seen. You can work around this by delaying slider's visibility with a small timer (FYI, version 0.43.0 of React Native [introduced a `display` style prop](https://github.com/facebook/react-native/commit/4d69f4b2d1cf4f2e8265fe5758f28086f1b67500) that could either be set to `flex` or `none`).
-
-## ScrollView's limitations
-
-Note that this plugin is built on top of React Native's `ScrollView`. Unfortunately, its implementation shows flaws that affect the plugin, the main ones being the following:
-- there is no `onScrollEnd` event
-- `scrollTo` method doesn't accept any callback
-- Android's `scrollTo` animation is quite brutal.
-
-We're trying to work around these issues, but the result is not always as smooth as we'd want it to be. Keep that in mind and go spam [React Native's Feature Request](https://react-native.canny.io/feature-requests) ;-)
 
 ## TODO
 
@@ -346,5 +355,5 @@ We're trying to work around these issues, but the result is not always as smooth
 
 ## Credits
 
-Written by [Maxime Bertonnier](https://fr.linkedin.com/in/maxime-bertonnier-744351aa) and [Benoît Delmaire](https://fr.linkedin.com/in/benoitdelmaire) at
+Written by [Maxime Bertonnier](https://fr.linkedin.com/in/maxime-bertonnier-744351aa) ([Exilz](https://github.com/Exilz)) and [Benoît Delmaire](https://fr.linkedin.com/in/benoitdelmaire) ([bd-arc](https://github.com/bd-arc)) at
 [Archriss](http://www.archriss.com/).
