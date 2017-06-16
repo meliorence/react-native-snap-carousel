@@ -8,7 +8,7 @@
 	"dependencies": {
 		"react": "16.0.0-alpha.6",
 		"react-native": "0.44.3",
-		"react-native-snap-carousel": "2.2.0"
+		"react-native-snap-carousel": "file:../"
 	},
 	"devDependencies": {
 		"babel-preset-react-native": "1.9.1"

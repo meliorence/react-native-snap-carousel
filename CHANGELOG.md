@@ -1,3 +1,12 @@
+## v2.3.0
+* Refactor callback handling to provide a more reliable solution when momentum is disabled
+* Fix issue with parallel animations (thanks [@jnbt](https://github.com/jnbt))
+* Prevent calls to `undefined` interpolators when working with dynamic slides (thanks [@cskaynar](https://github.com/cskaynar))
+* Improve vertical mode
+* Add prop `scrollEndDragDebounceValue`
+* Expose current scroll position with `this.currentScrollPosition`
+* Remove props `scrollEndDragThrottleValue` and `snapCallbackDebounceValue` (use `scrollEndDragDebounceValue` instead)
+
 ## v2.2.2
 * Fix issue that prevented inactive styles of first and last items to be applied when using `snapToPrev` and `snapToNext` methods
 
