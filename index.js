@@ -462,14 +462,14 @@ export default class Carousel extends Component {
     }
 
     _onScrollEndDragDebounced (event) {
-        if (this._scrollview) {
+        if (this._scrollview && this._onScrollEnd) {
             this._onScrollEnd();
         }
     }
 
     // Used when `enableMomentum` is ENABLED
     _onMomentumScrollEnd (event) {
-        if (this._scrollview) {
+        if (this._scrollview && this._onScrollEnd) {
             this._onScrollEnd();
         }
     }

@@ -1,3 +1,6 @@
+## v2.3.1
+* Fix issue when snap is disabled
+
 ## v2.3.0
 * Refactor callback handling to provide a more reliable solution when momentum is disabled
 * Fix issue with parallel animations (thanks [@jnbt](https://github.com/jnbt))
