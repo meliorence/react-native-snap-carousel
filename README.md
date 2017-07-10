@@ -9,7 +9,7 @@ Pull requests are very welcome!
 1. [Usage](#usage)
 1. [Props](#props)
 1. [Methods](#methods)
-1. [Properties](#properties)
+1. [Getters](#getters)
 1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
@@ -25,7 +25,9 @@ You can try these examples live in **Archriss' showcase app** on [Android](https
 ![react-native-snap-carousel](https://media.giphy.com/media/3o6ZsU9gWWrvYtogow/giphy.gif)
 ![react-native-snap-carousel](https://media.giphy.com/media/3o7TKUAlvi1tYLFCTK/giphy.gif)
 
-> Since it has been asked multiple times, please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
+> Please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
+
+> [codedaily.io](https://codedaily.io) has put together a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
 
 App currently uses version 1.4.0 of the plugin. Especially, this means that you should expect **slider's layout to break with RTL devices** (see [#38](https://github.com/archriss/react-native-snap-carousel/issues/38)) since support was added in version 2.1.0.
 
@@ -178,7 +180,7 @@ Method | Description
 `snapToNext (animated = true)` | Snap to next item manually
 `snapToPrev (animated = true)` | Snap to previous item manually
 
-## Properties
+## Getters
 
 > You need a reference to the carousel's instance (see [above](#reference-to-the-component) if needed).
 
@@ -297,6 +299,13 @@ return (
     </Carousel>
 );
 ```
+
+### Android performances
+
+Make sure to test carousel's performances **without JS Dev Mode enabled**.
+
+It can take user experience from "crappy and sluggish" to "pretty good" - it's Android though, so nothing like "perfect" or "incredibly smooth"...
+
 
 ### Understanding styles
 
