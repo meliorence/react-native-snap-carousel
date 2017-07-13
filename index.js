@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { ScrollView, Animated, Platform, Easing, I18nManager, ViewPropTypes } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import _debounce from 'lodash.debounce';
-import _isNumber from 'lodash.isNumber';
 
 // React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
 // See https://github.com/facebook/react-native/issues/11960
@@ -762,8 +761,8 @@ export default class Carousel extends Component {
             carouselVerticalPadding
         } = this.props;
 
-        const horizontalMargin = _isNumber(carouselHorizontalPadding) ? carouselHorizontalPadding : (sliderWidth - itemWidth) / 2;
-        const verticalMargin = _isNumber(carouselVerticalPadding) ? carouselVerticalPadding : (sliderHeight - itemHeight) / 2;
+        const horizontalMargin = typeof carouselHorizontalPadding === 'number' ? carouselHorizontalPadding : (sliderWidth - itemWidth) / 2;
+        const verticalMargin = typeof carouselVerticalPadding === 'number' ? carouselVerticalPadding : (sliderHeight - itemHeight) / 2;
 
         const style = [
             containerCustomStyle || {},
