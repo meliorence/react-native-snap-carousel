@@ -761,8 +761,8 @@ export default class Carousel extends Component {
             carouselVerticalPadding
         } = this.props;
 
-        const horizontalMargin = carouselHorizontalPadding || (sliderWidth - itemWidth) / 2;
-        const verticalMargin = carouselVerticalPadding || (sliderHeight - itemHeight) / 2;
+        const horizontalMargin = typeof carouselHorizontalPadding === 'number' ? carouselHorizontalPadding : (sliderWidth - itemWidth) / 2;
+        const verticalMargin = typeof carouselVerticalPadding === 'number' ? carouselVerticalPadding : (sliderHeight - itemHeight) / 2;
 
         const style = [
             containerCustomStyle || {},
