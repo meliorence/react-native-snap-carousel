@@ -117,8 +117,8 @@ autoplayInterval | Delay in ms until navigating to the next item | Number |  `30
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-animationFunc | Animated animation to use. Provide the name of the method | String | `timing`
-animationOptions | Animation options to be merged with the default ones. Can be used w/ animationFunc | Object | `{ easing: Easing.elastic(1) }`
+animationFunc | Animated animation to use; you must provide the name of the method. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around) | String | `timing`
+animationOptions | Animation options to be merged with the default ones. Can be used without `animationFunc`. Note that opacity's easing will be kept linear. | Object | `{ duration: 600, easing: Easing.elastic(1) }`
 carouselHorizontalPadding | Override container's inner horizontal padding (needed for slides's centering in a horizontal carousel). **Warning: be aware that overriding the default value can mess with carousel's behavior.**  | Number | `(sliderWidth - itemWidth) / 2`
 carouselVerticalPadding | Override container's inner vertical padding (needed for slides's centering in a vertical carousel). **Warning: be aware that overriding the default value can mess with carousel's behavior.**  | Number | `(sliderHeight - itemHeight) / 2`
 containerCustomStyle | Optional styles for Scrollview's global wrapper | ScrollView Style Object | `{}`

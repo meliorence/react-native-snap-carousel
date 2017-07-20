@@ -152,8 +152,7 @@ export default class Carousel extends Component {
         animationFunc: 'timing',
         animationOptions: {
             duration: 600,
-            easing: Easing.elastic(1),
-            isInteraction: false
+            easing: Easing.elastic(1)
         },
         autoplay: false,
         autoplayDelay: 5000,
@@ -349,7 +348,11 @@ export default class Carousel extends Component {
         let interpolators = [];
 
         this._children(props).map((item, index) => {
-            interpolators.push(new Animated.Value(index === _firstItem ? 1 : 0));
+            const value = index === _firstItem ? 1 : 0;
+            interpolators.push({
+                opacity: new Animated.Value(value),
+                scale: new Animated.Value(value)
+            });
         });
         this.setState({ interpolators });
     }
@@ -384,18 +387,35 @@ export default class Carousel extends Component {
         return offset - containerMargin + ((vertical ? sliderHeight : sliderWidth) / 2);
     }
 
+    _getSlideAnimation (index, toValue) {
+        const { animationFunc, animationOptions } = this.props;
+
+        const animationCommonOptions = {
+            isInteraction: false,
+            useNativeDriver: true,
+            ...animationOptions,
+            toValue: toValue
+        };
+
+        return Animated.parallel([
+            Animated['timing'](
+                this.state.interpolators[index].opacity,
+                { ...animationCommonOptions, easing: Easing.linear }
+            ),
+            Animated[animationFunc](
+                this.state.interpolators[index].scale,
+                { ...animationCommonOptions }
+            )
+        ]);
+    }
+
     _onScroll (event) {
-        const { animationFunc, animationOptions, enableMomentum, onScroll, onScrollViewScroll } = this.props;
+        const { enableMomentum, onScroll, onScrollViewScroll } = this.props;
         const { activeItem } = this.state;
 
         const scrollOffset = this._getScrollOffset(event);
         const newActiveItem = this._getActiveItem(scrollOffset);
         const itemsLength = this._positions.length;
-        const animationCommonOptions = {
-            isInteraction: false,
-            useNativeDriver: true,
-            ...animationOptions
-        };
         let animations = [];
 
         this._currentContentOffset = scrollOffset;
@@ -417,20 +437,10 @@ export default class Carousel extends Component {
             // With dynamically removed items, `activeItem` and
             // `newActiveItem`'s interpolators might be `undefined`
             if (this.state.interpolators[activeItem]) {
-                animations.push(
-                    Animated[animationFunc](
-                        this.state.interpolators[activeItem],
-                        { ...animationCommonOptions, toValue: 0 }
-                    )
-                );
+                animations.push(this._getSlideAnimation(activeItem, 0));
             }
             if (this.state.interpolators[newActiveItem]) {
-                animations.push(
-                    Animated[animationFunc](
-                        this.state.interpolators[newActiveItem],
-                        { ...animationCommonOptions, toValue: 1 }
-                    )
-                );
+                animations.push(this._getSlideAnimation(newActiveItem, 1));
             }
             Animated.parallel(animations, { stopTogether: false }).start();
 
@@ -738,7 +748,7 @@ export default class Carousel extends Component {
         return this._children().map((child, index) => {
             const animatedValue = this.state.interpolators[index];
 
-            if (!animatedValue) {
+            if (!animatedValue || !animatedValue.opacity || !animatedValue.scale) {
                 return false;
             }
 
@@ -748,12 +758,12 @@ export default class Carousel extends Component {
                 style={[
                     slideStyle,
                     {
-                        opacity: animatedValue.interpolate({
+                        opacity: animatedValue.opacity.interpolate({
                             inputRange: [0, 1],
                             outputRange: [inactiveSlideOpacity, 1]
                         }),
                         transform: [{
-                            scale: animatedValue.interpolate({
+                            scale: animatedValue.scale.interpolate({
                                 inputRange: [0, 1],
                                 outputRange: [inactiveSlideScale, 1]
                             })
