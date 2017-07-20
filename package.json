@@ -22,11 +22,12 @@
         "component",
         "rtl"
     ],
-    "author": "Archriss",
+    "author": "Archriss <contact@archriss.com> (github.com/archriss)",
     "license": "ISC",
     "dependencies": {
         "lodash.debounce": "4.0.8",
-        "react-addons-shallow-compare": "15.5.2"
+        "prop-types": "^15.5.10",
+        "react-addons-shallow-compare": "15.6.0"
     },
     "peerDependencies": {
         "react": "*",
