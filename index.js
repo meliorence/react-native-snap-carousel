@@ -381,6 +381,11 @@ export default class Carousel extends Component {
         const scrollOffset = this._getScrollOffset(event);
         const newActiveItem = this._getActiveItem(scrollOffset);
         const itemsLength = this._positions.length;
+        const animationCommonOptions = {
+            isInteraction: false,
+            useNativeDriver: true,
+            ...animationOptions
+        };
         let animations = [];
 
         this._currentContentOffset = scrollOffset;
@@ -404,7 +409,7 @@ export default class Carousel extends Component {
                 animations.push(
                     Animated[animationFunc](
                         this.state.interpolators[activeItem],
-                        { isInteraction: false, ...animationOptions, toValue: 0 }
+                        { ...animationCommonOptions, toValue: 0 }
                     )
                 );
             }
@@ -412,7 +417,7 @@ export default class Carousel extends Component {
                 animations.push(
                     Animated[animationFunc](
                         this.state.interpolators[newActiveItem],
-                        { isInteraction: false, ...animationOptions, toValue: 1 }
+                        { ...animationCommonOptions, toValue: 1 }
                     )
                 );
             }
