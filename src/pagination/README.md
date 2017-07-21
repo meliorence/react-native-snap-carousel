@@ -1,11 +1,8 @@
 # `<Pagination />` component
 
-1. [Props](#props)
-1. [Usage](#usage)
-
 Starting with version `2.4.0`, a customizable `<Pagination />` component has been added. This is how it looks like:
 
-![react-native-snap-carousel pagination](http://i.imgur.com/QF6I8HN.gif)
+![react-native-snap-carousel pagination](http://i.imgur.com/yAJTTAU.gif)
 
 ## Props
 
@@ -30,7 +27,7 @@ export default class MyCarousel extends Component {
     get slides () {
         const { entries } = this.state;
         return entries.map((entry, index) => {
-            // return your slide component
+            return <MySlideComponent key={`entry-${index}`} data={entry} />
         });
     }
 

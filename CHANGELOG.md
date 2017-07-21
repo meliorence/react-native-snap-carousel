@@ -1,5 +1,5 @@
 ## v2.4.0
-* Add `Pagination` component (see the specific documentation [here](https://github.com/archriss/react-native-snap-carousel/src/pagination))
+* Add `Pagination` component (see the specific documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/pagination/README.md))
 * Allow `firstItem` to be changed dynamically
 * Allow `0` value for `carouselHorizontalPadding` and `carouselVerticalPadding` (thanks [@bonbonez](https://github.com/bonbonez))
 * Keep the easing of slide's opacity animation linear

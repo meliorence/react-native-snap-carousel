@@ -195,9 +195,9 @@ You can find the following example in the [/example](https://github.com/archriss
 
 Starting with version `2.4.0`, a `<Pagination />` component has been added. Here is how it looks like:
 
-![react-native-snap-carousel pagination](http://i.imgur.com/QF6I8HN.gif)
+![react-native-snap-carousel pagination](http://i.imgur.com/yAJTTAU.gif)
 
-You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/src/pagination).
+You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/pagination/README.md).
 
 ## Tips and tricks
 
