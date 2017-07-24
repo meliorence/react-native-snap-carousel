@@ -170,6 +170,7 @@ export default class Carousel extends Component {
             activeItem: initialActiveItem,
             previousActiveItem: initialActiveItem, // used only when `enableMomentum` is set to `true`
             previousFirstItem: initialActiveItem,
+            hideCarousel: true,
             interpolators: []
         };
 
@@ -231,6 +232,11 @@ export default class Carousel extends Component {
                 this.startAutoplay();
             }
         }, 0);
+
+        // hide FlatList's awful init
+        setTimeout(() => {
+            this.setState({ hideCarousel: false });
+        }, 200);
     }
 
     shouldComponentUpdate (nextProps, nextState) {
@@ -796,6 +802,7 @@ export default class Carousel extends Component {
     }
 
     render () {
+        const { hideCarousel } = this.state;
         const {
             data,
             renderItem,
@@ -816,6 +823,7 @@ export default class Carousel extends Component {
 
         const style = [
             containerCustomStyle || {},
+            hideCarousel ? { opacity: 0 } : {},
             vertical ?
                 { height: sliderHeight, flexDirection: 'column' } :
                 // LTR hack; see https://github.com/facebook/react-native/issues/11960
