@@ -1,13 +1,14 @@
 {
 	"name": "example",
-	"version": "0.3.1",
+	"version": "0.4.0",
 	"private": true,
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start"
 	},
 	"dependencies": {
-		"react": "16.0.0-alpha.6",
-		"react-native": "0.44.3",
+		"react": "16.0.0-alpha.12",
+		"react-native": "~0.46.4",
+		"react-native-linear-gradient": "^2.1.0",
 		"react-native-snap-carousel": "file:../"
 	},
 	"devDependencies": {

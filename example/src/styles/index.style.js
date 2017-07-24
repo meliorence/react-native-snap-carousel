@@ -3,8 +3,9 @@ import { StyleSheet } from 'react-native';
 export const colors = {
     black: '#1a1917',
     gray: '#888888',
-    background1: 'hsl(15, 55%, 50%)',
-    background2: 'hsl(230, 30%, 45%)'
+    background1: '#4158D0',
+    background2: '#C850C0',
+    background3: '#FFCC70'
 };
 
 export default StyleSheet.create({
@@ -12,21 +13,15 @@ export default StyleSheet.create({
         flex: 1,
         backgroundColor: colors.background1
     },
-    colorsContainer: {
-        ...StyleSheet.absoluteFillObject,
-        flexDirection: 'row'
-    },
-    color1: {
-        flex: 1,
-        backgroundColor: colors.background1
-    },
-    color2: {
-        flex: 1,
-        backgroundColor: colors.background2
+    gradient: {
+        ...StyleSheet.absoluteFillObject
     },
     scrollview: {
         flex: 1,
         paddingTop: 50
+    },
+    scrollviewContentContainer: {
+        paddingBottom: 50
     },
     title: {
         marginTop: 15,

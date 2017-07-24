@@ -1,52 +1,46 @@
 import React, { Component } from 'react';
 import { View, ScrollView, Text, StatusBar } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Carousel from 'react-native-snap-carousel';
 import { sliderWidth, itemWidth } from 'example/src/styles/SliderEntry.style';
 import SliderEntry from 'example/src/components/SliderEntry';
-import styles from 'example/src/styles/index.style';
+import styles, { colors } from 'example/src/styles/index.style';
 import { ENTRIES1, ENTRIES2 } from 'example/src/static/entries';
 
 export default class example extends Component {
 
-    getSlides (entries) {
-        if (!entries) {
-            return false;
-        }
-
-        return entries.map((entry, index) => {
-            return (
-                <SliderEntry
-                  key={`carousel-entry-${index}`}
-                  even={(index + 1) % 2 === 0}
-                  {...entry}
-                />
-            );
-        });
+    _renderItem ({item, index}) {
+        return (
+            <SliderEntry
+              data={item}
+              even={(index + 1) % 2 === 0}
+            />
+        );
     }
 
     get example1 () {
         return (
             <Carousel
+              data={ENTRIES1}
+              renderItem={this._renderItem}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
-              firstItem={1}
+              firstItem={2}
               inactiveSlideScale={0.94}
               inactiveSlideOpacity={0.6}
               enableMomentum={false}
               containerCustomStyle={styles.slider}
               contentContainerCustomStyle={styles.sliderContainer}
-              showsHorizontalScrollIndicator={false}
-              snapOnAndroid={true}
               removeClippedSubviews={false}
-            >
-                { this.getSlides(ENTRIES1) }
-            </Carousel>
+            />
         );
     }
 
     get example2 () {
         return (
             <Carousel
+              data={ENTRIES2}
+              renderItem={this._renderItem}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
               inactiveSlideScale={1}
@@ -57,12 +51,19 @@ export default class example extends Component {
               autoplayInterval={2500}
               containerCustomStyle={styles.slider}
               contentContainerCustomStyle={styles.sliderContainer}
-              showsHorizontalScrollIndicator={false}
-              snapOnAndroid={true}
               removeClippedSubviews={false}
-              >
-                  { this.getSlides(ENTRIES2) }
-              </Carousel>
+            />
+        );
+    }
+
+    get gradient () {
+        return (
+            <LinearGradient
+              colors={[colors.background1, colors.background2, colors.background3]}
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={styles.gradient}
+            />
         );
     }
 
@@ -74,14 +75,13 @@ export default class example extends Component {
                   backgroundColor={'rgba(0, 0, 0, 0.3)'}
                   barStyle={'light-content'}
                 />
-                <View style={styles.colorsContainer}>
-                    <View style={styles.color1} />
-                    <View style={styles.color2} />
-                </View>
+                { this.gradient }
                 <ScrollView
                   style={styles.scrollview}
+                  contentContainerStyle={styles.scrollviewContentContainer}
                   indicatorStyle={'white'}
                   scrollEventThrottle={200}
+                  directionalLockEnabled={true}
                 >
                     <Text style={styles.title}>Example 1</Text>
                     <Text style={styles.subtitle}>No momentum | Scale | Opacity</Text>
