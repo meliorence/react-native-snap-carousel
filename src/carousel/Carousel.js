@@ -370,6 +370,12 @@ export default class Carousel extends Component {
                 return i;
             }
         }
+
+        const lastIndex = this._positions.length - 1;
+        if (center - activeSlideOffset > this._positions[lastIndex].end) {
+            return lastIndex;
+        }
+
         return 0;
     }
 
