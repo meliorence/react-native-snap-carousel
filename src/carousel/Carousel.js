@@ -36,6 +36,11 @@ export default class Carousel extends Component {
         */
         sliderHeight: PropTypes.number,
         /**
+        * Determine active slide's alignment
+        * relative to the carousel
+        */
+        activeSlideAlignment: PropTypes.oneOf(['center', 'end', 'start']),
+        /**
         * From slider's center, minimum slide distance
         * to be scrolled before being set to active
         */
@@ -132,6 +137,7 @@ export default class Carousel extends Component {
     };
 
     static defaultProps = {
+        activeSlideAlignment: 'center',
         activeSlideOffset: 25,
         animationFunc: 'timing',
         animationOptions: {
@@ -362,18 +368,22 @@ export default class Carousel extends Component {
     }
 
     _getContainerInnerMargin () {
-        const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical } = this.props;
+        const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical, activeSlideAlignment } = this.props;
 
-        return vertical ?
-            (sliderHeight - itemHeight) / 2 :
-            (sliderWidth - itemWidth) / 2;
+        if (activeSlideAlignment === 'start' || (IS_RTL && activeSlideAlignment === 'end')) {
+            return 0;
+        } else if (activeSlideAlignment === 'end' || (IS_RTL && activeSlideAlignment === 'start')) {
+            return vertical ? sliderHeight - itemHeight : sliderWidth - itemWidth;
+        }
+
+        return vertical ? (sliderHeight - itemHeight) / 2 : (sliderWidth - itemWidth) / 2;
     }
 
     _getCenter (offset) {
         const { sliderWidth, sliderHeight, vertical } = this.props;
 
-        return offset -
-            this._getContainerInnerMargin() +
+        return offset +
+            (this._getContainerInnerMargin() * (IS_RTL ? -1 : 1)) +
             ((vertical ? sliderHeight : sliderWidth) / 2);
     }
 
@@ -394,6 +404,8 @@ export default class Carousel extends Component {
     }
 
     _getItemOffset (index) {
+        // 'viewPosition' doesn't work for the first item
+        // It is always aligned to the left
         if ((!IS_RTL && index === 0) ||
             (IS_RTL && index === this.props.data.length - 1)) {
             return this._getContainerInnerMargin();
@@ -656,7 +668,7 @@ export default class Carousel extends Component {
 
     snapToItem (index, animated = true, fireCallback = true, initial = false) {
         const { previousActiveItem } = this.state;
-        const { enableMomentum, scrollEndDragDebounceValue } = this.props;
+        const { enableMomentum, scrollEndDragDebounceValue, activeSlideAlignment } = this.props;
 
         const itemsLength = this._positions.length;
 
@@ -709,9 +721,17 @@ export default class Carousel extends Component {
                 }, Math.max(200, scrollEndDragDebounceValue + 50));
             }
 
+            let viewPosition = 0.5;
+
+            if (activeSlideAlignment === 'start') {
+                viewPosition = IS_RTL ? 1 : 0;
+            } else if (activeSlideAlignment === 'end') {
+                viewPosition = IS_RTL ? 0 : 1;
+            }
+
             this._flatlist.scrollToIndex({
                 index,
-                viewPosition: 0.5,
+                viewPosition: viewPosition,
                 viewOffset: this._getItemOffset(index),
                 animated
             });
