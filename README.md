@@ -1,5 +1,5 @@
 # react-native-snap-carousel
-Swiper component for React Native with **previews**, **snapping effect** and **RTL support**. Compatible with Android & iOS.
+Swiper component for React Native with **previews**, **snapping effect**, **support for huge number of items**, and **RTL support**. Compatible with Android & iOS.
 Pull requests are very welcome!
 
 ## Testers wanted!
@@ -25,7 +25,6 @@ Let us know what you think and use [issue #73](https://github.com/archriss/react
 1. [Pagination component](#pagination-component)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
-1. [RTL support (experimental)](#rtl-support-experimental)
 1. [TODO](#todo)
 1. [Credits](#credits)
 
@@ -52,41 +51,28 @@ $ npm install --save react-native-snap-carousel
 ```javascript
 import Carousel from 'react-native-snap-carousel';
 
-    // Example with different children
-    render () {
+export class MyCarousel extends Component {
+
+    _renderItem ({item, index}) {
         return (
-            <Carousel
-              ref={(carousel) => { this._carousel = carousel; }}
-              sliderWidth={sliderWidth}
-              itemWidth={itemWidth}
-            >
-                <View style={styles.slide1} />
-                <Text style={styles.slide2} />
-                <Image style={styles.slide3} />
-            </Carousel>
+            <View style={styles.slide}>
+                <Text style={styles.title}>{ entry.title }</Text>
+            </View>
         );
     }
 
-    // Example of appending the same component multiple times while looping through an array of data
     render () {
-        const slides = this.state.entries.map((entry, index) => {
-            return (
-                <View key={`entry-${index}`} style={styles.slide}>
-                    <Text style={styles.title}>{ entry.title }</Text>
-                </View>
-            );
-        });
-
         return (
             <Carousel
-              ref={(carousel) => { this._carousel = carousel; }}
+              ref={(c) => { this._carousel = c; }}
+              data={this.state.entries}
+              renderItem={this._renderItem}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
-            >
-                { slides }
-            </Carousel>
+            />
         );
     }
+}
 ```
 
 ## Props
@@ -95,6 +81,8 @@ import Carousel from 'react-native-snap-carousel';
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
+**data** | Array of items to loop on | Array | **Required**
+**renderItem** | Takes an item from data and renders it into the list. The function must return a React element. | Function | **Required**
 **itemWidth** | Width in pixels of carousel's items, **must be the same for all of them** | Number | **Required with horizontal carousel**
 **itemHeight** | Height in pixels of carousel's items, **must be the same for all of them** | Number | **Required with vertical carousel**
 **sliderWidth** | Width in pixels of the carousel itself | Number | **Required with horizontal carousel**
@@ -126,10 +114,9 @@ autoplayInterval | Delay in ms until navigating to the next item | Number |  `30
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
+activeSlideAlignment | Determine active slide's alignment relative to the carousel. Possible values are: `'start'`, `'center'` and `'end'`. | String | `'center'`
 animationFunc | Animated animation to use; you must provide the name of the method. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around) | String | `timing`
 animationOptions | Animation options to be merged with the default ones. Can be used without `animationFunc`. Note that opacity's easing will be kept linear. | Object | `{ duration: 600, easing: Easing.elastic(1) }`
-carouselHorizontalPadding | Override container's inner horizontal padding (needed for slides's centering in a horizontal carousel). **Warning: be aware that overriding the default value can mess with carousel's behavior.**  | Number | `(sliderWidth - itemWidth) / 2`
-carouselVerticalPadding | Override container's inner vertical padding (needed for slides's centering in a vertical carousel). **Warning: be aware that overriding the default value can mess with carousel's behavior.**  | Number | `(sliderHeight - itemHeight) / 2`
 containerCustomStyle | Optional styles for Scrollview's global wrapper | View Style Object | `{}`
 contentContainerCustomStyle | Optional styles for Scrollview's items container | View Style Object | `{}`
 inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
@@ -142,14 +129,17 @@ Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 onLayout(event) | Exposed `View` callback; invoked on mount and layout changes | Function | `undefined`
 onScroll(event) | Exposed `ScrollView` callback; fired while scrolling | Function | `undefined`
-onScrollViewScroll(event) | Callback fired while scrolling (**deprecated**: use `onScroll` instead) | Function | `undefined`
 onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function | `undefined`
 
-### `ScrollView`
+### Inherited props
 
-In addition to these props, you can use **any prop from the [ScrollView component](https://facebook.github.io/react-native/docs/scrollview.html)**.
+The component is built on top of the `FlatList` component. This means it inherits from [`FlatList`](https://facebook.github.io/react-native/docs/flatlist.html), [`VirtualizedList`](https://facebook.github.io/react-native/docs/virtualizedlist.html), and [`ScrollView`](https://facebook.github.io/react-native/docs/scrollview.html).
 
-Here are a few useful ones: `removeClippedSubviews`, `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
+You can use almost all props from this three components. Note that some of them can't be overriden because it would mess with our implementation's logic.
+
+Here are a few useful props regarding carousel's style and feeling: `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
+
+And here some useful ones for performance optimizations: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your need.
 
 ## Methods
 
@@ -161,7 +151,7 @@ In order to use the following methods, you need to create a reference to the car
 ```javascript
 <Carousel
   // other props
-  ref={(carousel) => { this._carousel = carousel; }}
+  ref={(c) => { this._carousel = c; }}
 />
 
 // methods can then be called this way
@@ -240,18 +230,6 @@ const styles = Stylesheet.create({
         // other styles for your item's container
     }
 };
-
-return (
-    <Carousel
-      sliderWidth={sliderWidth}
-      itemWidth={itemWidth}
-    >
-        <View style={styles.slide} />
-        <View style={styles.slide} />
-        <View style={styles.slide} />
-    </Carousel>
-);
-
 ```
 
 ### Handling device rotation
@@ -284,12 +262,11 @@ render() {
             }}
         >
             <Carousel
-                ref={carousel => { this.carousel = carousel; } }
+                ref={c => { this.carousel = c; } }
                 sliderWidth={this.state.viewport.width}
                 itemWidth={this.state.viewport.width}
                 ...
-            >
-            </Carousel>
+            />
         </View>
     );
 }
@@ -302,19 +279,28 @@ While the plugin hasn't been designed with this use case in mind, you can easily
 ```javascript
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
-return (
-    <Carousel
-      sliderWidth={viewportWidth}
-      itemWidth={viewportWidth}
-      slideStyle={{ width: viewportWidth }}
-      inactiveSlideOpacity={1}
-      inactiveSlideScale={1}
-    >
-        <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
-        <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
-        <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
-    </Carousel>
-);
+export class MyCarousel extends Component {
+
+    _renderItem ({item, index}) {
+        return (
+            <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
+        );
+    }
+
+    render () {
+        return (
+            <Carousel
+              data={this.state.entries}
+              renderItem={this._renderItem}
+              sliderWidth={viewportWidth}
+              itemWidth={viewportWidth}
+              slideStyle={{ width: viewportWidth }}
+              inactiveSlideOpacity={1}
+              inactiveSlideScale={1}
+            />
+        );
+    }
+}
 ```
 
 [This plugin](https://github.com/shichongrui/react-native-on-layout) can also prove useful.
@@ -357,23 +343,26 @@ As you can see [here](https://github.com/facebook/react-native/blob/master/jest/
 
 The easiest workaround is to add `jest.unmock('ScrollView')` before importing the component in your test file (thanks [@hoangnm](https://github.com/hoangnm) for the tip!).
 
-### RTL layouts
+### React Native version
 
-There is one kown issue with RTL layouts: during init, the last slide will shortly be seen. You can work around this by delaying slider's visibility with a small timer (FYI, version 0.43.0 of React Native [introduced a `display` style prop](https://github.com/facebook/react-native/commit/4d69f4b2d1cf4f2e8265fe5758f28086f1b67500) that could either be set to `flex` or `none`).
+RN 0.44 is the minimum version required to use the plugin. Note that we follow RN evolutions closely, which means newer versions of the plugin might break when used with a version of RN that is not the latest stable one.
 
-## RTL support (experimental)
+### RTL support (experimental)
 
 Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`.
 
 As such, this feature should be considered experimental since it might break with newer versions of React Native.
 
+There is one kown issue with RTL layouts: during init, the last slide will shortly be seen. You can work around this by delaying slider's visibility with a small timer (FYI, version 0.43.0 of React Native [introduced a `display` style prop](https://github.com/facebook/react-native/commit/4d69f4b2d1cf4f2e8265fe5758f28086f1b67500) that could either be set to `flex` or `none`).
+
 ## TODO
 
-- [ ] Base the plugin on `FlatList` instead of `ScrollView`
 - [ ] Implement 'loop' mode
 - [ ] Add parallax image component
 - [ ] Handle changing major props on-the-fly
 - [ ] Handle autoplay properly when updating children's length
+- [x] Base the plugin on `FlatList` instead of `ScrollView`
+- [x] Add alignment option
 - [x] Add pagination component
 - [x] Add vertical implementation
 - [x] Handle device orientation event (see [this note] (https://github.com/archriss/react-native-snap-carousel#handling-device-rotation))
