@@ -1,5 +1,5 @@
 # react-native-snap-carousel
-Swiper component for React Native with **previews**, **snapping effect**, **support for huge number of items**, and **RTL support**. Compatible with Android & iOS.
+Swiper component for React Native featuring **previews**, **snapping effect**, **performant handling of huge numbers of items**, and **RTL support**. Compatible with Android & iOS.
 Pull requests are very welcome!
 
 ## Testers wanted!
@@ -31,17 +31,26 @@ Let us know what you think and use [issue #73](https://github.com/archriss/react
 
 ## Showcase
 
-You can try these examples live in **Archriss' showcase app** on [Android](https://play.google.com/store/apps/details?id=fr.archriss.demo.app) and [iOS](https://itunes.apple.com/lu/app/archriss-presentation-mobile/id1180954376?mt=8).
+### Archriss' showcase app
+
+**You can try the app live on [Android](https://play.google.com/store/apps/details?id=fr.archriss.demo.app) and [iOS](https://itunes.apple.com/lu/app/archriss-presentation-mobile/id1180954376?mt=8).**
 
 ![react-native-snap-carousel](http://i.imgur.com/Fope3uj.gif)
-![react-native-snap-carousel](https://media.giphy.com/media/3o6ZsU9gWWrvYtogow/giphy.gif)
-![react-native-snap-carousel](https://media.giphy.com/media/3o7TKUAlvi1tYLFCTK/giphy.gif)
+![react-native-snap-carousel](http://i.imgur.com/WNOBYfl.gif)
+![react-native-snap-carousel](http://i.imgur.com/sK5DKaG.gif)
+
+This app currently uses **version 1.4.0** of the plugin. Be aware that sliders' layouts will break on RTL devices since support was added in version 2.1.0 (see [#38](https://github.com/archriss/react-native-snap-carousel/issues/38)).
 
 > Please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
 
 > [codedaily.io](https://codedaily.io) has put together a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
 
-App currently uses version 1.4.0 of the plugin. Especially, this means that you should expect **slider's layout to break with RTL devices** (see [#38](https://github.com/archriss/react-native-snap-carousel/issues/38)) since support was added in version 2.1.0.
+### Archriss' "Ville d'Aix-en-Provence" app
+
+**The app is available for [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8)**, but the React Native version featuring the carousels hasn't been published yet (the current version is a Cordova one we've previously made). The app will use **version 2.4.0** of the plugin.
+
+![react-native-snap-carousel archriss aix](http://i.imgur.com/C4YHp1j.gif)
+![react-native-snap-carousel archriss aix](http://i.imgur.com/Z7KTLHq.gif)
 
 ## Usage
 
