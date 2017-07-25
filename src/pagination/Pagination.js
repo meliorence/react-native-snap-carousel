@@ -26,7 +26,7 @@ export default class Pagination extends Component {
 
         let dots = [];
 
-        for (var i = 0; i < dotsLength; i++) {
+        for (let i = 0; i < dotsLength; i++) {
             dots.push(
                 <PaginationDot
                   key={`pagination-dot-${i}`}

@@ -46,6 +46,7 @@ export default class example extends Component {
               inactiveSlideScale={1}
               inactiveSlideOpacity={1}
               enableMomentum={true}
+              activeSlideAlignment={'start'}
               autoplay={true}
               autoplayDelay={500}
               autoplayInterval={2500}
@@ -59,7 +60,7 @@ export default class example extends Component {
     get gradient () {
         return (
             <LinearGradient
-              colors={[colors.background1, colors.background2, colors.background3]}
+              colors={[colors.background1, colors.background2]}
               start={{ x: 1, y: 0 }}
               end={{ x: 0, y: 1 }}
               style={styles.gradient}
@@ -87,7 +88,7 @@ export default class example extends Component {
                     <Text style={styles.subtitle}>No momentum | Scale | Opacity</Text>
                     { this.example1 }
                     <Text style={styles.title}>Example 2</Text>
-                    <Text style={styles.subtitle}>Momentum | Autoplay</Text>
+                    <Text style={styles.subtitle}>Momentum | Left-aligned | Autoplay</Text>
                     { this.example2 }
                 </ScrollView>
             </View>
