@@ -18,6 +18,7 @@ Let us know what you think and use [issue #73](https://github.com/archriss/react
 
 1. [Showcase](#showcase)
 1. [Usage](#usage)
+1. [Migration from version 2.x](#migration-from-version-2x)
 1. [Props](#props)
 1. [Methods](#methods)
 1. [Getters](#getters)
@@ -75,6 +76,75 @@ export class MyCarousel extends Component {
 }
 ```
 
+## Migration from version 2.x
+
+Slides are no longer appended as direct children of the component. There are two new props that takes care of their rendering: `data` and `renderItem` (both are inherited from `FlatList`).
+
+If you were already looping throught an array of data to populate the carousel, the migration is pretty straightforward. Just pass your slides' data to the `data` prop, convert your slides' getter to a function and pass it to the `renderItem` prop: you're good to go!
+
+**From**
+```javascript
+    get slides () {
+        return this.state.entries.map((entry, index) => {
+            return (
+                <View key={`entry-${index}`} style={styles.slide}>
+                    <Text style={styles.title}>{ entry.title }</Text>
+                </View>
+            );
+        });
+    }
+
+    render () {
+        return (
+            <Carousel
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+            >
+                { this.slides }
+            </Carousel>
+        );
+    }
+```
+
+**To**
+```javascript
+    _renderItem ({item, index}) {
+        return (
+            <View style={styles.slide}>
+                <Text style={styles.title}>{ entry.title }</Text>
+            </View>
+        );
+    }
+
+    render () {
+        return (
+            <Carousel
+              data={this.state.entries}
+              renderItem={this._renderItem}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+            />
+        );
+    }
+```
+
+> Note that the `key` prop is no longer needed for carousel's items. If you want to provide a custom key, you should pass your own [`keyExtractor`](https://facebook.github.io/react-native/docs/flatlist.html#keyextractor) to the `<Carousel />`.
+
+If you were previously appending random types of children, you will need to rely on a specific bit of data to return the proper element from your `renderItem` function.
+
+**Example**
+```javascript
+    _renderItem ({item, index}) {
+        if (item.type === 'text') {
+            return <Text style={styles.textSlide} />;
+        } else if (item.type === 'image') {
+            return <Image style={styles.imageSlide} />;
+        } else {
+            return <View style={styles.viewSlide} />;
+        }
+    }
+```
+
 ## Props
 
 ### Required
@@ -82,11 +152,11 @@ export class MyCarousel extends Component {
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 **data** | Array of items to loop on | Array | **Required**
-**renderItem** | Takes an item from data and renders it into the list. The function must return a React element. | Function | **Required**
-**itemWidth** | Width in pixels of carousel's items, **must be the same for all of them** | Number | **Required with horizontal carousel**
-**itemHeight** | Height in pixels of carousel's items, **must be the same for all of them** | Number | **Required with vertical carousel**
-**sliderWidth** | Width in pixels of the carousel itself | Number | **Required with horizontal carousel**
-**sliderHeight** | Height in pixels of the carousel itself | Number | **Required with vertical carousel**
+**renderItem** | Takes an item from data and renders it into the list. The function receives one argument `{item, index}` (see [Usage](#usage)) and must return a React element. | Function | **Required**
+**itemWidth** | Width in pixels of carousel's items, **must be the same for all of them** | Number | **Required for __horizontal__ carousel**
+**sliderWidth** | Width in pixels of the carousel itself | Number | **Required for __horizontal__ carousel**
+**itemHeight** | Height in pixels of carousel's items, **must be the same for all of them** | Number | **Required for __vertical__ carousel**
+**sliderHeight** | Height in pixels of the carousel itself | Number | **Required for __vertical__ carousel**
 
 ### Behavior
 
@@ -205,12 +275,13 @@ You can find the documentation for this component [here](https://github.com/arch
 
 ### Momentum
 
-Since version `1.5.0`, the snapping effect can now be based on momentum instead of when you're releasing your finger. It means that the component will wait until the `ScrollView` isn't moving anymore to snap. By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long.
-You can adjust this value to your needs thanks to [this prop](https://facebook.github.io/react-native/docs/scrollview.html#decelerationrate).
+Since version `1.5.0`, the snapping effect can be based on momentum (by setting `enableMomentum` to `true`) instead of when you're releasing your finger. It means that the component will wait until the `ScrollView` isn't moving anymore to snap.
 
-Make sure to also play with prop `scrollEndDragDebounceValue` since it can help achieving a better snap feeling when momentum is disabled.
+By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long. You can adjust this value to your needs thanks to [this prop](https://facebook.github.io/react-native/docs/scrollview.html#decelerationrate).
 
-> As a rule of thumb, **we recommend setting `enableMomentum` to `false` (default) and `decelerationRate` to `'fast'` when you are displaying only one main slide** (as in the showcase above), and to use `true` and `0.9` otherwise.
+If momentum is disabled (default behavior), make sure to play with prop `scrollEndDragDebounceValue` since it can help achieving a better snap feeling.
+
+> **We recommend setting `enableMomentum` to `false` (default) and `decelerationRate` to `'fast'` when you are displaying only one main slide** (as in the showcase above), and to use `true` and `0.9` otherwise.
 
 ### Margin between slides
 If you need some **extra horizontal margin** between slides (besides the one resulting from the scale effect), you should add it as `paddingHorizontal` on slide's container. Make sure to take this into account when calculating item's width.
@@ -234,7 +305,7 @@ const styles = Stylesheet.create({
 
 ### Handling device rotation
 
-Since version 2.2.0, slides will re-center properly if you update slider and/or items's dimensions when `onLayout` is fired.
+Since version 2.2.0, slides will re-center properly if you update slider and/or items' dimensions when `onLayout` is fired.
 
 Here is an example of a working implementation (thanks [@andrewpope](https://github.com/archriss/react-native-snap-carousel/pull/76#issuecomment-306187425)):
 
@@ -352,8 +423,6 @@ RN 0.44 is the minimum version required to use the plugin. Note that we follow R
 Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`.
 
 As such, this feature should be considered experimental since it might break with newer versions of React Native.
-
-There is one kown issue with RTL layouts: during init, the last slide will shortly be seen. You can work around this by delaying slider's visibility with a small timer (FYI, version 0.43.0 of React Native [introduced a `display` style prop](https://github.com/facebook/react-native/commit/4d69f4b2d1cf4f2e8265fe5758f28086f1b67500) that could either be set to `flex` or `none`).
 
 ## TODO
 
