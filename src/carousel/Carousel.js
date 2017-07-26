@@ -251,7 +251,7 @@ export default class Carousel extends Component {
         const { activeItem, interpolators, previousFirstItem } = this.state;
         const { data, firstItem, sliderWidth, sliderHeight, itemWidth, itemHeight } = nextProps;
 
-        const childrenLength = data.length;
+        const itemsLength = data.length;
         const nextFirstItem = this._getFirstItem(firstItem, nextProps);
         const nextActiveItem = activeItem || activeItem === 0 ? activeItem : nextFirstItem;
 
@@ -260,7 +260,7 @@ export default class Carousel extends Component {
         const hasNewItemWidth = itemWidth && itemWidth !== this.props.itemWidth;
         const hasNewItemHeight = itemHeight && itemHeight !== this.props.itemHeight;
 
-        if ((childrenLength && interpolators.length !== childrenLength) ||
+        if ((itemsLength && interpolators.length !== itemsLength) ||
             hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
             this._positions = [];
             this._calcCardPositions(nextProps);
@@ -303,21 +303,21 @@ export default class Carousel extends Component {
     }
 
     _getCustomIndex (index, props = this.props) {
-        const childrenLength = props.data && props.data.length;
+        const itemsLength = props.data && props.data.length;
 
-        if (!childrenLength || (!index && index !== 0)) {
+        if (!itemsLength || (!index && index !== 0)) {
             return 0;
         }
 
         return IS_RTL && !props.vertical ?
-            childrenLength - index - 1 :
+            itemsLength - index - 1 :
             index;
     }
 
     _getFirstItem (index, props = this.props) {
-        const childrenLength = props.data && props.data.length;
+        const itemsLength = props.data && props.data.length;
 
-        if (!childrenLength || index > childrenLength - 1 || index < 0) {
+        if (!itemsLength || index > itemsLength - 1 || index < 0) {
             return 0;
         }
 
@@ -326,7 +326,6 @@ export default class Carousel extends Component {
 
     _calcCardPositions (props = this.props) {
         const { data, itemWidth, itemHeight, vertical } = props;
-
         const sizeRef = vertical ? itemHeight : itemWidth;
 
         data.forEach((itemData, index) => {
@@ -361,7 +360,6 @@ export default class Carousel extends Component {
 
     _getActiveItem (offset) {
         const { activeSlideOffset } = this.props;
-
         const center = this._getCenter(offset);
 
         for (let i = 0; i < this._positions.length; i++) {
@@ -405,7 +403,6 @@ export default class Carousel extends Component {
 
     _getItemLayout (data, index) {
         const { itemWidth, itemHeight, vertical } = this.props;
-
         const itemSize = vertical ? itemHeight : itemWidth;
 
         return {
@@ -428,7 +425,6 @@ export default class Carousel extends Component {
 
     _getSlideAnimation (index, toValue) {
         const { animationFunc, animationOptions } = this.props;
-
         const animationCommonOptions = {
             isInteraction: false,
             useNativeDriver: true,
@@ -449,12 +445,12 @@ export default class Carousel extends Component {
     }
 
     _onScroll (event) {
-        const { enableMomentum, onScroll } = this.props;
         const { activeItem } = this.state;
+        const { data, enableMomentum, onScroll } = this.props;
 
         const scrollOffset = this._getScrollOffset(event);
         const newActiveItem = this._getActiveItem(scrollOffset);
-        const itemsLength = this._positions.length;
+        const itemsLength = data.length;
         let animations = [];
 
         this._currentContentOffset = scrollOffset;
@@ -636,9 +632,8 @@ export default class Carousel extends Component {
     }
 
     _onSnap (index) {
-        const { enableMomentum, onSnapToItem } = this.props;
-
-        const itemsLength = this._positions.length;
+        const { data, enableMomentum, onSnapToItem } = this.props;
+        const itemsLength = data.length;
 
         if (this._flatlist) {
             if (enableMomentum) {
@@ -680,9 +675,12 @@ export default class Carousel extends Component {
 
     snapToItem (index, animated = true, fireCallback = true, initial = false) {
         const { previousActiveItem } = this.state;
-        const { enableMomentum, scrollEndDragDebounceValue, activeSlideAlignment } = this.props;
+        const { data, enableMomentum, scrollEndDragDebounceValue, activeSlideAlignment } = this.props;
+        const itemsLength = data.length;
 
-        const itemsLength = this._positions.length;
+        if (!itemsLength) {
+            return;
+        }
 
         if (!index) {
             index = 0;
@@ -756,7 +754,7 @@ export default class Carousel extends Component {
     }
 
     snapToNext (animated = true) {
-        const itemsLength = this._positions.length;
+        const itemsLength = this.props.data.length;
 
         let newIndex = this.currentIndex + 1;
         if (newIndex > itemsLength - 1) {
@@ -766,7 +764,7 @@ export default class Carousel extends Component {
     }
 
     snapToPrev (animated = true) {
-        const itemsLength = this._positions.length;
+        const itemsLength = this.props.data.length;
 
         let newIndex = this.currentIndex - 1;
         if (newIndex < 0) {
@@ -777,7 +775,6 @@ export default class Carousel extends Component {
 
     _renderItem ({ item, index }) {
         const { renderItem, slideStyle, inactiveSlideScale, inactiveSlideOpacity } = this.props;
-
         const animatedValue = this.state.interpolators[index];
 
         if (!animatedValue || !animatedValue.opacity || !animatedValue.scale) {
