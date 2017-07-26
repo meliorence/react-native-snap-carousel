@@ -56,6 +56,13 @@ export default class Carousel extends Component {
         */
         animationOptions: PropTypes.object,
         /**
+        * FlatList's init is a real mess, with lots of
+        * unneeded flickers and slides movement
+        * This prop controls the delay during which the
+        * carousel will be hidden when mounted
+        */
+        apparitionDelay: PropTypes.number,
+        /**
         * Trigger autoplay
         */
         autoplay: PropTypes.bool,
@@ -144,6 +151,7 @@ export default class Carousel extends Component {
             duration: 600,
             easing: Easing.elastic(1)
         },
+        apparitionDelay: 250,
         autoplay: false,
         autoplayDelay: 5000,
         autoplayInterval: 3000,
@@ -220,7 +228,7 @@ export default class Carousel extends Component {
     }
 
     componentDidMount () {
-        const { firstItem, autoplay } = this.props;
+        const { firstItem, autoplay, apparitionDelay } = this.props;
         const _firstItem = this._getFirstItem(firstItem);
 
         this._initInterpolators(this.props);
@@ -236,7 +244,7 @@ export default class Carousel extends Component {
         // hide FlatList's awful init
         setTimeout(() => {
             this.setState({ hideCarousel: false });
-        }, 200);
+        }, apparitionDelay);
     }
 
     shouldComponentUpdate (nextProps, nextState) {
