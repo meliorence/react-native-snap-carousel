@@ -231,7 +231,7 @@ export default class Carousel extends Component {
         const { firstItem, autoplay, apparitionDelay } = this.props;
         const _firstItem = this._getFirstItem(firstItem);
 
-        this._initInterpolators(this.props);
+        this._initInterpolators(this.props, true);
 
         setTimeout(() => {
             this.snapToItem(_firstItem, false, false, true);
@@ -345,13 +345,17 @@ export default class Carousel extends Component {
         });
     }
 
-    _initInterpolators (props = this.props) {
+    _initInterpolators (props = this.props, initial = false) {
+        const { activeItem } = this.state;
         const { data, firstItem } = props;
-        const _firstItem = this._getFirstItem(firstItem, props);
+
         let interpolators = [];
+        const focusedItem = !initial && (activeItem || activeItem === 0) ?
+            activeItem :
+            this._getFirstItem(firstItem, props);
 
         data.forEach((itemData, index) => {
-            const value = index === _firstItem ? 1 : 0;
+            const value = index === focusedItem ? 1 : 0;
             interpolators.push({
                 opacity: new Animated.Value(value),
                 scale: new Animated.Value(value)
