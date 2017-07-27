@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 import _debounce from 'lodash.debounce';
 
+// Native driver for scroll events
+// See: https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 // React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
 // See https://github.com/facebook/react-native/issues/11960
 // Handling it requires a bunch of hacks
@@ -134,6 +138,10 @@ export default class Carousel extends Component {
         */
         swipeThreshold: PropTypes.number,
         /**
+        * Use native driver for 'onScroll' events
+        */
+        useNativeOnScroll: PropTypes.bool,
+        /**
         * Layout slides vertically
         */
         vertical: PropTypes.bool,
@@ -167,6 +175,7 @@ export default class Carousel extends Component {
         shouldOptimizeUpdates: true,
         snapOnAndroid: true,
         swipeThreshold: 20,
+        useNativeOnScroll: false,
         vertical: false
     }
 
@@ -200,6 +209,25 @@ export default class Carousel extends Component {
         this._onTouchRelease = this._onTouchRelease.bind(this);
         this._onLayout = this._onLayout.bind(this);
         this._onSnap = this._onSnap.bind(this);
+
+        // Native driver for scroll events
+        if (props.useNativeOnScroll || props.scrollEventThrottle < 16) {
+            const scrollEventConfig = {
+                listener: this._onScroll,
+                useNativeDriver: true
+            };
+            this._scrollPos = new Animated.Value(0);
+            this._onScrollHandler = props.vertical ?
+                Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }],
+                    scrollEventConfig
+                ) : Animated.event(
+                    [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }],
+                    scrollEventConfig
+                );
+        } else {
+            this._onScrollHandler = this._onScroll;
+        }
 
         // Debounce `_onScrollEndDrag` execution
         // This aims at improving snap feeling and callback reliability
@@ -829,12 +857,15 @@ export default class Carousel extends Component {
             contentContainerCustomStyle,
             enableMomentum,
             vertical,
-            firstItem
+            firstItem,
+            useNativeOnScroll
         } = this.props;
 
         if (!data || !renderItem) {
             return false;
         }
+
+        const Component = useNativeOnScroll ? AnimatedFlatList : FlatList;
 
         const style = [
             containerCustomStyle || {},
@@ -850,9 +881,9 @@ export default class Carousel extends Component {
             sliderWidth / itemWidth) + 1;
 
         return (
-            <FlatList
+            <Component
               decelerationRate={enableMomentum ? 0.9 : 'normal'}
-              scrollEventThrottle={16}
+              scrollEventThrottle={useNativeOnScroll ? 1 : 16}
               showsHorizontalScrollIndicator={false}
               showsVerticalScrollIndicator={false}
               overScrollMode={'never'}
@@ -862,7 +893,7 @@ export default class Carousel extends Component {
               windowSize={enableMomentum ? Math.max(11, (visibleItems * 2) + 1) : 11}
               // updateCellsBatchingPeriod
               {...this.props}
-              ref={(c) => { this._flatlist = c; }}
+              ref={(c) => { if (c) { this._flatlist = useNativeOnScroll ? c._component : c; } }}
               data={data}
               renderItem={this._renderItem}
               // extraData={this.state}
@@ -873,7 +904,7 @@ export default class Carousel extends Component {
               style={style}
               contentContainerStyle={contentContainerCustomStyle}
               horizontal={!vertical}
-              onScroll={this._onScroll}
+              onScroll={this._onScrollHandler}
               onScrollBeginDrag={this._onScrollBeginDrag}
               onScrollEndDrag={this._onScrollEndDrag}
               onMomentumScrollEnd={this._onMomentumScrollEnd}
