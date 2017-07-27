@@ -42,8 +42,7 @@ Let us know what you think and use [issue #73](https://github.com/archriss/react
 This app currently uses **version 1.4.0** of the plugin. Be aware that sliders' layouts will break on RTL devices since support was added in version 2.1.0 (see [#38](https://github.com/archriss/react-native-snap-carousel/issues/38)).
 
 > Please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
-
-> [codedaily.io](https://codedaily.io) has put together a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
+> The folks at [codedaily.io](https://codedaily.io) have put together a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
 
 ### Archriss' "Ville d'Aix-en-Provence" app
 
@@ -172,20 +171,22 @@ Prop | Description | Type | Default
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 activeSlideOffset | From slider's center, minimum slide distance to be scrolled before being set to active | Number | `25`
-enableMomentum | See [momentum](#momentum). **Warning: this prop can't be changed dynamically.** | Boolean | `false`
-enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item. **Warning: this prop can't be changed dynamically.** | Number | `true`
+apparitionDelay | `FlatList`'s init is a real mess, with lots of unneeded flickers and slides movement. This prop controls the delay during which the carousel will be hidden when mounted. | Number | `250`
+enableMomentum | See [momentum](#momentum) | Boolean | `false`
+enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Number | `true`
 firstItem | Index of the first item to display | Number | `0`
-scrollEndDragDebounceValue | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released.. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
+scrollEndDragDebounceValue | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
 shouldOptimizeUpdates | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
-snapOnAndroid | Snapping on android is kinda choppy, especially when swiping quickly so you can disable it. **Warning: this prop can't be changed dynamically.** | Boolean | `true`
+snapOnAndroid | Snapping on android is sometimes choppy, especially when swiping quickly, so you can disable it | Boolean | `true`
 swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
+useNativeOnScroll | Move `onScroll` events to the native thread in order to prevent the tiny lag associated with RN's JS bridge. **Activate this if you have a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely**. More info in [this post](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html). Note that it will be activated if `scrollEventThrottle` is set to less than `16`. | Boolean | `false`
 vertical | Layout slides vertically instead of horizontally | Boolean | `false`
 
 ### Autoplay
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-autoplay | Trigger autoplay on mount. **Warning: this prop can't be changed dynamically.** | Boolean | `false`
+autoplay | Trigger autoplay on mount. **Warning: this prop cannot be changed dynamically.** | Boolean | `false`
 autoplayDelay | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
 autoplayInterval | Delay in ms until navigating to the next item | Number |  `3000`
 
@@ -212,13 +213,13 @@ onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function 
 
 ### Inherited props
 
-The component is built on top of the `FlatList` component. This means it inherits from [`FlatList`](https://facebook.github.io/react-native/docs/flatlist.html), [`VirtualizedList`](https://facebook.github.io/react-native/docs/virtualizedlist.html), and [`ScrollView`](https://facebook.github.io/react-native/docs/scrollview.html).
+The component is built on top of the `FlatList` component, meaning it inherits from [`FlatList`](https://facebook.github.io/react-native/docs/flatlist.html), [`VirtualizedList`](https://facebook.github.io/react-native/docs/virtualizedlist.html), and [`ScrollView`](https://facebook.github.io/react-native/docs/scrollview.html).
 
-You can use almost all props from this three components. Note that some of them can't be overriden because it would mess with our implementation's logic.
+You can use almost all props from this three components, but some of them can't be overriden because it would mess with our implementation's logic.
 
-Here are a few useful props regarding carousel's style and feeling: `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
+Here are a few useful props regarding carousel's **style and "feeling"**: `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
 
-And here some useful ones for performance optimizations: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your need.
+And here are some useful ones for **performance optimizations**: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your need.
 
 ## Methods
 
@@ -265,7 +266,7 @@ Method | Description
 Property | Description
 ------ | ------
 `currentIndex` | Current active item (`int`, starts at 0)
-`currentScrollPosition` | Underlying `ScrollView`'s current content offset (`int`, starts at 0)
+`currentScrollPosition` | Underlying `ScrollView`'s current content offset (`int`, starts at `0` if `activeSlideAlignment` is set to `start`, negative value otherwise)
 
 ## Example
 You can find the following example in the [/example](https://github.com/archriss/react-native-snap-carousel/tree/master/example) folder.
@@ -400,12 +401,14 @@ Here is a screenshot that should help you understand how each of the above varia
 
 ## Known issues
 
-### ScrollView's limitations
+### FlatList and ScrollView's limitations
 
-Note that this plugin is built on top of React Native's `ScrollView`. Unfortunately, its implementation shows flaws that affect the plugin, the main ones being the following:
+Note that this plugin is built on top of React Native's `FlatList` which, in turn, is based on `ScrollView`. Unfortunately, its implementation shows flaws that affect the plugin, the main ones being the following:
 - there is no `scrollEnd` event
 - `scrollTo` method doesn't accept any callback
 - Android's `scrollTo` animation is quite brutal.
+
+On top of that, `FlatList` has its own set of bugs and buggy behaviors.
 
 We're trying to work around these issues, but the result is not always as smooth as we'd want it to be. Keep that in mind and go spam [React Native's Feature Request](https://react-native.canny.io/feature-requests) ;-)
 
@@ -425,7 +428,9 @@ The easiest workaround is to add `jest.unmock('ScrollView')` before importing th
 
 ### React Native version
 
-RN 0.44 is the minimum version required to use the plugin. Note that we follow RN evolutions closely, which means newer versions of the plugin might break when used with a version of RN that is not the latest stable one.
+**RN 0.44.x is the minimum version required to use the plugin.**
+
+Bear in mind that we follow RN evolutions closely, which means newer versions of the plugin might break when used in conjunction with a version of RN that is not the latest stable one.
 
 ### RTL support (experimental)
 
