@@ -10,7 +10,6 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 // React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
 // See https://github.com/facebook/react-native/issues/11960
-// Handling it requires a bunch of hacks
 // NOTE: the following variable is not declared in the constructor
 // otherwise it is undefined at init, which messes with custom indexes
 const IS_RTL = I18nManager.isRTL;
@@ -19,135 +18,33 @@ export default class Carousel extends Component {
 
     static propTypes = {
         ...FlatList.propTypes,
-        /**
-        * Width in pixels of carousel's items
-        * Required with 'horizontal' mode
-        */
-        itemWidth: PropTypes.number,
-        /**
-        * Height in pixels of carousel's items
-        * Required with 'vertical' mode
-        */
-        itemHeight: PropTypes.number,
-        /**
-        * Width in pixels of the carousel itself
-        * Required with 'horizontal' mode
-        */
-        sliderWidth: PropTypes.number,
-        /**
-        * Height in pixels of the carousel itself
-        * Required with 'horizontal' mode
-        */
-        sliderHeight: PropTypes.number,
-        /**
-        * Determine active slide's alignment
-        * relative to the carousel
-        */
+        itemWidth: PropTypes.number, // required for horizontal carousel
+        itemHeight: PropTypes.number, // required for vertical carousel
+        sliderWidth: PropTypes.number,  // required for horizontal carousel
+        sliderHeight: PropTypes.number, // required for vertical carousel
         activeSlideAlignment: PropTypes.oneOf(['center', 'end', 'start']),
-        /**
-        * From slider's center, minimum slide distance
-        * to be scrolled before being set to active
-        */
         activeSlideOffset: PropTypes.number,
-        /**
-        * Animated animation to use. Provide the name
-        * of the method, defaults to timing
-        */
         animationFunc: PropTypes.string,
-        /**
-        * Animation options to be merged with the
-        * default ones. Can be used w/ animationFunc
-        */
         animationOptions: PropTypes.object,
-        /**
-        * FlatList's init is a real mess, with lots of
-        * unneeded flickers and slides movement
-        * This prop controls the delay during which the
-        * carousel will be hidden when mounted
-        */
         apparitionDelay: PropTypes.number,
-        /**
-        * Trigger autoplay
-        */
         autoplay: PropTypes.bool,
-        /**
-        * Delay before enabling autoplay on startup and
-        * after releasing the touch
-        */
         autoplayDelay: PropTypes.number,
-        /**
-        * Delay until navigating to the next item
-        */
         autoplayInterval: PropTypes.number,
-        /**
-        * Global wrapper's style
-        */
         containerCustomStyle: ViewPropTypes.style,
-        /**
-        * Content container's style
-        */
         contentContainerCustomStyle: ViewPropTypes.style,
-        /**
-        * If enabled, snapping will be triggered once
-        * the ScrollView stops moving, not when the
-        * user releases his finger
-        */
         enableMomentum: PropTypes.bool,
-        /**
-        * If enabled, releasing the touch will scroll
-        * to the center of the nearest/active item
-        */
         enableSnap: PropTypes.bool,
-        /**
-        * Index of the first item to display
-        */
         firstItem: PropTypes.number,
-        /**
-        * Opacity value of the inactive slides
-        */
+        hasParallaxImages: PropTypes.bool,
         inactiveSlideOpacity: PropTypes.number,
-        /**
-        * Scale factor of the inactive slides
-        */
         inactiveSlideScale: PropTypes.number,
-        /**
-        * When momentum is disabled, this prop defines the
-        * timeframe during which multiple 'endDrag' calls
-        * should be "grouped" into a single one.
-        * This debounce also helps smoothing the snap effect
-        * by providing a bit of inertia when touch is released.
-        * Note that it will delay callback's execution.
-        */
         scrollEndDragDebounceValue: PropTypes.number,
-        /**
-         * Style of each item's container
-         */
         slideStyle: Animated.View.propTypes.style,
-        /**
-         * whether to implement a `shouldComponentUpdate`
-         * strategy to minimize updates
-         */
         shouldOptimizeUpdates: PropTypes.bool,
-        /**
-         * Snapping on android is kinda choppy, especially
-         * when swiping quickly so you can disable it
-         */
         snapOnAndroid: PropTypes.bool,
-        /**
-        * Delta x when swiping to trigger the snap
-        */
         swipeThreshold: PropTypes.number,
-        /**
-        * Use native driver for 'onScroll' events
-        */
         useNativeOnScroll: PropTypes.bool,
-        /**
-        * Layout slides vertically
-        */
         vertical: PropTypes.bool,
-        /**
-         * Fired when snapping to an item
-         */
         onSnapToItem: PropTypes.func
     };
 
@@ -168,6 +65,7 @@ export default class Carousel extends Component {
         enableMomentum: false,
         enableSnap: true,
         firstItem: 0,
+        hasParallaxImages: false,
         inactiveSlideOpacity: 0.7,
         inactiveSlideScale: 0.9,
         scrollEndDragDebounceValue: Platform.OS === 'ios' ? 50 : 150,
@@ -211,7 +109,7 @@ export default class Carousel extends Component {
         this._onSnap = this._onSnap.bind(this);
 
         // Native driver for scroll events
-        if (props.useNativeOnScroll || props.scrollEventThrottle < 16) {
+        if (props.useNativeOnScroll || props.hasParallaxImages || props.scrollEventThrottle < 16) {
             const scrollEventConfig = {
                 listener: this._onScroll,
                 useNativeDriver: true
@@ -814,8 +712,21 @@ export default class Carousel extends Component {
     }
 
     _renderItem ({ item, index }) {
-        const { renderItem, slideStyle, inactiveSlideScale, inactiveSlideOpacity } = this.props;
-        const animatedValue = this.state.interpolators[index];
+        const { interpolators } = this.state;
+        const {
+            renderItem,
+            sliderWidth,
+            sliderHeight,
+            itemWidth,
+            itemHeight,
+            slideStyle,
+            inactiveSlideScale,
+            inactiveSlideOpacity,
+            vertical,
+            hasParallaxImages
+        } = this.props;
+
+        const animatedValue = interpolators && interpolators[index];
 
         if (!animatedValue || !animatedValue.opacity || !animatedValue.scale) {
             return false;
@@ -834,12 +745,22 @@ export default class Carousel extends Component {
             }]
         };
 
+        const parallaxProps = hasParallaxImages ? {
+            scrollPosition: this._scrollPos,
+            carouselRef: this._flatlist,
+            vertical,
+            sliderWidth,
+            sliderHeight,
+            itemWidth,
+            itemHeight
+        } : undefined;
+
         return (
             <Animated.View
               key={`carousel-item-${index}`}
               style={[slideStyle, animatedStyle]}
             >
-                { renderItem({ item, index }) }
+                { renderItem({ item, index }, parallaxProps) }
             </Animated.View>
         );
     }
@@ -858,14 +779,16 @@ export default class Carousel extends Component {
             enableMomentum,
             vertical,
             firstItem,
-            useNativeOnScroll
+            useNativeOnScroll,
+            hasParallaxImages
         } = this.props;
 
         if (!data || !renderItem) {
             return false;
         }
 
-        const Component = useNativeOnScroll ? AnimatedFlatList : FlatList;
+        const wrapList = useNativeOnScroll || hasParallaxImages;
+        const Component = wrapList ? AnimatedFlatList : FlatList;
 
         const style = [
             containerCustomStyle || {},
@@ -893,7 +816,7 @@ export default class Carousel extends Component {
               windowSize={enableMomentum ? Math.max(11, (visibleItems * 2) + 1) : 11}
               // updateCellsBatchingPeriod
               {...this.props}
-              ref={(c) => { if (c) { this._flatlist = useNativeOnScroll ? c._component : c; } }}
+              ref={(c) => { if (c) { this._flatlist = wrapList ? c._component : c; } }}
               data={data}
               renderItem={this._renderItem}
               // extraData={this.state}
