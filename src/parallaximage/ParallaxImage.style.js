@@ -10,5 +10,10 @@ export default StyleSheet.create({
         resizeMode: 'cover',
         width: null,
         height: null
+    },
+    loaderContainer: {
+        ...StyleSheet.absoluteFillObject,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });

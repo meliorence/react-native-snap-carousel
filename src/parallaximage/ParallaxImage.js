@@ -1,32 +1,38 @@
-// Inspired by https://github.com/oblador/react-native-parallax/
+// Parallax effect inspired by https://github.com/oblador/react-native-parallax/
 
 import React, { Component } from 'react';
-import { View, ViewPropTypes, Animated, findNodeHandle } from 'react-native';
+import { View, ViewPropTypes, Image, Animated, Easing, ActivityIndicator, findNodeHandle } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './ParallaxImage.style';
 
 export default class ParallaxImage extends Component {
 
     static propTypes = {
-        carouselRef: PropTypes.object,
+        ...Image.propTypes,
+        carouselRef: PropTypes.object, // passed from <Carousel />
+        itemHeight: PropTypes.number, // passed from <Carousel />
+        itemWidth: PropTypes.number, // passed from <Carousel />
+        scrollPosition: PropTypes.object, // passed from <Carousel />
+        sliderHeight: PropTypes.number, // passed from <Carousel />
+        sliderWidth: PropTypes.number, // passed from <Carousel />
+        vertical: PropTypes.bool, // passed from <Carousel />
         containerStyle: ViewPropTypes.style,
         dimensions: PropTypes.shape({
             width: PropTypes.number,
             height: PropTypes.number
         }),
-        image: PropTypes.element,
-        itemHeight: PropTypes.number,
-        itemWidth: PropTypes.number,
+        fadeDuration: PropTypes.number,
         parallaxFactor: PropTypes.number,
-        sliderHeight: PropTypes.number,
-        sliderWidth: PropTypes.number,
-        scrollPosition: PropTypes.object,
-        vertical: PropTypes.bool
+        showSpinner: PropTypes.bool,
+        spinnerColor: PropTypes.string
     };
 
     static defaultProps = {
         containerStyle: {},
-        parallaxFactor: 0.3
+        fadeDuration: 500,
+        parallaxFactor: 0.3,
+        showSpinner: true,
+        spinnerColor: 'rgba(0, 0, 0, 0.4)'
     }
 
     constructor (props) {
@@ -34,8 +40,12 @@ export default class ParallaxImage extends Component {
         this.state = {
             offset: 0,
             width: 0,
-            height: 0
+            height: 0,
+            status: 1, // 1 -> loading; 2 -> loaded // 3 -> transition finished; 4 -> error
+            animOpacity: new Animated.Value(0)
         };
+        this._onLoad = this._onLoad.bind(this);
+        this._onError = this._onError.bind(this);
     }
 
     setNativeProps (nativeProps) {
@@ -43,9 +53,15 @@ export default class ParallaxImage extends Component {
     }
 
     componentDidMount () {
+        this._mounted = true;
+
         setTimeout(() => {
             this._measureLayout();
         }, 0);
+    }
+
+    componentWillUnmount () {
+        this._mounted = false;
     }
 
     _measureLayout () {
@@ -68,25 +84,49 @@ export default class ParallaxImage extends Component {
                             y - ((sliderHeight - itemHeight) / 2) :
                             x - ((sliderWidth - itemWidth) / 2);
 
-                        if (dimensions) {
-                            this.setState({
-                                offset: offset
-                            });
-                        } else {
-                            this.setState({
-                                offset: offset,
-                                width: Math.ceil(width),
-                                height: Math.ceil(height)
-                            });
-                        }
+                        this.setState({
+                            offset: offset,
+                            width: dimensions && dimensions.width ?
+                                dimensions.width :
+                                Math.ceil(width),
+                            height: dimensions && dimensions.height ?
+                                dimensions.height :
+                                Math.ceil(height)
+                        });
                     }
                 );
             }
         }
     }
 
-    render () {
-        const { offset } = this.state;
+    _onLoad () {
+        const { animOpacity } = this.state;
+        const { fadeDuration } = this.props;
+
+        if (!this._mounted) {
+            return;
+        }
+
+        this.setState({ status: 2 });
+
+        Animated.timing(animOpacity, {
+            toValue: 1,
+            duration: fadeDuration,
+            easing: Easing.out(Easing.quad),
+            isInteraction: false,
+            useNativeDriver: true
+        }).start(() => {
+            this.setState({ status: 3 });
+        });
+    }
+
+    // If arg is missing from method signature, it just won't be called
+    _onError (event) {
+        this.setState({ status: 4 });
+    }
+
+    get image () {
+        const { status, animOpacity, offset, width, height } = this.state;
         const {
             scrollPosition,
             dimensions,
@@ -95,18 +135,14 @@ export default class ParallaxImage extends Component {
             sliderHeight,
             parallaxFactor,
             style,
-            containerStyle,
-            image,
             ...other
         } = this.props;
 
-        const width = dimensions ? dimensions.width : this.state.width;
-        const height = dimensions ? dimensions.height : this.state.height;
-
         const parallaxPadding = (vertical ? height : width) * parallaxFactor;
-        const parallaxStyle = {
+        const dynamicStyles = {
             width: vertical ? width : width + parallaxPadding * 2,
             height: vertical ? height + parallaxPadding * 2 : height,
+            opacity: animOpacity,
             transform: scrollPosition ? [
                 {
                     translateX: !vertical ? scrollPosition.interpolate({
@@ -126,16 +162,42 @@ export default class ParallaxImage extends Component {
         };
 
         return (
+            <Animated.Image
+              {...other}
+              style={[style, styles.image, dynamicStyles]}
+              onLoad={this._onLoad}
+              onError={status !== 3 ? this._onError : undefined} // prevent infinite-loop bug
+            />
+        );
+    }
+
+    get spinner () {
+        const { status } = this.state;
+        const { showSpinner, spinnerColor } = this.props;
+
+        return status === 1 && showSpinner ? (
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator
+                  size={'small'}
+                  color={spinnerColor}
+                  animating={true}
+                />
+            </View>
+        ) : false;
+    }
+
+    render () {
+        const { containerStyle } = this.props;
+
+        return (
             <View
               ref={(c) => { this._container = c; }}
               pointerEvents={'none'}
               style={[containerStyle, styles.container]}
               onLayout={this._measureLayout}
             >
-                <Animated.Image
-                  {...other}
-                  style={[style, styles.image, parallaxStyle]}
-                />
+                { this.image }
+                { this.spinner }
             </View>
         );
     }
