@@ -99,15 +99,19 @@ export default class ParallaxImage extends Component {
         }
     }
 
-    _onLoad () {
+    _onLoad (event) {
         const { animOpacity } = this.state;
-        const { fadeDuration } = this.props;
+        const { fadeDuration, onLoad } = this.props;
 
         if (!this._mounted) {
             return;
         }
 
         this.setState({ status: 2 });
+
+        if (onLoad) {
+            onLoad(event);
+        }
 
         Animated.timing(animOpacity, {
             toValue: 1,
@@ -122,7 +126,13 @@ export default class ParallaxImage extends Component {
 
     // If arg is missing from method signature, it just won't be called
     _onError (event) {
+        const { onError } = this.props;
+
         this.setState({ status: 4 });
+
+        if (onError) {
+            onError(event);
+        }
     }
 
     get image () {
