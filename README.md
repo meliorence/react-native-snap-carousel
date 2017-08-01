@@ -1,5 +1,6 @@
 # react-native-snap-carousel
-Swiper component for React Native featuring **previews**, **snapping effect**, **performant handling of huge numbers of items**, and **RTL support**. Compatible with Android & iOS.
+Swiper component for React Native featuring **previews**, **snapping effect**, **parallax images**, **performant handling of huge numbers of items**, and **RTL support**. Compatible with Android & iOS.
+
 Pull requests are very welcome!
 
 ## Testers wanted!
@@ -23,6 +24,7 @@ Let us know what you think and use [issue #73](https://github.com/archriss/react
 1. [Methods](#methods)
 1. [Getters](#getters)
 1. [Example](#example)
+1. [ParallaxImage component](#parallaximage-component)
 1. [Pagination component](#pagination-component)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
@@ -65,7 +67,7 @@ export class MyCarousel extends Component {
     _renderItem ({item, index}) {
         return (
             <View style={styles.slide}>
-                <Text style={styles.title}>{ entry.title }</Text>
+                <Text style={styles.title}>{ item.title }</Text>
             </View>
         );
     }
@@ -119,7 +121,7 @@ If you were already looping throught an array of data to populate the carousel, 
     _renderItem ({item, index}) {
         return (
             <View style={styles.slide}>
-                <Text style={styles.title}>{ entry.title }</Text>
+                <Text style={styles.title}>{ item.title }</Text>
             </View>
         );
     }
@@ -175,6 +177,7 @@ apparitionDelay | `FlatList`'s init is a real mess, with lots of unneeded flicke
 enableMomentum | See [momentum](#momentum) | Boolean | `false`
 enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Number | `true`
 firstItem | Index of the first item to display | Number | `0`
+hasParallaxImages | Whether the carousel contains `<ParallaxImage />` components or not. Required for specific data to be passed to children. | Boolean | `false`
 scrollEndDragDebounceValue | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
 shouldOptimizeUpdates | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
 snapOnAndroid | Snapping on android is sometimes choppy, especially when swiping quickly, so you can disable it | Boolean | `true`
@@ -219,7 +222,7 @@ You can use almost all props from this three components, but some of them can't 
 
 Here are a few useful props regarding carousel's **style and "feeling"**: `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
 
-And here are some useful ones for **performance optimizations**: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your need.
+And here are some useful ones for **performance optimizations**: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your needs.
 
 ## Methods
 
@@ -273,7 +276,15 @@ You can find the following example in the [/example](https://github.com/archriss
 
 ![react-native-snap-carousel](http://i.imgur.com/UNL48OS.gif)
 
-## Pagination component
+## `ParallaxImage` component
+
+Version `3.0.0` introduced a `<ParallaxImage />` component, an image component aware of carousel's current scroll position and therefore able to display a nice parallax effect.
+
+![react-native-snap-carousel parallax image](http://i.imgur.com/6iIb4SR.gif)
+
+You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/parallaximage/README.md).
+
+## `Pagination` component
 
 Starting with version `2.4.0`, a customizable `<Pagination />` component has been added. This is how it looks like with its default configuration:
 
