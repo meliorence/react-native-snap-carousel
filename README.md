@@ -3,18 +3,6 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 
 Pull requests are very welcome!
 
-## Testers wanted!
-
-![react-native-snap-carousel we need you](http://i.imgur.com/KOSTJx2m.jpg)
-
-A lot is currently going on with the plugin: **`FlatList` implementation** (which allows for a virtually infinite number of slides), **parallax images**, **slides' alignment**... There are even rumors of the most wanted 'loop mode' being currently worked on.
-
-Some of this changes are huge and we want them to be tested by a large pool of users - **including you!** If you feel like getting a taste of the future, try the latest commit of the regularly updated [`flatlist` branch](https://github.com/archriss/react-native-snap-carousel/tree/flatlist).
-
-To make things easy for you, branch's [documentation](https://github.com/archriss/react-native-snap-carousel/blob/flatlist/README.md) and [example](https://github.com/archriss/react-native-snap-carousel/tree/flatlist/example) will always be kept up-to-date.
-
-Let us know what you think and use [issue #73](https://github.com/archriss/react-native-snap-carousel/issues/73) to get your feedback rolling!
-
 ## Table of contents
 
 1. [Showcase](#showcase)
@@ -282,7 +270,7 @@ Version `3.0.0` introduced a `<ParallaxImage />` component, an image component a
 
 ![react-native-snap-carousel parallax image](http://i.imgur.com/6iIb4SR.gif)
 
-You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/parallaximage/README.md).
+You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/flatlist/src/parallaximage/README.md).
 
 ## `Pagination` component
 
