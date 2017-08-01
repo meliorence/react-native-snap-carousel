@@ -274,7 +274,7 @@ Property | Description
 ## Example
 You can find the following example in the [/example](https://github.com/archriss/react-native-snap-carousel/tree/master/example) folder.
 
-![react-native-snap-carousel](http://i.imgur.com/UNL48OS.gif)
+![react-native-snap-carousel](http://i.imgur.com/m0297Ys.gif)
 
 ## `ParallaxImage` component
 
