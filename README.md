@@ -2,6 +2,18 @@
 Swiper component for React Native with **previews**, **snapping effect** and **RTL support**. Compatible with Android & iOS.
 Pull requests are very welcome!
 
+## Testers wanted!
+
+![react-native-snap-carousel we need you](http://i.imgur.com/KOSTJx2m.jpg)
+
+A lot is currently going on with the plugin: **`FlatList` implementation** (which allows for a virtually infinite number of slides), **parallax images**, **slides' alignment**... There are even rumors of the most wanted 'loop mode' being currently worked on.
+
+Some of this changes are huge and we want them to be tested by a large pool of users - **including you!** If you feel like getting a taste of the future, try the latest commit of the regularly updated [`flatlist` branch](https://github.com/archriss/react-native-snap-carousel/tree/flatlist).
+
+To make things easy for you, branch's [documentation](https://github.com/archriss/react-native-snap-carousel/blob/flatlist/src/parallaximage/README.md) and [example](https://github.com/archriss/react-native-snap-carousel/tree/flatlist/example) will always be kept up-to-date.
+
+Let us know what you think and use [issue #73](https://github.com/archriss/react-native-snap-carousel/issues/73) to get your feedback rolling!
+
 ## Table of contents
 
 1. [Showcase](#showcase)
