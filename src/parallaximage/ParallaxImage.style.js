@@ -7,6 +7,7 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     image: {
+        position: 'relative',
         resizeMode: 'cover',
         width: null,
         height: null
