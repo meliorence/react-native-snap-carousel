@@ -91,7 +91,7 @@ export default class Carousel extends Component {
 
         this._positions = [];
         this._currentContentOffset = 0; // store ScrollView's scroll position
-        this._hasFiredEdgeItemCallback = false; // deal with overscroll and callback
+        this._hasFiredEdgeItemCallback = true; // deal with overscroll and callback
         this._canFireCallback = false; // used only when `enableMomentum` is set to `false`
         this._isShortSnapping = false; // used only when `enableMomentum` is set to `false`
 
@@ -99,10 +99,10 @@ export default class Carousel extends Component {
         this._getItemLayout = this._getItemLayout.bind(this);
         this._renderItem = this._renderItem.bind(this);
         this._onScroll = this._onScroll.bind(this);
-        this._onScrollBeginDrag = this._snapEnabled ? this._onScrollBeginDrag.bind(this) : null;
-        this._onScrollEnd = this._snapEnabled || props.autoplay ? this._onScrollEnd.bind(this) : null;
-        this._onScrollEndDrag = !props.enableMomentum ? this._onScrollEndDrag.bind(this) : null;
-        this._onMomentumScrollEnd = props.enableMomentum ? this._onMomentumScrollEnd.bind(this) : null;
+        this._onScrollBeginDrag = this._snapEnabled ? this._onScrollBeginDrag.bind(this) : undefined;
+        this._onScrollEnd = this._snapEnabled || props.autoplay ? this._onScrollEnd.bind(this) : undefined;
+        this._onScrollEndDrag = !props.enableMomentum ? this._onScrollEndDrag.bind(this) : undefined;
+        this._onMomentumScrollEnd = props.enableMomentum ? this._onMomentumScrollEnd.bind(this) : undefined;
         this._onTouchStart = this._onTouchStart.bind(this);
         this._onTouchRelease = this._onTouchRelease.bind(this);
         this._onLayout = this._onLayout.bind(this);
@@ -410,6 +410,10 @@ export default class Carousel extends Component {
         }
 
         if (activeItem !== newActiveItem) {
+            if (activeItem === 0 || activeItem === itemsLength - 1) {
+                this._hasFiredEdgeItemCallback = false;
+            }
+
             // WARNING: `setState()` is asynchronous
             this.setState({ activeItem: newActiveItem }, () => {
                 // When "short snapping", we can rely on the "activeItem/newActiveItem" comparison
@@ -428,10 +432,6 @@ export default class Carousel extends Component {
                 animations.push(this._getSlideAnimation(newActiveItem, 1));
             }
             Animated.parallel(animations, { stopTogether: false }).start();
-
-            if (activeItem === 0 || activeItem === itemsLength - 1) {
-                this._hasFiredEdgeItemCallback = false;
-            }
         }
 
         // When scrolling, we need to check that we are not "short snapping",
@@ -625,7 +625,7 @@ export default class Carousel extends Component {
 
     snapToItem (index, animated = true, fireCallback = true, initial = false) {
         const { previousActiveItem } = this.state;
-        const { data, enableMomentum, scrollEndDragDebounceValue, activeSlideAlignment } = this.props;
+        const { data, enableMomentum, scrollEndDragDebounceValue } = this.props;
         const itemsLength = data.length;
 
         if (!itemsLength) {
@@ -638,11 +638,13 @@ export default class Carousel extends Component {
 
         if (itemsLength > 0 && index >= itemsLength) {
             index = itemsLength - 1;
+            this._isShortSnapping = false; // prevent issue #105
             if (this._scrollStartActive === itemsLength - 1 && this._hasFiredEdgeItemCallback) {
                 fireCallback = false;
             }
         } else if (index < 0) {
             index = 0;
+            this._isShortSnapping = false; // prevent issue #105
             if (this._scrollStartActive === 0 && this._hasFiredEdgeItemCallback) {
                 fireCallback = false;
             }
@@ -678,7 +680,7 @@ export default class Carousel extends Component {
                     if (scrollPosition === this._currentContentOffset && this._canFireCallback) {
                         this._onSnap(index);
                     }
-                }, Math.max(200, scrollEndDragDebounceValue + 50));
+                }, Math.max(500, scrollEndDragDebounceValue + 50));
             }
 
             // Unfortunately, 'viewPosition' is quite buggy at the moment
