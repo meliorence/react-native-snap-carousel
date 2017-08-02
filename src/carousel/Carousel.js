@@ -315,24 +315,35 @@ export default class Carousel extends Component {
         return 0;
     }
 
-    _getContainerInnerMargin () {
+    _getContainerInnerMargin (opposite = false) {
         const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical, activeSlideAlignment } = this.props;
 
-        if (activeSlideAlignment === 'start' || (IS_RTL && activeSlideAlignment === 'end')) {
+        if ((activeSlideAlignment === 'start' && !opposite) ||
+            (activeSlideAlignment === 'end' && opposite)) {
             return 0;
-        } else if (activeSlideAlignment === 'end' || (IS_RTL && activeSlideAlignment === 'start')) {
+        } else if ((activeSlideAlignment === 'end' && !opposite) ||
+            (activeSlideAlignment === 'start' && opposite)) {
             return vertical ? sliderHeight - itemHeight : sliderWidth - itemWidth;
+        } else {
+            return vertical ? (sliderHeight - itemHeight) / 2 : (sliderWidth - itemWidth) / 2;
         }
-
-        return vertical ? (sliderHeight - itemHeight) / 2 : (sliderWidth - itemWidth) / 2;
     }
 
     _getCenter (offset) {
-        const { sliderWidth, sliderHeight, vertical } = this.props;
+        const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical, activeSlideAlignment } = this.props;
 
-        return offset +
-            (this._getContainerInnerMargin() * (IS_RTL ? -1 : 1)) +
-            ((vertical ? sliderHeight : sliderWidth) / 2);
+        let viewportOffset;
+        if (activeSlideAlignment === 'start') {
+            viewportOffset = vertical ? itemHeight / 2 : itemWidth / 2;
+        } else if (activeSlideAlignment === 'end') {
+            viewportOffset = vertical ?
+                sliderHeight - (itemHeight / 2) :
+                sliderWidth - (itemWidth / 2);
+        } else {
+            viewportOffset = vertical ? sliderHeight / 2 : sliderWidth / 2;
+        }
+
+        return offset + viewportOffset - (this._getContainerInnerMargin() * (IS_RTL ? -1 : 1));
     }
 
     _getKeyExtractor (item, index) {
@@ -353,6 +364,7 @@ export default class Carousel extends Component {
     _getItemOffset (index) {
         // 'viewPosition' doesn't work for the first item
         // It is always aligned to the left
+        // Unfortunately, 'viewOffset' doesn't work on Android ATM
         if ((!IS_RTL && index === 0) ||
             (IS_RTL && index === this.props.data.length - 1)) {
             return this._getContainerInnerMargin();
@@ -669,18 +681,20 @@ export default class Carousel extends Component {
                 }, Math.max(200, scrollEndDragDebounceValue + 50));
             }
 
-            let viewPosition = 0.5;
-
-            if (activeSlideAlignment === 'start') {
-                viewPosition = IS_RTL ? 1 : 0;
-            } else if (activeSlideAlignment === 'end') {
-                viewPosition = IS_RTL ? 0 : 1;
-            }
+            // Unfortunately, 'viewPosition' is quite buggy at the moment
+            // Moreover, 'viewOffset' just doesn't work on Android
+            // const viewOffset = this._getItemOffset(index);
+            // let viewPosition = 0.5;
+            // if (activeSlideAlignment === 'start') {
+            //     viewPosition = IS_RTL ? 1 : 0;
+            // } else if (activeSlideAlignment === 'end') {
+            //     viewPosition = IS_RTL ? 0 : 1;
+            // }
 
             this._flatlist.scrollToIndex({
                 index,
-                viewPosition: viewPosition,
-                viewOffset: this._getItemOffset(index),
+                viewPosition: 0,
+                viewOffset: 0,
                 animated
             });
 
@@ -798,6 +812,16 @@ export default class Carousel extends Component {
                 // LTR hack; see https://github.com/facebook/react-native/issues/11960
                 { width: sliderWidth, flexDirection: IS_RTL ? 'row-reverse' : 'row' }
         ];
+        const contentContainerStyle = [
+            contentContainerCustomStyle || {},
+            vertical ? {
+                paddingTop: this._getContainerInnerMargin(),
+                paddingBottom: this._getContainerInnerMargin(true)
+            } : {
+                paddingLeft: this._getContainerInnerMargin(),
+                paddingRight: this._getContainerInnerMargin(true)
+            }
+        ];
 
         const visibleItems = Math.ceil(vertical ?
             sliderHeight / itemHeight :
@@ -825,7 +849,7 @@ export default class Carousel extends Component {
               initialScrollIndex={firstItem || undefined}
               numColumns={1}
               style={style}
-              contentContainerStyle={contentContainerCustomStyle}
+              contentContainerStyle={contentContainerStyle}
               horizontal={!vertical}
               onScroll={this._onScrollHandler}
               onScrollBeginDrag={this._onScrollBeginDrag}
