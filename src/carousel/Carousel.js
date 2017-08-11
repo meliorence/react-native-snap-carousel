@@ -308,7 +308,7 @@ export default class Carousel extends Component {
         }
 
         const lastIndex = this._positions.length - 1;
-        if (center - activeSlideOffset > this._positions[lastIndex].end) {
+        if (this._positions[lastIndex] && center - activeSlideOffset > this._positions[lastIndex].end) {
             return lastIndex;
         }
 
