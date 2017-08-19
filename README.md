@@ -163,7 +163,7 @@ Prop | Description | Type | Default
 activeSlideOffset | From slider's center, minimum slide distance to be scrolled before being set to active | Number | `25`
 apparitionDelay | `FlatList`'s init is a real mess, with lots of unneeded flickers and slides movement. This prop controls the delay during which the carousel will be hidden when mounted. | Number | `250`
 enableMomentum | See [momentum](#momentum) | Boolean | `false`
-enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Number | `true`
+enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Boolean | `true`
 firstItem | Index of the first item to display | Number | `0`
 hasParallaxImages | Whether the carousel contains `<ParallaxImage />` components or not. Required for specific data to be passed to children. | Boolean | `false`
 scrollEndDragDebounceValue | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
