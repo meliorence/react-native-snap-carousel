@@ -25,11 +25,8 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 export default class MyCarousel extends Component {
 
-    get slides () {
-        const { entries } = this.state;
-        return entries.map((entry, index) => {
-            return <MySlideComponent key={`entry-${index}`} data={entry} />
-        });
+    _renderItem ({item, index}) {
+        return <MySlideComponent data={item} />
     }
 
     get pagination () {
@@ -59,13 +56,12 @@ export default class MyCarousel extends Component {
         return (
             <View>
                 <Carousel
-                  ...
+                  data={this.state.entries}
+                  renderItem={this._renderItem}
                   onSnapToItem={(index) => this.setState({ activeSlide: index }) }
-                >
-                    { this.slides }
-                </Carousel>
+                />
                 { this.pagination }
             </View>
-        )
+        );
     }
 ```

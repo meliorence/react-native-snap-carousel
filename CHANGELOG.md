@@ -1,3 +1,13 @@
+## v3.0.0
+### Breaking changes
+* Plugin is now built on top of `FlatList`, which allows for huge performance optimizations. From now on, items must be rendered using props `data` and `renderItem`.
+### General
+* Add `ParallaxImage` component (see the specific documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/parallaximage/README.md))
+* Add prop `activeSlideAlignment`
+* Fix issue with autoplay when setting `scrollEnabled` to `false`
+* Prevent going back to the first item when overscrolling the last one
+* Prevent callback from being called at the wrong time in some specific scenarios
+
 ## v2.4.0
 * Add `Pagination` component (see the specific documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/pagination/README.md))
 * Allow `firstItem` to be changed dynamically

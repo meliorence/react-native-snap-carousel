@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { ScrollView, Animated, Platform, Easing, I18nManager, ViewPropTypes } from 'react-native';
+import { View, FlatList, Animated, Platform, Easing, I18nManager, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 import _debounce from 'lodash.debounce';
 
+// Native driver for scroll events
+// See: https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 // React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
 // See https://github.com/facebook/react-native/issues/11960
-// Handling it requires a bunch of hacks
 // NOTE: the following variable is not declared in the constructor
 // otherwise it is undefined at init, which messes with custom indexes
 const IS_RTL = I18nManager.isRTL;
@@ -14,163 +17,65 @@ const IS_RTL = I18nManager.isRTL;
 export default class Carousel extends Component {
 
     static propTypes = {
-        ...ScrollView.propTypes,
-        /**
-        * Width in pixels of carousel's items
-        * Required with 'horizontal' mode
-        */
-        itemWidth: PropTypes.number,
-        /**
-        * Height in pixels of carousel's items
-        * Required with 'vertical' mode
-        */
-        itemHeight: PropTypes.number,
-        /**
-        * Width in pixels of the carousel itself
-        * Required with 'horizontal' mode
-        */
-        sliderWidth: PropTypes.number,
-        /**
-        * Height in pixels of the carousel itself
-        * Required with 'horizontal' mode
-        */
-        sliderHeight: PropTypes.number,
-        /**
-        * From slider's center, minimum slide distance
-        * to be scrolled before being set to active
-        */
+        ...FlatList.propTypes,
+        data: PropTypes.array.isRequired,
+        renderItem: PropTypes.func.isRequired,
+        itemWidth: PropTypes.number, // required for horizontal carousel
+        itemHeight: PropTypes.number, // required for vertical carousel
+        sliderWidth: PropTypes.number,  // required for horizontal carousel
+        sliderHeight: PropTypes.number, // required for vertical carousel
+        activeSlideAlignment: PropTypes.oneOf(['center', 'end', 'start']),
         activeSlideOffset: PropTypes.number,
-        /**
-        * Animated animation to use. Provide the name
-        * of the method, defaults to timing
-        */
         animationFunc: PropTypes.string,
-        /**
-        * Animation options to be merged with the
-        * default ones. Can be used w/ animationFunc
-        */
         animationOptions: PropTypes.object,
-        /**
-        * Trigger autoplay
-        */
+        apparitionDelay: PropTypes.number,
         autoplay: PropTypes.bool,
-        /**
-        * Delay before enabling autoplay on startup and
-        * after releasing the touch
-        */
         autoplayDelay: PropTypes.number,
-        /**
-        * Delay until navigating to the next item
-        */
         autoplayInterval: PropTypes.number,
-        /**
-         * Override container's inner horizontal padding
-         * WARNING: current padding calculation is necessary for slide's centering
-         * Be aware that using this prop can mess with carousel's behavior
-         */
-        carouselHorizontalPadding: PropTypes.number,
-        /**
-         * Override container's inner vertical padding
-         * WARNING: current padding calculation is necessary for slide's centering
-         * Be aware that using this prop can mess with carousel's behavior
-         */
-        carouselVerticalPadding: PropTypes.number,
-        /**
-        * Global wrapper's style
-        */
-        containerCustomStyle: ViewPropTypes.style,
-        /**
-        * Content container's style
-        */
-        contentContainerCustomStyle: ViewPropTypes.style,
-        /**
-        * If enabled, snapping will be triggered once
-        * the ScrollView stops moving, not when the
-        * user releases his finger
-        */
+        containerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        contentContainerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         enableMomentum: PropTypes.bool,
-        /**
-        * If enabled, releasing the touch will scroll
-        * to the center of the nearest/active item
-        */
         enableSnap: PropTypes.bool,
-        /**
-        * Index of the first item to display
-        */
         firstItem: PropTypes.number,
-        /**
-        * Opacity value of the inactive slides
-        */
+        hasParallaxImages: PropTypes.bool,
         inactiveSlideOpacity: PropTypes.number,
-        /**
-        * Scale factor of the inactive slides
-        */
         inactiveSlideScale: PropTypes.number,
-        /**
-        * When momentum is disabled, this prop defines the
-        * timeframe during which multiple 'endDrag' calls
-        * should be "grouped" into a single one.
-        * This debounce also helps smoothing the snap effect
-        * by providing a bit of inertia when touch is released.
-        * Note that it will delay callback's execution.
-        */
         scrollEndDragDebounceValue: PropTypes.number,
-        /**
-         * Style of each item's container
-         */
         slideStyle: Animated.View.propTypes.style,
-        /**
-         * whether to implement a `shouldComponentUpdate`
-         * strategy to minimize updates
-         */
         shouldOptimizeUpdates: PropTypes.bool,
-        /**
-         * Snapping on android is kinda choppy, especially
-         * when swiping quickly so you can disable it
-         */
         snapOnAndroid: PropTypes.bool,
-        /**
-        * Delta x when swiping to trigger the snap
-        */
         swipeThreshold: PropTypes.number,
-        /**
-        * Layout slides vertically
-        */
+        useNativeOnScroll: PropTypes.bool,
         vertical: PropTypes.bool,
-        /**
-         * Interface for ScrollView's `onScroll` callback (deprecated)
-         */
-        onScrollViewScroll: PropTypes.func,
-        /**
-         * Fired when snapping to an item
-         */
         onSnapToItem: PropTypes.func
     };
 
     static defaultProps = {
+        activeSlideAlignment: 'center',
         activeSlideOffset: 25,
         animationFunc: 'timing',
         animationOptions: {
             duration: 600,
             easing: Easing.elastic(1)
         },
+        apparitionDelay: 250,
         autoplay: false,
         autoplayDelay: 5000,
         autoplayInterval: 3000,
-        carouselHorizontalPadding: null,
-        carouselVerticalPadding: null,
         containerCustomStyle: {},
         contentContainerCustomStyle: {},
         enableMomentum: false,
         enableSnap: true,
         firstItem: 0,
-        inactiveSlideOpacity: 1,
+        hasParallaxImages: false,
+        inactiveSlideOpacity: 0.7,
         inactiveSlideScale: 0.9,
         scrollEndDragDebounceValue: Platform.OS === 'ios' ? 50 : 150,
         slideStyle: {},
         shouldOptimizeUpdates: true,
         snapOnAndroid: true,
         swipeThreshold: 20,
+        useNativeOnScroll: false,
         vertical: false
     }
 
@@ -182,24 +87,47 @@ export default class Carousel extends Component {
             activeItem: initialActiveItem,
             previousActiveItem: initialActiveItem, // used only when `enableMomentum` is set to `true`
             previousFirstItem: initialActiveItem,
+            hideCarousel: true,
             interpolators: []
         };
 
         this._positions = [];
         this._currentContentOffset = 0; // store ScrollView's scroll position
-        this._hasFiredEdgeItemCallback = false; // deal with overscroll and callback
+        this._hasFiredEdgeItemCallback = true; // deal with overscroll and callback
         this._canFireCallback = false; // used only when `enableMomentum` is set to `false`
         this._isShortSnapping = false; // used only when `enableMomentum` is set to `false`
+
         this._initInterpolators = this._initInterpolators.bind(this);
+        this._getItemLayout = this._getItemLayout.bind(this);
+        this._renderItem = this._renderItem.bind(this);
         this._onScroll = this._onScroll.bind(this);
-        this._onScrollBeginDrag = this._snapEnabled ? this._onScrollBeginDrag.bind(this) : null;
-        this._onScrollEnd = this._snapEnabled || props.autoplay ? this._onScrollEnd.bind(this) : null;
-        this._onScrollEndDrag = !props.enableMomentum ? this._onScrollEndDrag.bind(this) : null;
-        this._onMomentumScrollEnd = props.enableMomentum ? this._onMomentumScrollEnd.bind(this) : null;
+        this._onScrollEnd = this._snapEnabled || props.autoplay ? this._onScrollEnd.bind(this) : undefined;
+        this._onScrollBeginDrag = this._snapEnabled ? this._onScrollBeginDrag.bind(this) : undefined;
+        this._onScrollEndDrag = !props.enableMomentum ? this._onScrollEndDrag.bind(this) : undefined;
+        this._onMomentumScrollEnd = props.enableMomentum ? this._onMomentumScrollEnd.bind(this) : undefined;
         this._onTouchStart = this._onTouchStart.bind(this);
         this._onTouchRelease = this._onTouchRelease.bind(this);
         this._onLayout = this._onLayout.bind(this);
         this._onSnap = this._onSnap.bind(this);
+
+        // Native driver for scroll events
+        if (props.useNativeOnScroll || props.hasParallaxImages || props.scrollEventThrottle < 16) {
+            const scrollEventConfig = {
+                listener: this._onScroll,
+                useNativeDriver: true
+            };
+            this._scrollPos = new Animated.Value(0);
+            this._onScrollHandler = props.vertical ?
+                Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }],
+                    scrollEventConfig
+                ) : Animated.event(
+                    [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }],
+                    scrollEventConfig
+                );
+        } else {
+            this._onScrollHandler = this._onScroll;
+        }
 
         // Debounce `_onScrollEndDrag` execution
         // This aims at improving snap feeling and callback reliability
@@ -216,8 +144,8 @@ export default class Carousel extends Component {
         this._ignoreNextMomentum = false;
 
         // Warnings
-        if (props.onScrollViewScroll) {
-            console.warn('react-native-snap-carousel: Prop `onScrollViewScroll` is deprecated. Please use `onScroll` instead');
+        if (!ViewPropTypes) {
+            console.warn('react-native-snap-carousel: It is recommended to use at least version 0.44 of React Native with the plugin');
         }
         if (!props.vertical && (!props.sliderWidth || !props.itemWidth)) {
             console.warn('react-native-snap-carousel: You need to specify both `sliderWidth` and `itemWidth` for horizontal carousels');
@@ -225,13 +153,16 @@ export default class Carousel extends Component {
         if (props.vertical && (!props.sliderHeight || !props.itemHeight)) {
             console.warn('react-native-snap-carousel: You need to specify both `sliderHeight` and `itemHeight` for vertical carousels');
         }
+        if (props.onScrollViewScroll) {
+            console.warn('react-native-snap-carousel: Prop `onScrollViewScroll` has been removed. Use `onScroll` instead');
+        }
     }
 
     componentDidMount () {
-        const { firstItem, autoplay } = this.props;
+        const { firstItem, autoplay, apparitionDelay } = this.props;
         const _firstItem = this._getFirstItem(firstItem);
 
-        this._initInterpolators(this.props);
+        this._initInterpolators(this.props, true);
 
         setTimeout(() => {
             this.snapToItem(_firstItem, false, false, true);
@@ -240,6 +171,11 @@ export default class Carousel extends Component {
                 this.startAutoplay();
             }
         }, 0);
+
+        // hide FlatList's awful init
+        setTimeout(() => {
+            this.setState({ hideCarousel: false });
+        }, apparitionDelay);
     }
 
     shouldComponentUpdate (nextProps, nextState) {
@@ -252,9 +188,9 @@ export default class Carousel extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { activeItem, interpolators, previousFirstItem } = this.state;
-        const { firstItem, sliderWidth, sliderHeight, itemWidth, itemHeight } = nextProps;
+        const { data, firstItem, sliderWidth, sliderHeight, itemWidth, itemHeight } = nextProps;
 
-        const childrenLength = React.Children.count(nextProps.children);
+        const itemsLength = data.length;
         const nextFirstItem = this._getFirstItem(firstItem, nextProps);
         const nextActiveItem = activeItem || activeItem === 0 ? activeItem : nextFirstItem;
 
@@ -263,7 +199,7 @@ export default class Carousel extends Component {
         const hasNewItemWidth = itemWidth && itemWidth !== this.props.itemWidth;
         const hasNewItemHeight = itemHeight && itemHeight !== this.props.itemHeight;
 
-        if ((childrenLength && interpolators.length !== childrenLength) ||
+        if ((itemsLength && interpolators.length !== itemsLength) ||
             hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
             this._positions = [];
             this._calcCardPositions(nextProps);
@@ -294,7 +230,6 @@ export default class Carousel extends Component {
 
     get _snapEnabled () {
         const { enableSnap, snapOnAndroid } = this.props;
-
         return enableSnap && (Platform.OS === 'ios' || snapOnAndroid);
     }
 
@@ -307,21 +242,21 @@ export default class Carousel extends Component {
     }
 
     _getCustomIndex (index, props = this.props) {
-        const childrenLength = this._children(props).length;
+        const itemsLength = props.data && props.data.length;
 
-        if (!childrenLength || (!index && index !== 0)) {
+        if (!itemsLength || (!index && index !== 0)) {
             return 0;
         }
 
         return IS_RTL && !props.vertical ?
-            childrenLength - index - 1 :
+            itemsLength - index - 1 :
             index;
     }
 
     _getFirstItem (index, props = this.props) {
-        const childrenLength = this._children(props).length;
+        const itemsLength = props.data && props.data.length;
 
-        if (!childrenLength || index > childrenLength - 1 || index < 0) {
+        if (!itemsLength || index > itemsLength - 1 || index < 0) {
             return 0;
         }
 
@@ -329,11 +264,10 @@ export default class Carousel extends Component {
     }
 
     _calcCardPositions (props = this.props) {
-        const { itemWidth, itemHeight, vertical } = props;
-
+        const { data, itemWidth, itemHeight, vertical } = props;
         const sizeRef = vertical ? itemHeight : itemWidth;
 
-        this._children(props).map((item, index) => {
+        data.forEach((itemData, index) => {
             const _index = this._getCustomIndex(index, props);
             this._positions[index] = {
                 start: _index * sizeRef,
@@ -342,13 +276,17 @@ export default class Carousel extends Component {
         });
     }
 
-    _initInterpolators (props = this.props) {
-        const { firstItem } = props;
-        const _firstItem = this._getFirstItem(firstItem, props);
-        let interpolators = [];
+    _initInterpolators (props = this.props, initial = false) {
+        const { activeItem } = this.state;
+        const { data, firstItem } = props;
 
-        this._children(props).map((item, index) => {
-            const value = index === _firstItem ? 1 : 0;
+        let interpolators = [];
+        const focusedItem = !initial && (activeItem || activeItem === 0) ?
+            activeItem :
+            this._getFirstItem(firstItem, props);
+
+        data.forEach((itemData, index) => {
+            const value = index === focusedItem ? 1 : 0;
             interpolators.push({
                 opacity: new Animated.Value(value),
                 scale: new Animated.Value(value)
@@ -365,7 +303,6 @@ export default class Carousel extends Component {
 
     _getActiveItem (offset) {
         const { activeSlideOffset } = this.props;
-
         const center = this._getCenter(offset);
 
         for (let i = 0; i < this._positions.length; i++) {
@@ -374,22 +311,75 @@ export default class Carousel extends Component {
                 return i;
             }
         }
+
+        const lastIndex = this._positions.length - 1;
+        if (this._positions[lastIndex] && center - activeSlideOffset > this._positions[lastIndex].end) {
+            return lastIndex;
+        }
+
         return 0;
     }
 
+    _getContainerInnerMargin (opposite = false) {
+        const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical, activeSlideAlignment } = this.props;
+
+        if ((activeSlideAlignment === 'start' && !opposite) ||
+            (activeSlideAlignment === 'end' && opposite)) {
+            return 0;
+        } else if ((activeSlideAlignment === 'end' && !opposite) ||
+            (activeSlideAlignment === 'start' && opposite)) {
+            return vertical ? sliderHeight - itemHeight : sliderWidth - itemWidth;
+        } else {
+            return vertical ? (sliderHeight - itemHeight) / 2 : (sliderWidth - itemWidth) / 2;
+        }
+    }
+
     _getCenter (offset) {
-        const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical } = this.props;
+        const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical, activeSlideAlignment } = this.props;
 
-        const containerMargin = vertical ?
-            (sliderHeight - itemHeight) / 2 :
-            (sliderWidth - itemWidth) / 2;
+        let viewportOffset;
+        if (activeSlideAlignment === 'start') {
+            viewportOffset = vertical ? itemHeight / 2 : itemWidth / 2;
+        } else if (activeSlideAlignment === 'end') {
+            viewportOffset = vertical ?
+                sliderHeight - (itemHeight / 2) :
+                sliderWidth - (itemWidth / 2);
+        } else {
+            viewportOffset = vertical ? sliderHeight / 2 : sliderWidth / 2;
+        }
 
-        return offset - containerMargin + ((vertical ? sliderHeight : sliderWidth) / 2);
+        return offset + viewportOffset - (this._getContainerInnerMargin() * (IS_RTL ? -1 : 1));
+    }
+
+    _getKeyExtractor (item, index) {
+        return `carousel-item-${index}`;
+    }
+
+    _getItemLayout (data, index) {
+        const { itemWidth, itemHeight, vertical } = this.props;
+        const itemSize = vertical ? itemHeight : itemWidth;
+
+        return {
+            length: itemSize,
+            offset: itemSize * index,
+            index
+        };
+    }
+
+    _getItemOffset (index) {
+        // 'viewPosition' doesn't work for the first item
+        // It is always aligned to the left
+        // Unfortunately, 'viewOffset' doesn't work on Android ATM
+        if ((!IS_RTL && index === 0) ||
+            (IS_RTL && index === this.props.data.length - 1)) {
+            return this._getContainerInnerMargin();
+        }
+
+        return 0;
     }
 
     _getSlideAnimation (index, toValue) {
         const { animationFunc, animationOptions } = this.props;
-
         const animationCommonOptions = {
             isInteraction: false,
             useNativeDriver: true,
@@ -410,12 +400,12 @@ export default class Carousel extends Component {
     }
 
     _onScroll (event) {
-        const { enableMomentum, onScroll, onScrollViewScroll } = this.props;
         const { activeItem } = this.state;
+        const { data, enableMomentum, onScroll } = this.props;
 
         const scrollOffset = this._getScrollOffset(event);
         const newActiveItem = this._getActiveItem(scrollOffset);
-        const itemsLength = this._positions.length;
+        const itemsLength = data.length;
         let animations = [];
 
         this._currentContentOffset = scrollOffset;
@@ -425,6 +415,10 @@ export default class Carousel extends Component {
         }
 
         if (activeItem !== newActiveItem) {
+            if (activeItem === 0 || activeItem === itemsLength - 1) {
+                this._hasFiredEdgeItemCallback = false;
+            }
+
             // WARNING: `setState()` is asynchronous
             this.setState({ activeItem: newActiveItem }, () => {
                 // When "short snapping", we can rely on the "activeItem/newActiveItem" comparison
@@ -443,10 +437,6 @@ export default class Carousel extends Component {
                 animations.push(this._getSlideAnimation(newActiveItem, 1));
             }
             Animated.parallel(animations, { stopTogether: false }).start();
-
-            if (activeItem === 0 || activeItem === itemsLength - 1) {
-                this._hasFiredEdgeItemCallback = false;
-            }
         }
 
         // When scrolling, we need to check that we are not "short snapping",
@@ -464,47 +454,62 @@ export default class Carousel extends Component {
         if (onScroll) {
             onScroll(event);
         }
-
-        // Deprecated
-        if (onScrollViewScroll) {
-            onScrollViewScroll(event);
-        }
     }
 
     _onTouchStart () {
-        if (this._autoplaying) {
+        // `onTouchStart` is fired even when `scrollEnabled` is set to `false`
+        if (this.props.scrollEnabled !== false && this._autoplaying) {
             this.stopAutoplay();
         }
     }
 
+    // Used when `enableSnap` is ENABLED
     _onScrollBeginDrag (event) {
+        const { onScrollBeginDrag } = this.props;
+
         this._scrollStartOffset = this._getScrollOffset(event);
         this._scrollStartActive = this._getActiveItem(this._scrollStartOffset);
         this._ignoreNextMomentum = false;
         this._canFireCallback = false;
+
+        if (onScrollBeginDrag) {
+            onScrollBeginDrag(event);
+        }
     }
 
     // Used when `enableMomentum` is DISABLED
     _onScrollEndDrag (event) {
+        const { onScrollEndDrag } = this.props;
+
         // event.persist(); // See https://stackoverflow.com/a/24679479
         this._onScrollEndDragDebounced();
+
+        if (onScrollEndDrag) {
+            onScrollEndDrag(event);
+        }
     }
 
     _onScrollEndDragDebounced (event) {
-        if (this._scrollview && this._onScrollEnd) {
+        if (this._flatlist && this._onScrollEnd) {
             this._onScrollEnd();
         }
     }
 
     // Used when `enableMomentum` is ENABLED
     _onMomentumScrollEnd (event) {
-        if (this._scrollview && this._onScrollEnd) {
+        const { onMomentumScrollEnd } = this.props;
+
+        if (this._flatlist && this._onScrollEnd) {
             this._onScrollEnd();
+        }
+
+        if (onMomentumScrollEnd) {
+            onMomentumScrollEnd(event);
         }
     }
 
     _onScrollEnd (event) {
-        const { autoplayDelay, autoplay } = this.props;
+        const { autoplay } = this.props;
 
         if (this._ignoreNextMomentum) {
             // iOS fix
@@ -524,10 +529,11 @@ export default class Carousel extends Component {
             // Restart autoplay after a little while
             // This could be done when releasing touch
             // but the event is buggy on Android...
+            // https://github.com/facebook/react-native/issues/9439
             clearTimeout(this._enableAutoplayTimeout);
             this._enableAutoplayTimeout = setTimeout(() => {
-                this.startAutoplay(true);
-            }, autoplayDelay + 200);
+                this.startAutoplay();
+            }, 300);
         }
     }
 
@@ -602,11 +608,10 @@ export default class Carousel extends Component {
     }
 
     _onSnap (index) {
-        const { enableMomentum, onSnapToItem } = this.props;
+        const { data, enableMomentum, onSnapToItem } = this.props;
+        const itemsLength = data.length;
 
-        const itemsLength = this._positions.length;
-
-        if (this._scrollview) {
+        if (this._flatlist) {
             if (enableMomentum) {
                 onSnapToItem && onSnapToItem(index);
             } else if (this._canFireCallback) {
@@ -621,7 +626,7 @@ export default class Carousel extends Component {
         }
     }
 
-    startAutoplay (instantly = false) {
+    startAutoplay () {
         const { autoplayInterval, autoplayDelay } = this.props;
 
         if (this._autoplaying) {
@@ -636,7 +641,7 @@ export default class Carousel extends Component {
                     this.snapToNext();
                 }
             }, autoplayInterval);
-        }, instantly ? 0 : autoplayDelay);
+        }, autoplayDelay);
     }
 
     stopAutoplay () {
@@ -646,9 +651,12 @@ export default class Carousel extends Component {
 
     snapToItem (index, animated = true, fireCallback = true, initial = false) {
         const { previousActiveItem } = this.state;
-        const { enableMomentum, vertical, scrollEndDragDebounceValue } = this.props;
+        const { data, enableMomentum, scrollEndDragDebounceValue } = this.props;
+        const itemsLength = data.length;
 
-        const itemsLength = this._positions.length;
+        if (!itemsLength) {
+            return;
+        }
 
         if (!index) {
             index = 0;
@@ -656,11 +664,13 @@ export default class Carousel extends Component {
 
         if (itemsLength > 0 && index >= itemsLength) {
             index = itemsLength - 1;
+            this._isShortSnapping = false; // prevent issue #105
             if (this._scrollStartActive === itemsLength - 1 && this._hasFiredEdgeItemCallback) {
                 fireCallback = false;
             }
         } else if (index < 0) {
             index = 0;
+            this._isShortSnapping = false; // prevent issue #105
             if (this._scrollStartActive === 0 && this._hasFiredEdgeItemCallback) {
                 fireCallback = false;
             }
@@ -669,9 +679,7 @@ export default class Carousel extends Component {
         }
 
         // Make sure the component hasn't been unmounted
-        if (this._scrollview) {
-            const snapTo = itemsLength && this._positions[index].start;
-
+        if (this._flatlist) {
             if (enableMomentum) {
                 this.setState({ previousActiveItem: index });
                 // Callback can be fired here when relying on 'onMomentumScrollEnd'
@@ -698,12 +706,23 @@ export default class Carousel extends Component {
                     if (scrollPosition === this._currentContentOffset && this._canFireCallback) {
                         this._onSnap(index);
                     }
-                }, Math.max(200, scrollEndDragDebounceValue + 50));
+                }, Math.max(500, scrollEndDragDebounceValue + 50));
             }
 
-            this._scrollview.scrollTo({
-                x: vertical ? 0 : snapTo,
-                y: vertical ? snapTo : 0,
+            // Unfortunately, 'viewPosition' is quite buggy at the moment
+            // Moreover, 'viewOffset' just doesn't work on Android
+            // const viewOffset = this._getItemOffset(index);
+            // let viewPosition = 0.5;
+            // if (activeSlideAlignment === 'start') {
+            //     viewPosition = IS_RTL ? 1 : 0;
+            // } else if (activeSlideAlignment === 'end') {
+            //     viewPosition = IS_RTL ? 0 : 1;
+            // }
+
+            this._flatlist.scrollToIndex({
+                index,
+                viewPosition: 0,
+                viewOffset: 0,
                 animated
             });
 
@@ -715,7 +734,7 @@ export default class Carousel extends Component {
     }
 
     snapToNext (animated = true) {
-        const itemsLength = this._positions.length;
+        const itemsLength = this.props.data.length;
 
         let newIndex = this.currentIndex + 1;
         if (newIndex > itemsLength - 1) {
@@ -725,7 +744,7 @@ export default class Carousel extends Component {
     }
 
     snapToPrev (animated = true) {
-        const itemsLength = this._positions.length;
+        const itemsLength = this.props.data.length;
 
         let newIndex = this.currentIndex - 1;
         if (newIndex < 0) {
@@ -734,70 +753,86 @@ export default class Carousel extends Component {
         this.snapToItem(newIndex, animated);
     }
 
-    _children (props = this.props) {
-        return React.Children.toArray(props.children);
-    }
-
-    _childSlides () {
-        const { slideStyle, inactiveSlideScale, inactiveSlideOpacity } = this.props;
-
-        if (!this.state.interpolators || !this.state.interpolators.length) {
-            return false;
-        };
-
-        return this._children().map((child, index) => {
-            const animatedValue = this.state.interpolators[index];
-
-            if (!animatedValue || !animatedValue.opacity || !animatedValue.scale) {
-                return false;
-            }
-
-            return (
-              <Animated.View
-                key={`carousel-item-${index}`}
-                style={[
-                    slideStyle,
-                    {
-                        opacity: animatedValue.opacity.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [inactiveSlideOpacity, 1]
-                        }),
-                        transform: [{
-                            scale: animatedValue.scale.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [inactiveSlideScale, 1]
-                            })
-                        }]
-                    }
-                ]}>
-                    { child }
-              </Animated.View>
-            );
-        });
-    }
-
-    render () {
+    _renderItem ({ item, index }) {
+        const { interpolators } = this.state;
         const {
+            renderItem,
             sliderWidth,
             sliderHeight,
             itemWidth,
             itemHeight,
-            containerCustomStyle,
-            contentContainerCustomStyle,
-            enableMomentum,
+            slideStyle,
+            inactiveSlideScale,
+            inactiveSlideOpacity,
             vertical,
-            carouselHorizontalPadding,
-            carouselVerticalPadding
+            hasParallaxImages
         } = this.props;
 
-        const horizontalMargin = carouselHorizontalPadding || carouselHorizontalPadding === 0 ?
-            carouselHorizontalPadding :
-            (sliderWidth - itemWidth) / 2;
-        const verticalMargin = carouselVerticalPadding || carouselVerticalPadding === 0 ?
-            carouselVerticalPadding :
-            (sliderHeight - itemHeight) / 2;
+        const animatedValue = interpolators && interpolators[index];
+
+        if (!animatedValue || !animatedValue.opacity || !animatedValue.scale) {
+            return false;
+        }
+
+        const animatedStyle = {
+            opacity: animatedValue.opacity.interpolate({
+                inputRange: [0, 1],
+                outputRange: [inactiveSlideOpacity, 1]
+            }),
+            transform: [{
+                scale: animatedValue.scale.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [inactiveSlideScale, 1]
+                })
+            }]
+        };
+
+        const parallaxProps = hasParallaxImages ? {
+            scrollPosition: this._scrollPos,
+            carouselRef: this._flatlist,
+            vertical,
+            sliderWidth,
+            sliderHeight,
+            itemWidth,
+            itemHeight
+        } : undefined;
+
+        return (
+            <Animated.View style={[slideStyle, animatedStyle]}>
+                { renderItem({ item, index }, parallaxProps) }
+            </Animated.View>
+        );
+    }
+
+    render () {
+        const { hideCarousel } = this.state;
+        const {
+            containerCustomStyle,
+            contentContainerCustomStyle,
+            data,
+            enableMomentum,
+            firstItem,
+            hasParallaxImages,
+            itemWidth,
+            itemHeight,
+            keyExtractor,
+            renderItem,
+            sliderWidth,
+            sliderHeight,
+            useNativeOnScroll,
+            vertical
+        } = this.props;
+
+        if (!data || !renderItem) {
+            return false;
+        }
+
+        const wrapList = useNativeOnScroll || hasParallaxImages;
+        const Component = wrapList ? AnimatedFlatList : FlatList;
+
         const style = [
             containerCustomStyle || {},
+            hideCarousel ? { opacity: 0 } : {},
             vertical ?
                 { height: sliderHeight, flexDirection: 'column' } :
                 // LTR hack; see https://github.com/facebook/react-native/issues/11960
@@ -805,33 +840,51 @@ export default class Carousel extends Component {
         ];
         const contentContainerStyle = [
             contentContainerCustomStyle || {},
-            vertical ?
-                { paddingVertical: verticalMargin } :
-                { paddingHorizontal: horizontalMargin }
+            vertical ? {
+                paddingTop: this._getContainerInnerMargin(),
+                paddingBottom: this._getContainerInnerMargin(true)
+            } : {
+                paddingLeft: this._getContainerInnerMargin(),
+                paddingRight: this._getContainerInnerMargin(true)
+            }
         ];
 
+        const visibleItems = Math.ceil(vertical ?
+            sliderHeight / itemHeight :
+            sliderWidth / itemWidth) + 1;
+
         return (
-            <ScrollView
+            <Component
               decelerationRate={enableMomentum ? 0.9 : 'normal'}
-              scrollEventThrottle={16}
+              scrollEventThrottle={useNativeOnScroll ? 1 : 16}
               showsHorizontalScrollIndicator={false}
               showsVerticalScrollIndicator={false}
               overScrollMode={'never'}
+              directionalLockEnabled={true}
+              initialNumToRender={visibleItems + 5}
+              maxToRenderPerBatch={enableMomentum ? visibleItems * 2 : 5}
+              windowSize={enableMomentum ? Math.max(11, (visibleItems * 2) + 1) : 11}
+              // updateCellsBatchingPeriod
               {...this.props}
-              ref={(scrollview) => { this._scrollview = scrollview; }}
+              ref={(c) => { if (c) { this._flatlist = wrapList ? c._component : c; } }}
+              data={data}
+              renderItem={this._renderItem}
+              // extraData={this.state}
+              getItemLayout={this._getItemLayout}
+              keyExtractor={keyExtractor || this._getKeyExtractor}
+              initialScrollIndex={firstItem || undefined}
+              numColumns={1}
               style={style}
               contentContainerStyle={contentContainerStyle}
               horizontal={!vertical}
-              onScroll={this._onScroll}
+              onScroll={this._onScrollHandler}
               onScrollBeginDrag={this._onScrollBeginDrag}
               onScrollEndDrag={this._onScrollEndDrag}
               onMomentumScrollEnd={this._onMomentumScrollEnd}
               onResponderRelease={this._onTouchRelease}
               onTouchStart={this._onTouchStart}
               onLayout={this._onLayout}
-            >
-                { this._childSlides() }
-            </ScrollView>
+            />
         );
     }
 }
