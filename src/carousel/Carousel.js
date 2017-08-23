@@ -101,8 +101,8 @@ export default class Carousel extends Component {
         this._getItemLayout = this._getItemLayout.bind(this);
         this._renderItem = this._renderItem.bind(this);
         this._onScroll = this._onScroll.bind(this);
-        this._onScrollBeginDrag = this._snapEnabled ? this._onScrollBeginDrag.bind(this) : undefined;
         this._onScrollEnd = this._snapEnabled || props.autoplay ? this._onScrollEnd.bind(this) : undefined;
+        this._onScrollBeginDrag = this._snapEnabled ? this._onScrollBeginDrag.bind(this) : undefined;
         this._onScrollEndDrag = !props.enableMomentum ? this._onScrollEndDrag.bind(this) : undefined;
         this._onMomentumScrollEnd = props.enableMomentum ? this._onMomentumScrollEnd.bind(this) : undefined;
         this._onTouchStart = this._onTouchStart.bind(this);
@@ -463,17 +463,30 @@ export default class Carousel extends Component {
         }
     }
 
+    // Used when `enableSnap` is ENABLED
     _onScrollBeginDrag (event) {
+        const { onScrollBeginDrag } = this.props;
+
         this._scrollStartOffset = this._getScrollOffset(event);
         this._scrollStartActive = this._getActiveItem(this._scrollStartOffset);
         this._ignoreNextMomentum = false;
         this._canFireCallback = false;
+
+        if (onScrollBeginDrag) {
+            onScrollBeginDrag(event);
+        }
     }
 
     // Used when `enableMomentum` is DISABLED
     _onScrollEndDrag (event) {
+        const { onScrollEndDrag } = this.props;
+
         // event.persist(); // See https://stackoverflow.com/a/24679479
         this._onScrollEndDragDebounced();
+
+        if (onScrollEndDrag) {
+            onScrollEndDrag(event);
+        }
     }
 
     _onScrollEndDragDebounced (event) {
@@ -484,8 +497,14 @@ export default class Carousel extends Component {
 
     // Used when `enableMomentum` is ENABLED
     _onMomentumScrollEnd (event) {
+        const { onMomentumScrollEnd } = this.props;
+
         if (this._flatlist && this._onScrollEnd) {
             this._onScrollEnd();
+        }
+
+        if (onMomentumScrollEnd) {
+            onMomentumScrollEnd(event);
         }
     }
 
