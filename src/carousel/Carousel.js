@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, Animated, Platform, Easing, I18nManager, ViewPropTypes } from 'react-native';
+import { View, FlatList, Animated, Platform, Easing, I18nManager, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 import _debounce from 'lodash.debounce';
@@ -18,6 +18,8 @@ export default class Carousel extends Component {
 
     static propTypes = {
         ...FlatList.propTypes,
+        data: PropTypes.array.isRequired,
+        renderItem: PropTypes.func.isRequired,
         itemWidth: PropTypes.number, // required for horizontal carousel
         itemHeight: PropTypes.number, // required for vertical carousel
         sliderWidth: PropTypes.number,  // required for horizontal carousel
@@ -30,8 +32,8 @@ export default class Carousel extends Component {
         autoplay: PropTypes.bool,
         autoplayDelay: PropTypes.number,
         autoplayInterval: PropTypes.number,
-        containerCustomStyle: ViewPropTypes ? ViewPropTypes.style : FlatList.propTypes.style,
-        contentContainerCustomStyle: ViewPropTypes ? ViewPropTypes.style : FlatList.propTypes.style,
+        containerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        contentContainerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         enableMomentum: PropTypes.bool,
         enableSnap: PropTypes.bool,
         firstItem: PropTypes.number,
@@ -142,6 +144,9 @@ export default class Carousel extends Component {
         this._ignoreNextMomentum = false;
 
         // Warnings
+        if (!ViewPropTypes) {
+            console.warn('react-native-snap-carousel: It is recommended to use at least version 0.44 of React Native with the plugin');
+        }
         if (!props.vertical && (!props.sliderWidth || !props.itemWidth)) {
             console.warn('react-native-snap-carousel: You need to specify both `sliderWidth` and `itemWidth` for horizontal carousels');
         }
@@ -452,7 +457,8 @@ export default class Carousel extends Component {
     }
 
     _onTouchStart () {
-        if (this._autoplaying) {
+        // `onTouchStart` is fired even when `scrollEnabled` is set to `false`
+        if (this.props.scrollEnabled !== false && this._autoplaying) {
             this.stopAutoplay();
         }
     }
@@ -484,7 +490,7 @@ export default class Carousel extends Component {
     }
 
     _onScrollEnd (event) {
-        const { autoplayDelay, autoplay } = this.props;
+        const { autoplay } = this.props;
 
         if (this._ignoreNextMomentum) {
             // iOS fix
@@ -504,10 +510,11 @@ export default class Carousel extends Component {
             // Restart autoplay after a little while
             // This could be done when releasing touch
             // but the event is buggy on Android...
+            // https://github.com/facebook/react-native/issues/9439
             clearTimeout(this._enableAutoplayTimeout);
             this._enableAutoplayTimeout = setTimeout(() => {
-                this.startAutoplay(true);
-            }, autoplayDelay + 200);
+                this.startAutoplay();
+            }, 300);
         }
     }
 
@@ -600,7 +607,7 @@ export default class Carousel extends Component {
         }
     }
 
-    startAutoplay (instantly = false) {
+    startAutoplay () {
         const { autoplayInterval, autoplayDelay } = this.props;
 
         if (this._autoplaying) {
@@ -615,7 +622,7 @@ export default class Carousel extends Component {
                     this.snapToNext();
                 }
             }, autoplayInterval);
-        }, instantly ? 0 : autoplayDelay);
+        }, autoplayDelay);
     }
 
     stopAutoplay () {
@@ -772,10 +779,7 @@ export default class Carousel extends Component {
         } : undefined;
 
         return (
-            <Animated.View
-              key={`carousel-item-${index}`}
-              style={[slideStyle, animatedStyle]}
-            >
+            <Animated.View style={[slideStyle, animatedStyle]}>
                 { renderItem({ item, index }, parallaxProps) }
             </Animated.View>
         );
@@ -784,19 +788,20 @@ export default class Carousel extends Component {
     render () {
         const { hideCarousel } = this.state;
         const {
+            containerCustomStyle,
+            contentContainerCustomStyle,
             data,
+            enableMomentum,
+            firstItem,
+            hasParallaxImages,
+            itemWidth,
+            itemHeight,
+            keyExtractor,
             renderItem,
             sliderWidth,
             sliderHeight,
-            itemWidth,
-            itemHeight,
-            containerCustomStyle,
-            contentContainerCustomStyle,
-            enableMomentum,
-            vertical,
-            firstItem,
             useNativeOnScroll,
-            hasParallaxImages
+            vertical
         } = this.props;
 
         if (!data || !renderItem) {
@@ -847,7 +852,7 @@ export default class Carousel extends Component {
               renderItem={this._renderItem}
               // extraData={this.state}
               getItemLayout={this._getItemLayout}
-              keyExtractor={this.props.keyExtractor || this._getKeyExtractor}
+              keyExtractor={keyExtractor || this._getKeyExtractor}
               initialScrollIndex={firstItem || undefined}
               numColumns={1}
               style={style}
