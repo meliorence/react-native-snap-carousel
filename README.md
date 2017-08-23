@@ -1,7 +1,11 @@
 # react-native-snap-carousel
 Swiper component for React Native featuring **previews**, **snapping effect**, **parallax images**, **performant handling of huge numbers of items**, and **RTL support**. Compatible with Android & iOS.
 
-Pull requests are very welcome!
+![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square)
+[![npm](https://img.shields.io/npm/v/react-native-snap-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-snap-carousel)
+[![github release](https://img.shields.io/github/release/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/releases)
+[![github issues](https://img.shields.io/github/issues/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/issues)
+[![github closed issues](https://img.shields.io/github/issues-closed/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
 ## Table of contents
 
@@ -12,8 +16,8 @@ Pull requests are very welcome!
 1. [Methods](#methods)
 1. [Getters](#getters)
 1. [Example](#example)
-1. [ParallaxImage component](#parallaximage-component)
-1. [Pagination component](#pagination-component)
+1. [`ParallaxImage` component](#parallaximage-component)
+1. [`Pagination` component](#pagination-component)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
 1. [TODO](#todo)
@@ -21,25 +25,23 @@ Pull requests are very welcome!
 
 ## Showcase
 
+### Archriss' "Ville d'Aix-en-Provence" app
+
+**The React Native version of this app (6.0.0) is going to be available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8) by mid-september** (the current one is Cordova-powered). It uses **version 3.0.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
+
+![react-native-snap-carousel archriss aix](http://i.imgur.com/vmMp520.gif)
+![react-native-snap-carousel archriss aix](http://i.imgur.com/OdQUYHS.gif)
+
 ### Archriss' showcase app
 
-**You can try the app live on [Android](https://play.google.com/store/apps/details?id=fr.archriss.demo.app) and [iOS](https://itunes.apple.com/lu/app/archriss-presentation-mobile/id1180954376?mt=8).**
+**You can try the app live on [Android](https://play.google.com/store/apps/details?id=fr.archriss.demo.app) and [iOS](https://itunes.apple.com/lu/app/archriss-presentation-mobile/id1180954376?mt=8).** It currently uses **version 1.4.0** of the plugin. Be aware that sliders' layouts will break on RTL devices since support was added in version 2.1.0 (see [#38](https://github.com/archriss/react-native-snap-carousel/issues/38)).
 
 ![react-native-snap-carousel](http://i.imgur.com/Fope3uj.gif)
 ![react-native-snap-carousel](http://i.imgur.com/WNOBYfl.gif)
 ![react-native-snap-carousel](http://i.imgur.com/sK5DKaG.gif)
 
-This app currently uses **version 1.4.0** of the plugin. Be aware that sliders' layouts will break on RTL devices since support was added in version 2.1.0 (see [#38](https://github.com/archriss/react-native-snap-carousel/issues/38)).
-
 > Please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
 > The folks at [codedaily.io](https://codedaily.io) have put together a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
-
-### Archriss' "Ville d'Aix-en-Provence" app
-
-**The app is available for [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8)**, but the React Native version featuring the carousels hasn't been published yet (the current version is a Cordova one we've previously made). The app will use **version 2.4.0** of the plugin.
-
-![react-native-snap-carousel archriss aix](http://i.imgur.com/C4YHp1j.gif)
-![react-native-snap-carousel archriss aix](http://i.imgur.com/Z7KTLHq.gif)
 
 ## Usage
 
@@ -163,14 +165,15 @@ Prop | Description | Type | Default
 activeSlideOffset | From slider's center, minimum slide distance to be scrolled before being set to active | Number | `25`
 apparitionDelay | `FlatList`'s init is a real mess, with lots of unneeded flickers and slides movement. This prop controls the delay during which the carousel will be hidden when mounted. | Number | `250`
 enableMomentum | See [momentum](#momentum) | Boolean | `false`
-enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Number | `true`
+enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Boolean | `true`
 firstItem | Index of the first item to display | Number | `0`
 hasParallaxImages | Whether the carousel contains `<ParallaxImage />` components or not. Required for specific data to be passed to children. | Boolean | `false`
 scrollEndDragDebounceValue | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
 shouldOptimizeUpdates | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
 snapOnAndroid | Snapping on android is sometimes choppy, especially when swiping quickly, so you can disable it | Boolean | `true`
+swipeEnabled | When disabled, the view cannot be scrolled via touch interaction. It takes advantage of `ScrollView`'s prop `scrollEnabled`, with just a tiny tweak regarding autoplay. | Boolean | `true`
 swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
-useNativeOnScroll | Move `onScroll` events to the native thread in order to prevent the tiny lag associated with RN's JS bridge. **Activate this if you have a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely**. More info in [this post](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html). Note that it will be activated if `scrollEventThrottle` is set to less than `16`. | Boolean | `false`
+useNativeOnScroll | Move `onScroll` events to the native thread in order to prevent the tiny lag associated with RN's JS bridge. **Activate this if you have a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely**. More info in [this post](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html). Note that it will be activated if `hasParallaxImages` is set to `true` and/or if `scrollEventThrottle` is set to less than `16`. | Boolean | `false`
 vertical | Layout slides vertically instead of horizontally | Boolean | `false`
 
 ### Autoplay
@@ -208,9 +211,9 @@ The component is built on top of the `FlatList` component, meaning it inherits f
 
 You can use almost all props from this three components, but some of them can't be overriden because it would mess with our implementation's logic.
 
-Here are a few useful props regarding carousel's **style and "feeling"**: `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
+Here are a few useful props regarding carousel's **style and "feeling"**: `showsHorizontalScrollIndicator`, `scrollEnabled` (if you want to scroll only programmatically), `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
 
-And here are some useful ones for **performance optimizations**: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your needs.
+And here are some useful ones for **performance optimizations and rendering**: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `extraData`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your needs.
 
 ## Methods
 
@@ -440,9 +443,9 @@ As such, this feature should be considered experimental since it might break wit
 ## TODO
 
 - [ ] Implement 'loop' mode
-- [ ] Add parallax image component
 - [ ] Handle changing major props on-the-fly
 - [ ] Handle autoplay properly when updating children's length
+- [x] Add parallax image component
 - [x] Base the plugin on `FlatList` instead of `ScrollView`
 - [x] Add alignment option
 - [x] Add pagination component
