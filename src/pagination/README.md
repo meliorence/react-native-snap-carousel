@@ -12,6 +12,7 @@ dotsLength | Number of dots to display | Number | **Required**
 activeDotIndex | Currently focused dot | Number | **Required**
 containerStyle | Style for dots' container that will be merged with the default one | View Style Object | `{}`
 dotStyle | Dots' style that will be merged with the default one | View Style Object | `{}`
+inactiveDotStyle | Dots' style that will be applied to inactive elements | View Style Object | `{}`
 inactiveDotOpacity | Value of the opacity effect applied to inactive dots | Number | `0.5`
 inactiveDotScale | Value of the 'scale' transform applied to inactive dots | Number | `0.5`
 
@@ -41,6 +42,9 @@ export default class MyCarousel extends Component {
                   borderRadius: 5,
                   marginHorizontal: 8,
                   backgroundColor: 'rgba(255, 255, 255, 0.92)'
+              }}
+              inactiveDotStyle={{
+                  // Define styles for inactive dots here
               }}
               inactiveDotOpacity={0.4}
               inactiveDotScale={0.6}

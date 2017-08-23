@@ -11,6 +11,7 @@ export default class Pagination extends Component {
         activeDotIndex: PropTypes.number.isRequired,
         containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         dotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        inactiveDotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         inactiveDotOpacity: PropTypes.number,
         inactiveDotScale: PropTypes.number
     };
@@ -20,6 +21,7 @@ export default class Pagination extends Component {
             dotsLength,
             activeDotIndex,
             dotStyle,
+            inactiveDotStyle,
             inactiveDotOpacity,
             inactiveDotScale
         } = this.props;
@@ -32,6 +34,7 @@ export default class Pagination extends Component {
                   key={`pagination-dot-${i}`}
                   active={i === activeDotIndex}
                   style={dotStyle}
+                  inactiveStyle={inactiveDotStyle}
                   inactiveOpacity={inactiveDotOpacity}
                   inactiveScale={inactiveDotScale}
                 />
