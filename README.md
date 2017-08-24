@@ -193,7 +193,7 @@ animationFunc | Animated animation to use; you must provide the name of the meth
 animationOptions | Animation options to be merged with the default ones. Can be used without `animationFunc`. Note that opacity's easing will be kept linear. | Object | `{ duration: 600, easing: Easing.elastic(1) }`
 containerCustomStyle | Optional styles for Scrollview's global wrapper | View Style Object | `{}`
 contentContainerCustomStyle | Optional styles for Scrollview's items container | View Style Object | `{}`
-inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `1`
+inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `0.7`
 inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
 slideStyle | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | {}
 
@@ -211,7 +211,7 @@ The component is built on top of the `FlatList` component, meaning it inherits f
 
 You can use almost all props from this three components, but some of them can't be overriden because it would mess with our implementation's logic.
 
-Here are a few useful props regarding carousel's **style and "feeling"**: `showsHorizontalScrollIndicator`, `scrollEnabled` (if you want to scroll only programmatically), `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
+Here are a few useful props regarding carousel's **style and "feeling"**: `scrollEnabled` (if you want to disable user scrolling while still being able to use `Carousel`'s methods), `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
 
 And here are some useful ones for **performance optimizations and rendering**: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `extraData`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your needs.
 
@@ -273,7 +273,7 @@ Version `3.0.0` introduced a `<ParallaxImage />` component, an image component a
 
 ![react-native-snap-carousel parallax image](http://i.imgur.com/6iIb4SR.gif)
 
-You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/flatlist/src/parallaximage/README.md).
+You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/parallaximage/README.md).
 
 ## `Pagination` component
 

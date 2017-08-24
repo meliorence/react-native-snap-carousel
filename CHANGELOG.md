@@ -1,4 +1,9 @@
+## v3.1.0
+* `Pagination` component: add new props for advanced customization
+
 ## v3.0.0
+###WARNING
+* **Do not use this version as some temporary code was pushed to `npm` by mistake. Make sure to use version `3.1.0` instead.**
 ### Breaking changes
 * Plugin is now built on top of `FlatList`, which allows for huge performance optimizations. From now on, items must be rendered using props `data` and `renderItem`.
 ### General
