@@ -15,9 +15,9 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 1. [Props](#props)
 1. [Methods](#methods)
 1. [Getters](#getters)
-1. [Example](#example)
 1. [`ParallaxImage` component](#parallaximage-component)
 1. [`Pagination` component](#pagination-component)
+1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
 1. [TODO](#todo)
@@ -78,7 +78,9 @@ export class MyCarousel extends Component {
 
 ## Migration from version 2.x
 
-Slides are no longer appended as direct children of the component. There are two new props that takes care of their rendering: `data` and `renderItem` (both are inherited from `FlatList`).
+> **IMPORTANT: Since `FlatList` was introduced in React Native `0.43.x`, you need to use version `2.4.0` of the plugin if you're currently using an older release of RN. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
+
+Slides are no longer appended as direct children of the component since the plugin is now based on `FlatList` instead of `ScrollView`. There are two new props that takes care of their rendering: `data` and `renderItem` (both are inherited from `FlatList`).
 
 If you were already looping throught an array of data to populate the carousel, the migration is pretty straightforward. Just pass your slides' data to the `data` prop, convert your slides' getter to a function and pass it to the `renderItem` prop: you're good to go!
 
@@ -151,59 +153,58 @@ If you were previously appending random types of children, you will need to rely
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-**data** | Array of items to loop on | Array | **Required**
-**renderItem** | Takes an item from data and renders it into the list. The function receives one argument `{item, index}` (see [Usage](#usage)) and must return a React element. | Function | **Required**
-**itemWidth** | Width in pixels of carousel's items, **must be the same for all of them** | Number | **Required for __horizontal__ carousel**
-**sliderWidth** | Width in pixels of the carousel itself | Number | **Required for __horizontal__ carousel**
-**itemHeight** | Height in pixels of carousel's items, **must be the same for all of them** | Number | **Required for __vertical__ carousel**
-**sliderHeight** | Height in pixels of the carousel itself | Number | **Required for __vertical__ carousel**
+**`data`** | Array of items to loop on | Array | **Required**
+**`renderItem`** | Takes an item from data and renders it into the list. The function receives one argument `{item, index}` (see [Usage](#usage)) and must return a React element. | Function | **Required**
+**`itemWidth`** | Width in pixels of carousel's items, **must be the same for all of them** | Number | **Required for __horizontal__ carousel**
+**`sliderWidth`** | Width in pixels of the carousel itself | Number | **Required for __horizontal__ carousel**
+**`itemHeight`** | Height in pixels of carousel's items, **must be the same for all of them** | Number | **Required for __vertical__ carousel**
+**`sliderHeight`** | Height in pixels of the carousel itself | Number | **Required for __vertical__ carousel**
 
 ### Behavior
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-activeSlideOffset | From slider's center, minimum slide distance to be scrolled before being set to active | Number | `25`
-apparitionDelay | `FlatList`'s init is a real mess, with lots of unneeded flickers and slides movement. This prop controls the delay during which the carousel will be hidden when mounted. | Number | `250`
-enableMomentum | See [momentum](#momentum) | Boolean | `false`
-enableSnap | If enabled, releasing the touch will scroll to the center of the nearest/active item | Boolean | `true`
-firstItem | Index of the first item to display | Number | `0`
-hasParallaxImages | Whether the carousel contains `<ParallaxImage />` components or not. Required for specific data to be passed to children. | Boolean | `false`
-scrollEndDragDebounceValue | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
-shouldOptimizeUpdates | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
-snapOnAndroid | Snapping on android is sometimes choppy, especially when swiping quickly, so you can disable it | Boolean | `true`
-swipeEnabled | When disabled, the view cannot be scrolled via touch interaction. It takes advantage of `ScrollView`'s prop `scrollEnabled`, with just a tiny tweak regarding autoplay. | Boolean | `true`
-swipeThreshold | Delta x when swiping to trigger the snap | Number | `20`
-useNativeOnScroll | Move `onScroll` events to the native thread in order to prevent the tiny lag associated with RN's JS bridge. **Activate this if you have a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely**. More info in [this post](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html). Note that it will be activated if `hasParallaxImages` is set to `true` and/or if `scrollEventThrottle` is set to less than `16`. | Boolean | `false`
-vertical | Layout slides vertically instead of horizontally | Boolean | `false`
+`activeSlideOffset` | From slider's center, minimum slide distance to be scrolled before being set to active | Number | `25`
+`apparitionDelay` | `FlatList`'s init is a real mess, with lots of unneeded flickers and slides movement. This prop controls the delay during which the carousel will be hidden when mounted. | Number | `250`
+`enableMomentum` | See [momentum](#momentum) | Boolean | `false`
+`enableSnap` | If enabled, releasing the touch will scroll to the center of the nearest/active item | Boolean | `true`
+`firstItem` | Index of the first item to display | Number | `0`
+`hasParallaxImages` | Whether the carousel contains `<ParallaxImage />` components or not. Required for specific data to be passed to children. | Boolean | `false`
+`scrollEndDragDebounceValue` | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
+`shouldOptimizeUpdates` | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
+`snapOnAndroid` | Snapping on android is sometimes choppy, especially when swiping quickly, so you can disable it | Boolean | `true`
+`swipeThreshold` | Delta x when swiping to trigger the snap | Number | `20`
+`useNativeOnScroll` | Move `onScroll` events to the native thread in order to prevent the tiny lag associated with RN's JS bridge. **Activate this if you have a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely**. More info in [this post](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html). Note that it will be activated if `hasParallaxImages` is set to `true` and/or if `scrollEventThrottle` is set to less than `16`. | Boolean | `false`
+`vertical` | Layout slides vertically instead of horizontally | Boolean | `false`
 
 ### Autoplay
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-autoplay | Trigger autoplay on mount. **Warning: this prop cannot be changed dynamically.** | Boolean | `false`
-autoplayDelay | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
-autoplayInterval | Delay in ms until navigating to the next item | Number |  `3000`
+`autoplay` | Trigger autoplay on mount. **Warning: this prop cannot be changed dynamically.** | Boolean | `false`
+`autoplayDelay` | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
+`autoplayInterval` | Delay in ms until navigating to the next item | Number |  `3000`
 
 ### Style and animation
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-activeSlideAlignment | Determine active slide's alignment relative to the carousel. Possible values are: `'start'`, `'center'` and `'end'`. | String | `'center'`
-animationFunc | Animated animation to use; you must provide the name of the method. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around) | String | `timing`
-animationOptions | Animation options to be merged with the default ones. Can be used without `animationFunc`. Note that opacity's easing will be kept linear. | Object | `{ duration: 600, easing: Easing.elastic(1) }`
-containerCustomStyle | Optional styles for Scrollview's global wrapper | View Style Object | `{}`
-contentContainerCustomStyle | Optional styles for Scrollview's items container | View Style Object | `{}`
-inactiveSlideOpacity | Value of the opacity effect applied to inactive slides | Number | `0.7`
-inactiveSlideScale | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
-slideStyle | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | {}
+`activeSlideAlignment` | Determine active slide's alignment relative to the carousel. Possible values are: `'start'`, `'center'` and `'end'`. | String | `'center'`
+`animationFunc` | Animated animation to use; you must provide the name of the method. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around) | String | `timing`
+`animationOptions` | Animation options to be merged with the default ones. Can be used without `animationFunc`. Note that opacity's easing will be kept linear. | Object | `{ duration: 600, easing: Easing.elastic(1) }`
+`containerCustomStyle` | Optional styles for Scrollview's global wrapper | View Style Object | `{}`
+`contentContainerCustomStyle` | Optional styles for Scrollview's items container | View Style Object | `{}`
+`inactiveSlideOpacity` | Value of the opacity effect applied to inactive slides | Number | `0.7`
+`inactiveSlideScale` | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
+`slideStyle` | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | `{}`
 
 ### Callbacks
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-onLayout(event) | Exposed `View` callback; invoked on mount and layout changes | Function | `undefined`
-onScroll(event) | Exposed `ScrollView` callback; fired while scrolling | Function | `undefined`
-onSnapToItem(slideIndex) | Callback fired when navigating to an item | Function | `undefined`
+`onLayout(event)` | Exposed `View` callback; invoked on mount and layout changes | Function | `undefined`
+`onScroll(event)` | Exposed `ScrollView` callback; fired while scrolling | Function | `undefined`
+`onSnapToItem(slideIndex)` | Callback fired when navigating to an item | Function | `undefined`
 
 ### Inherited props
 
@@ -262,26 +263,26 @@ Property | Description
 `currentIndex` | Current active item (`int`, starts at 0)
 `currentScrollPosition` | Underlying `ScrollView`'s current content offset (`int`, starts at `0` if `activeSlideAlignment` is set to `start`, negative value otherwise)
 
-## Example
-You can find the following example in the [/example](https://github.com/archriss/react-native-snap-carousel/tree/master/example) folder.
-
-![react-native-snap-carousel](http://i.imgur.com/m0297Ys.gif)
-
 ## `ParallaxImage` component
 
 Version `3.0.0` introduced a `<ParallaxImage />` component, an image component aware of carousel's current scroll position and therefore able to display a nice parallax effect.
 
-![react-native-snap-carousel parallax image](http://i.imgur.com/6iIb4SR.gif)
-
 You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/parallaximage/README.md).
+
+![react-native-snap-carousel parallax image](http://i.imgur.com/6iIb4SR.gif)
 
 ## `Pagination` component
 
 Starting with version `2.4.0`, a customizable `<Pagination />` component has been added. This is how it looks like with its default configuration:
 
+You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/pagination/README.md).
+
 ![react-native-snap-carousel pagination](http://i.imgur.com/FLQcGGL.gif)
 
-You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/pagination/README.md).
+## Example
+You can find the following example in the [`/example` folder](https://github.com/archriss/react-native-snap-carousel/tree/master/example).
+
+![react-native-snap-carousel](http://i.imgur.com/m0297Ys.gif)
 
 ## Tips and tricks
 
@@ -388,13 +389,6 @@ export class MyCarousel extends Component {
 
 [This plugin](https://github.com/shichongrui/react-native-on-layout) can also prove useful.
 
-### Android performances
-
-Make sure to test carousel's performances **without JS Dev Mode enabled**.
-
-It can take user experience from "crappy and sluggish" to "pretty good" - it's Android though, so nothing like "perfect" or "incredibly smooth"...
-
-
 ### Understanding styles
 
 Here is a screenshot that should help you understand how each of the above variables is used.
@@ -403,6 +397,18 @@ Here is a screenshot that should help you understand how each of the above varia
 
 ## Known issues
 
+### React Native version
+
+**RN 0.43.x is the minimum required to use versions `>= 3.0.0` of the plugin. If you're using an older release of React Native, you are stuck with version `2.4.0`. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
+
+Bear in mind that we follow RN evolutions closely, which means newer versions of the plugin might break when used in conjunction with a version of RN that is not the latest stable one.
+
+### Android performances
+
+**Make sure to test carousel's performances without JS Dev Mode enabled**.
+
+It can take user experience from "crappy and sluggish" to "pretty good" - it's Android though, so nothing like "perfect" or "incredibly smooth"...
+
 ### FlatList and ScrollView's limitations
 
 Note that this plugin is built on top of React Native's `FlatList` which, in turn, is based on `ScrollView`. Unfortunately, its implementation shows flaws that affect the plugin, the main ones being the following:
@@ -410,7 +416,7 @@ Note that this plugin is built on top of React Native's `FlatList` which, in tur
 - `scrollTo` method doesn't accept any callback
 - Android's `scrollTo` animation is quite brutal.
 
-On top of that, `FlatList` has its own set of bugs and buggy behaviors.
+On top of that, `FlatList` has [its own set of bugs and buggy behaviors](https://github.com/facebook/react-native/issues?utf8=%E2%9C%93&q=flatlist).
 
 We're trying to work around these issues, but the result is not always as smooth as we'd want it to be. Keep that in mind and go spam [React Native's Feature Request](https://react-native.canny.io/feature-requests) ;-)
 
@@ -427,12 +433,6 @@ You might encounter the following error when using the plugin in conjonction wit
 As you can see [here](https://github.com/facebook/react-native/blob/master/jest/setup.js), this is because React Native mocks `ScrollView` for you when you write unit tests with Jest.
 
 The easiest workaround is to add `jest.unmock('ScrollView')` before importing the component in your test file (thanks [@hoangnm](https://github.com/hoangnm) for the tip!).
-
-### React Native version
-
-**RN 0.44.x is the minimum version required to use the plugin.**
-
-Bear in mind that we follow RN evolutions closely, which means newer versions of the plugin might break when used in conjunction with a version of RN that is not the latest stable one.
 
 ### RTL support (experimental)
 
