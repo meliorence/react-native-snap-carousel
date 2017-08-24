@@ -4,6 +4,12 @@ Starting with version `2.4.0`, a customizable `<Pagination />` component has bee
 
 ![react-native-snap-carousel pagination](http://i.imgur.com/FLQcGGL.gif)
 
+## Table of contents
+
+1. [Props](#props)
+1. [Note on dots' colors](#note-on-dots-colors)
+1. [Usage](#usage)
+
 ## Props
 
 Prop | Description | Type | Default
@@ -21,6 +27,15 @@ Prop | Description | Type | Default
 `inactiveDotStyle` | Dots' style that will be applied to inactive elements | View Style Object | `{}`
 `renderDots` | Function that gives you complete control over pagination's rendering. It will receive three parameters : `(activeIndex, total, context)`. This can be especially useful in order to replace dots with numbers. | Function | `undefined`
 `vertical` | Whether to layout dots vertically or horizontally | Boolean | `false`
+
+## Note on dots' colors
+If your active and inactive dots aren't of the same color, you have a choice to make:
+1. either animate the color transition by specifying both `dotColor` and `inactiveDotColor`
+1. or setting `{ backgroundColor }` in both `dotStyle` and `inactiveDotStyle`.
+
+**When animating the color transition, the dot component will no longer be able to use the native driver for scale and opacity transitions.** As stated in [React Native's doc](https://facebook.github.io/react-native/docs/animations.html#caveats), color animations aren't supported by the native driver. And, unfortunately, it doesn't seem currently possible to run native-powered and js-powered animations at the same time on the same element.
+
+Basically, this is a tradeoff between color transition and optimal smoothness. We recommended you to try the first version and, if you experiment performance drops, to settle for the second one.
 
 ## Usage
 
@@ -71,12 +86,3 @@ export default class MyCarousel extends Component {
         );
     }
 ```
-
-## Dots' colors
-If your active and inactive dots aren't of the same color, you have a choice to make:
-1. either animate the color transition by specifying both `dotColor` and `inactiveDotColor`
-1. or setting `{ backgroundColor }` in both `dotStyle` and `inactiveDotStyle`.
-
-**When animating the color transition, the dot component will no longer be able to use the native driver for scale and opacity transitions.** As stated in [React Native's doc](https://facebook.github.io/react-native/docs/animations.html#caveats), color animations aren't supported by the native driver. And, unfortunately, it doesn't seem currently possible to run native-powered and js-powered animations at the same time on the same element.
-
-Basically, this is a tradeoff between color transition and optimal smoothness. We recommended you to try the first version and, if you experiment performance drops, to settle for the second one.
