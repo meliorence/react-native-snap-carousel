@@ -1,26 +1,24 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Animated, Easing, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './Pagination.style';
 
-export default class PaginationDot extends Component {
+export default class PaginationDot extends PureComponent {
 
     static propTypes = {
+        inactiveOpacity: PropTypes.number.isRequired,
+        inactiveScale: PropTypes.number.isRequired,
         active: PropTypes.bool,
-        style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        color: PropTypes.string,
+        inactiveColor: PropTypes.string,
         inactiveStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        inactiveOpacity: PropTypes.number,
-        inactiveScale: PropTypes.number
+        style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style
     };
-
-    static defaultProps = {
-        inactiveOpacity: 0.5,
-        inactiveScale: 0.5
-    }
 
     constructor (props) {
         super(props);
         this.state = {
+            animColor: new Animated.Value(0),
             animOpacity: new Animated.Value(0),
             animTransform: new Animated.Value(0)
         };
@@ -39,29 +37,45 @@ export default class PaginationDot extends Component {
     }
 
     _animate (toValue = 0) {
-        const { animOpacity, animTransform } = this.state;
+        const { animColor, animOpacity, animTransform } = this.state;
 
-        Animated.parallel([
+        const commonProperties = {
+            toValue,
+            duration: 250,
+            isInteraction: false,
+            useNativeDriver: !this._shouldAnimateColor
+        };
+
+        let animations = [
             Animated.timing(animOpacity, {
-                toValue,
-                duration: 250,
                 easing: Easing.linear,
-                isInteraction: false,
-                useNativeDriver: true
+                ...commonProperties
             }),
             Animated.spring(animTransform, {
-                toValue,
                 friction: 4,
                 tension: 50,
-                isInteraction: false,
-                useNativeDriver: true
+                ...commonProperties
             })
-        ]).start();
+        ];
+
+        if (this._shouldAnimateColor) {
+            animations.push(Animated.timing(animColor, {
+                easing: Easing.linear,
+                ...commonProperties
+            }));
+        }
+
+        Animated.parallel(animations).start();
+    }
+
+    get _shouldAnimateColor () {
+        const { color, inactiveColor } = this.props;
+        return color && inactiveColor;
     }
 
     render () {
-        const { animOpacity, animTransform } = this.state;
-        const { active, style, inactiveStyle, inactiveOpacity, inactiveScale } = this.props;
+        const { animColor, animOpacity, animTransform } = this.state;
+        const { active, color, style, inactiveColor, inactiveStyle, inactiveOpacity, inactiveScale } = this.props;
 
         const animatedStyle = {
             opacity: animOpacity.interpolate({
@@ -75,11 +89,19 @@ export default class PaginationDot extends Component {
                 })
             }]
         };
+        const animatedColor = this._shouldAnimateColor ? {
+            backgroundColor: animColor.interpolate({
+                inputRange: [0, 1],
+                outputRange: [inactiveColor, color]
+            })
+        } : {};
+
         const dotStyle = [
             styles.sliderPaginationDot,
             style || {},
             (!active && inactiveStyle) || {},
-            animatedStyle
+            animatedStyle,
+            animatedColor
         ];
 
         return (

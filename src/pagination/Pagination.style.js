@@ -5,7 +5,6 @@ const DEFAULT_DOT_COLOR = 'rgba(0, 0, 0, 0.75)';
 
 export default StyleSheet.create({
     sliderPagination: {
-        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 20,
