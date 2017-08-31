@@ -16,16 +16,18 @@ Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 **`activeDotIndex`** | Index of the currently active dot | Number | **Required**
 **`dotsLength`** | Number of dots to display | Number | **Required**
+`carouselRef` | Reference to the `Carousel` component to which pagination is linked. Needed only when setting `tappableDots` to `true`. | Object | `undefined`
 `containerStyle` | Style for dots' container that will be merged with the default one | View Style Object | `{}`
 `dotColor` | Background color of the active dot. **Use this if you want to animate the change between active and inactive colors**, and always in conjunction with `inactiveDotColor` (see [notes](#dots-colors)). | String | `undefined`
-`dotElement` | Optional custom active dot element that will replace the default one. The element will receive a prop `active` set to `true`. | React element | `undefined`
+`dotElement` | Optional custom active dot element that will replace the default one. The element will receive a prop `active` set to `true` as well as a prop `index`. | React element | `undefined`
 `dotStyle` | Dots' style that will be merged with the default one | View Style Object | `{}`
 `inactiveDotColor` | Background color of the inactive dots. **Use this if you want to animate the change between active and inactive colors**, and always in conjunction with `dotColor` (see [notes](#dots-colors)). | String | `undefined`
-`inactiveDotElement` | Optional custom inactive dot element that will replace the default one. The element will receive a prop `active` set to `false` | React element | `undefined`
+`inactiveDotElement` | Optional custom inactive dot element that will replace the default one. The element will receive a prop `active` set to `false` as well as a prop `index` | React element | `undefined`
 `inactiveDotOpacity` | Value of the opacity effect applied to inactive dots | Number | `0.5`
 `inactiveDotScale` | Value of the 'scale' transform applied to inactive dots | Number | `0.5`
 `inactiveDotStyle` | Dots' style that will be applied to inactive elements | View Style Object | `{}`
 `renderDots` | Function that gives you complete control over pagination's rendering. It will receive three parameters : `(activeIndex, total, context)`. This can be especially useful in order to replace dots with numbers. | Function | `undefined`
+`tappableDots` | Make default dots tappable, e.g. your carousel will slide to the corresponding item. Note that `carouselRef` must be specified for this to work. | Boolean | `false`
 `vertical` | Whether to layout dots vertically or horizontally | Boolean | `false`
 
 ## Note on dots' colors

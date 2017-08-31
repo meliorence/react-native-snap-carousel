@@ -27,7 +27,7 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 
 ### Archriss' "Ville d'Aix-en-Provence" app
 
-**The React Native version of this app (6.0.0) is going to be available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8) by mid-september** (the current one is Cordova-powered). It uses **version 3.0.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
+**The React Native version of this app (6.0.0) is going to be available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8) by mid-september** (the current one is Cordova-powered). It uses **version 3.1.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
 
 ![react-native-snap-carousel archriss aix](http://i.imgur.com/vmMp520.gif)
 ![react-native-snap-carousel archriss aix](http://i.imgur.com/OdQUYHS.gif)
@@ -78,9 +78,9 @@ export class MyCarousel extends Component {
 
 ## Migration from version 2.x
 
-> **IMPORTANT: Since `FlatList` was introduced in React Native `0.43.x`, you need to use version `2.4.0` of the plugin if you're currently using an older release of RN. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
-
 Slides are no longer appended as direct children of the component since the plugin is now based on `FlatList` instead of `ScrollView`. There are two new props that takes care of their rendering: `data` and `renderItem` (both are inherited from `FlatList`).
+
+> :warning: **Since `FlatList` was introduced in React Native `0.43.x`, you need to use version `2.4.0` of the plugin if you're currently using an older release of RN. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
 
 If you were already looping throught an array of data to populate the carousel, the migration is pretty straightforward. Just pass your slides' data to the `data` prop, convert your slides' getter to a function and pass it to the `renderItem` prop: you're good to go!
 
@@ -297,7 +297,9 @@ If momentum is disabled (default behavior), make sure to play with prop `scrollE
 > **We recommend setting `enableMomentum` to `false` (default) and `decelerationRate` to `'fast'` when you are displaying only one main slide** (as in the showcase above), and to use `true` and `0.9` otherwise.
 
 ### Margin between slides
-If you need some **extra horizontal margin** between slides (besides the one resulting from the scale effect), you should add it as `paddingHorizontal` on slide's container. Make sure to take this into account when calculating item's width.
+If you need some **extra horizontal margin** between slides (besides the one resulting from the scale effect), you should add it as `paddingHorizontal` on slide's container.
+
+:warning: **The value of `itemWidth` must include this extra margin.**
 
 ```javascript
 const horizontalMargin = 20;
@@ -315,6 +317,15 @@ const styles = Stylesheet.create({
     }
 };
 ```
+```javascript
+<Carousel sliderWidth={sliderWidth} itemWidth={itemWidth} />
+```
+
+### Understanding styles
+
+Here is a screenshot that should help you understand how each of the above variables is used.
+
+![react-native-snap-carousel info](http://i.imgur.com/PMi6aBd.jpg)
 
 ### Handling device rotation
 
@@ -358,7 +369,7 @@ render() {
 
 ### Fullscreen slides
 
-While the plugin hasn't been designed with this use case in mind, you can easily implement fullscreen slides. The following code should serve as a good starting point.
+While the plugin hasn't been designed with this use case in mind, you can easily implement fullscreen slides. The following code can serve as a good starting point.
 
 ```javascript
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -389,23 +400,17 @@ export class MyCarousel extends Component {
 
 [This plugin](https://github.com/shichongrui/react-native-on-layout) can also prove useful.
 
-### Understanding styles
-
-Here is a screenshot that should help you understand how each of the above variables is used.
-
-![react-native-snap-carousel info](http://i.imgur.com/PMi6aBd.jpg)
-
 ## Known issues
 
 ### React Native version
 
-**RN 0.43.x is the minimum required to use versions `>= 3.0.0` of the plugin. If you're using an older release of React Native, you are stuck with version `2.4.0`. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
+:warning: **RN 0.43.x is the minimum required to use versions `>= 3.0.0` of the plugin. If you're using an older release of React Native, you are stuck with version `2.4.0`. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
 
 Bear in mind that we follow RN evolutions closely, which means newer versions of the plugin might break when used in conjunction with a version of RN that is not the latest stable one.
 
 ### Android performances
 
-**Make sure to test carousel's performances without JS Dev Mode enabled**.
+:warning: **Make sure to test carousel's performances without JS Dev Mode enabled**.
 
 It can take user experience from "crappy and sluggish" to "pretty good" - it's Android though, so nothing like "perfect" or "incredibly smooth"...
 
@@ -422,7 +427,7 @@ We're trying to work around these issues, but the result is not always as smooth
 
 ### Unreliable callbacks
 
-When `enableMomentum` is disabled, providing a reliable callback is really tricky since no `scrollEnd` event has been exposed yet for the `ScrollView` component. We can only rely on the `scrollDragEnd` event, which comes with a huge bunch of issues. See [#34](https://github.com/archriss/react-native-snap-carousel/issues/34) for more information.
+When `enableMomentum` is disabled, providing a reliable callback is really tricky since no `scrollEnd` event has been exposed yet for the `ScrollView` component. We can only rely on the `scrollEndDrag` event, which comes with a huge bunch of issues. See [#34](https://github.com/archriss/react-native-snap-carousel/issues/34) for more information.
 
 Version 2.3.0 tackled these issues with a bunch of flags and hacks. But you could still be facing the following one: **when you build a debug version of your app without enabling JS remote debugging**, timers will desynchronize and callbacks will be a complete mess. Try to either enable remote debugging or build a production version of your app, and everything should get back to normal.
 
