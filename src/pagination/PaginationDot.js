@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Animated, Easing, ViewPropTypes } from 'react-native';
+import { View, Animated, Easing, TouchableOpacity, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './Pagination.style';
 
@@ -9,10 +9,13 @@ export default class PaginationDot extends PureComponent {
         inactiveOpacity: PropTypes.number.isRequired,
         inactiveScale: PropTypes.number.isRequired,
         active: PropTypes.bool,
+        carouselRef: PropTypes.object,
         color: PropTypes.string,
         inactiveColor: PropTypes.string,
         inactiveStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style
+        index: PropTypes.number,
+        style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        tappable: PropTypes.bool
     };
 
     constructor (props) {
@@ -75,7 +78,18 @@ export default class PaginationDot extends PureComponent {
 
     render () {
         const { animColor, animOpacity, animTransform } = this.state;
-        const { active, color, style, inactiveColor, inactiveStyle, inactiveOpacity, inactiveScale } = this.props;
+        const {
+            active,
+            carouselRef,
+            color,
+            style,
+            inactiveColor,
+            inactiveStyle,
+            inactiveOpacity,
+            inactiveScale,
+            index,
+            tappable
+        } = this.props;
 
         const animatedStyle = {
             opacity: animOpacity.interpolate({
@@ -104,8 +118,14 @@ export default class PaginationDot extends PureComponent {
             animatedColor
         ];
 
+        const onPress = tappable ? () => {
+            carouselRef && carouselRef.snapToItem && carouselRef.snapToItem(index);
+        } : undefined;
+
         return (
-            <Animated.View style={dotStyle} />
+            <TouchableOpacity activeOpacity={1} onPress={onPress}>
+                <Animated.View style={dotStyle} />
+            </TouchableOpacity>
         );
     }
 }

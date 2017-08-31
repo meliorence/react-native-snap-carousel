@@ -9,6 +9,7 @@ export default class Pagination extends PureComponent {
     static propTypes = {
         activeDotIndex: PropTypes.number.isRequired,
         dotsLength: PropTypes.number.isRequired,
+        carouselRef: PropTypes.object,
         containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         dotColor: PropTypes.string,
         dotElement: PropTypes.element,
@@ -19,18 +20,45 @@ export default class Pagination extends PureComponent {
         inactiveDotScale: PropTypes.number,
         inactiveDotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         renderDots: PropTypes.func,
+        tappableDots: PropTypes.bool,
         vertical: PropTypes.bool
     };
 
     static defaultProps = {
         inactiveDotOpacity: 0.5,
         inactiveDotScale: 0.5,
+        tappableDots: false,
         vertical: false
+    }
+
+    constructor (props) {
+        super(props);
+
+        // Warnings
+        if ((props.dotColor && !props.inactiveDotColor) || (!props.dotColor && props.inactiveDotColor)) {
+            console.warn(
+                'react-native-snap-carousel | Pagination: ' +
+                'You need to specify both `dotColor` and `inactiveDotColor`'
+            );
+        }
+        if ((props.dotElement && !props.inactiveDotElement) || (!props.dotElement && props.inactiveDotElement)) {
+            console.warn(
+                'react-native-snap-carousel | Pagination: ' +
+                'You need to specify both `dotElement` and `inactiveDotElement`'
+            );
+        }
+        if (props.tappableDots && !props.carouselRef) {
+            console.warn(
+                'react-native-snap-carousel | Pagination: ' +
+                'You must specify prop `carouselRef` when setting `tappableDots` to `true`'
+            );
+        }
     }
 
     get dots () {
         const {
             activeDotIndex,
+            carouselRef,
             dotsLength,
             dotColor,
             dotElement,
@@ -40,7 +68,8 @@ export default class Pagination extends PureComponent {
             inactiveDotOpacity,
             inactiveDotScale,
             inactiveDotStyle,
-            renderDots
+            renderDots,
+            tappableDots
         } = this.props;
 
         if (renderDots) {
@@ -48,6 +77,8 @@ export default class Pagination extends PureComponent {
         }
 
         const DefaultDot = <PaginationDot
+          carouselRef={carouselRef}
+          tappable={tappableDots && typeof carouselRef !== 'undefined'}
           color={dotColor}
           style={dotStyle}
           inactiveColor={inactiveDotColor}
@@ -64,7 +95,8 @@ export default class Pagination extends PureComponent {
                 (isActive ? dotElement : inactiveDotElement) || DefaultDot,
                 {
                     key: `pagination-dot-${i}`,
-                    active: i === activeDotIndex
+                    active: i === activeDotIndex,
+                    index: i
                 }
             ));
         }
@@ -86,10 +118,7 @@ export default class Pagination extends PureComponent {
         ];
 
         return (
-            <View
-              pointerEvents={'none'}
-              style={style}
-            >
+            <View pointerEvents={'box-none'} style={style}>
                 { this.dots }
             </View>
         );
