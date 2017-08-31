@@ -26,6 +26,7 @@ export default StyleSheet.create({
         marginBottom: 30
     },
     title: {
+        paddingHorizontal: 30,
         backgroundColor: 'transparent',
         color: 'rgba(255, 255, 255, 0.9)',
         fontSize: 20,
@@ -34,6 +35,7 @@ export default StyleSheet.create({
     },
     subtitle: {
         marginTop: 5,
+        paddingHorizontal: 30,
         backgroundColor: 'transparent',
         color: 'rgba(255, 255, 255, 0.75)',
         fontSize: 13,
@@ -52,7 +54,6 @@ export default StyleSheet.create({
         width: 8,
         height: 8,
         borderRadius: 4,
-        marginHorizontal: 8,
-        backgroundColor: 'rgba(255, 255, 255, 0.92)'
+        marginHorizontal: 8
     }
 });

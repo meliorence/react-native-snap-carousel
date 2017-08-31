@@ -14,7 +14,8 @@ export default class example extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            slider1ActiveSlide: SLIDER_1_FIRST_ITEM
+            slider1ActiveSlide: SLIDER_1_FIRST_ITEM,
+            slider1Ref: null
         };
     }
 
@@ -39,13 +40,16 @@ export default class example extends Component {
     }
 
     get example1 () {
-        const { slider1ActiveSlide } = this.state;
+        const { slider1ActiveSlide, slider1Ref } = this.state;
 
         return (
             <View style={styles.exampleContainer}>
                 <Text style={styles.title}>Example 1</Text>
-                <Text style={styles.subtitle}>No momentum | Parallax | Pagination | Scale | Opacity</Text>
+                <Text style={styles.subtitle}>
+                    No momentum | Parallax | Scale | Opacity | Pagination with tappable dots
+                </Text>
                 <Carousel
+                  ref={(c) => { if (!this.state.slider1Ref) { this.setState({ slider1Ref: c }); } }}
                   data={ENTRIES1}
                   renderItem={this._renderItemWithParallax}
                   sliderWidth={sliderWidth}
@@ -64,9 +68,13 @@ export default class example extends Component {
                   dotsLength={ENTRIES1.length}
                   activeDotIndex={slider1ActiveSlide}
                   containerStyle={styles.paginationContainer}
+                  dotColor={'rgba(255, 255, 255, 0.92)'}
                   dotStyle={styles.paginationDot}
+                  inactiveDotColor={colors.black}
                   inactiveDotOpacity={0.4}
                   inactiveDotScale={0.6}
+                  carouselRef={slider1Ref}
+                  tappableDots={!!slider1Ref}
                 />
             </View>
         );
