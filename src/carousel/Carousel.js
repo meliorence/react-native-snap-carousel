@@ -162,7 +162,7 @@ export default class Carousel extends Component {
         const { firstItem, autoplay, apparitionDelay } = this.props;
         const _firstItem = this._getFirstItem(firstItem);
 
-        this._initInterpolators(this.props, true);
+        this._initInterpolators(this.props);
 
         setTimeout(() => {
             this.snapToItem(_firstItem, false, false, true);
@@ -276,20 +276,28 @@ export default class Carousel extends Component {
         });
     }
 
-    _initInterpolators (props = this.props, initial = false) {
-        const { activeItem } = this.state;
-        const { data, firstItem } = props;
+    _initInterpolators (props = this.props) {
+        const { data, firstItem, itemWidth, itemHeight, vertical } = props;
+
+        const sizeRef = vertical ? itemHeight : itemWidth;
 
         let interpolators = [];
-        const focusedItem = !initial && (activeItem || activeItem === 0) ?
-            activeItem :
-            this._getFirstItem(firstItem, props);
 
         data.forEach((itemData, index) => {
-            const value = index === focusedItem ? 1 : 0;
+            const start = (index - 1) * sizeRef;
+            const middle = index * sizeRef;
+            const end = (index + 1) * sizeRef;
             interpolators.push({
-                opacity: new Animated.Value(value),
-                scale: new Animated.Value(value)
+                opacity: this._scrollPos.interpolate({
+                  inputRange: [start, middle, end],
+                  outputRange: [0, 1, 0],
+                  extrapolate: 'clamp',
+                }),
+                scale: this._scrollPos.interpolate({
+                  inputRange: [start, middle, end],
+                  outputRange: [0, 1, 0],
+                  extrapolate: 'clamp',
+                })
             });
         });
         this.setState({ interpolators });
@@ -427,16 +435,6 @@ export default class Carousel extends Component {
                     this._onSnap(newActiveItem);
                 }
             });
-
-            // With dynamically removed items, `activeItem` and
-            // `newActiveItem`'s interpolators might be `undefined`
-            if (this.state.interpolators[activeItem]) {
-                animations.push(this._getSlideAnimation(activeItem, 0));
-            }
-            if (this.state.interpolators[newActiveItem]) {
-                animations.push(this._getSlideAnimation(newActiveItem, 1));
-            }
-            Animated.parallel(animations, { stopTogether: false }).start();
         }
 
         // When scrolling, we need to check that we are not "short snapping",
