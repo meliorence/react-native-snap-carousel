@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 import _debounce from 'lodash.debounce';
 
+const IS_IOS = Platform.OS === 'ios';
+
 // Native driver for scroll events
 // See: https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -70,7 +72,7 @@ export default class Carousel extends Component {
         hasParallaxImages: false,
         inactiveSlideOpacity: 0.7,
         inactiveSlideScale: 0.9,
-        scrollEndDragDebounceValue: Platform.OS === 'ios' ? 50 : 150,
+        scrollEndDragDebounceValue: IS_IOS ? 50 : 150,
         slideStyle: {},
         shouldOptimizeUpdates: true,
         snapOnAndroid: true,
@@ -191,33 +193,70 @@ export default class Carousel extends Component {
         const { data, firstItem, sliderWidth, sliderHeight, itemWidth, itemHeight } = nextProps;
 
         const itemsLength = data.length;
+
+        if (!itemsLength) {
+            return;
+        }
+
         const nextFirstItem = this._getFirstItem(firstItem, nextProps);
-        const nextActiveItem = activeItem || activeItem === 0 ? activeItem : nextFirstItem;
+        let nextActiveItem = activeItem || activeItem === 0 ? activeItem : nextFirstItem;
 
         const hasNewSliderWidth = sliderWidth && sliderWidth !== this.props.sliderWidth;
         const hasNewSliderHeight = sliderHeight && sliderHeight !== this.props.sliderHeight;
         const hasNewItemWidth = itemWidth && itemWidth !== this.props.itemWidth;
         const hasNewItemHeight = itemHeight && itemHeight !== this.props.itemHeight;
 
-        if ((itemsLength && interpolators.length !== itemsLength) ||
-            hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
-            this._positions = [];
-            this._calcCardPositions(nextProps);
-            this._initInterpolators(nextProps);
+        if (interpolators.length !== itemsLength || hasNewSliderWidth ||
+            hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
+            this.setState({ activeItem: nextActiveItem }, () => {
+                this._positions = [];
+                this._calcCardPositions(nextProps);
+                this._initInterpolators(nextProps);
 
-            this.setState({ activeItem: nextActiveItem });
+                // Prevent issues with dynamically removed items (see 'componentDidUpdate')
+                if (nextActiveItem > itemsLength - 1) {
+                    return;
+                }
 
-            if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight ||
-                (IS_RTL && !nextProps.vertical)) {
-                this.snapToItem(nextActiveItem, false, false);
-            }
+                if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight ||
+                    (IS_RTL && !nextProps.vertical)) {
+                    this.snapToItem(nextActiveItem, false, false);
+                }
+            });
         } else if (nextFirstItem !== previousFirstItem && nextFirstItem !== activeItem) {
             this.setState({
                 previousFirstItem: nextFirstItem,
                 activeItem: nextFirstItem
+            }, () => {
+                this.snapToItem(nextFirstItem);
             });
-            this.snapToItem(nextFirstItem);
         }
+    }
+
+    componentDidUpdate (prevProps, prevState) {
+        const previousItemsLength = prevProps && prevProps.data && prevProps.data.length;
+        const itemsLength = this.props && this.props.data && this.props.data.length;
+
+        // Handle state and scroll issue when dynamically removing items (see #133)
+        if (!previousItemsLength || !itemsLength || previousItemsLength <= itemsLength) {
+            return;
+        }
+
+        const { activeItem } = this.state;
+        let nextActiveItem = activeItem;
+
+        if (nextActiveItem > itemsLength - 1) {
+            nextActiveItem = itemsLength - 1;
+        }
+
+        if (nextActiveItem < 0) {
+            return;
+        }
+
+        this.setState({ activeItem: nextActiveItem }, () => {
+            this.snapToItem(nextActiveItem, false, true);
+            this._getSlideAnimation(nextActiveItem, 1).start();
+        });
     }
 
     componentWillUnmount () {
@@ -230,7 +269,7 @@ export default class Carousel extends Component {
 
     get _snapEnabled () {
         const { enableSnap, snapOnAndroid } = this.props;
-        return enableSnap && (Platform.OS === 'ios' || snapOnAndroid);
+        return enableSnap && (IS_IOS || snapOnAndroid);
     }
 
     get currentIndex () {
@@ -404,7 +443,7 @@ export default class Carousel extends Component {
         const { data, enableMomentum, onScroll } = this.props;
 
         const scrollOffset = this._getScrollOffset(event);
-        const newActiveItem = this._getActiveItem(scrollOffset);
+        const nextActiveItem = this._getActiveItem(scrollOffset);
         const itemsLength = data.length;
         let animations = [];
 
@@ -414,29 +453,31 @@ export default class Carousel extends Component {
             clearTimeout(this._snapNoMomentumTimeout);
         }
 
-        if (activeItem !== newActiveItem) {
+        if (activeItem !== nextActiveItem) {
             if (activeItem === 0 || activeItem === itemsLength - 1) {
                 this._hasFiredEdgeItemCallback = false;
             }
 
             // WARNING: `setState()` is asynchronous
-            this.setState({ activeItem: newActiveItem }, () => {
-                // When "short snapping", we can rely on the "activeItem/newActiveItem" comparison
+            this.setState({ activeItem: nextActiveItem }, () => {
+                // When "short snapping", we can rely on the "activeItem/nextActiveItem" comparison
                 if (!enableMomentum && this._canFireCallback && this._isShortSnapping) {
                     this._isShortSnapping = false;
-                    this._onSnap(newActiveItem);
+                    this._onSnap(nextActiveItem);
                 }
             });
 
             // With dynamically removed items, `activeItem` and
-            // `newActiveItem`'s interpolators might be `undefined`
+            // `nextActiveItem`'s interpolators might be `undefined`
             if (this.state.interpolators[activeItem]) {
                 animations.push(this._getSlideAnimation(activeItem, 0));
             }
-            if (this.state.interpolators[newActiveItem]) {
-                animations.push(this._getSlideAnimation(newActiveItem, 1));
+            if (this.state.interpolators[nextActiveItem]) {
+                animations.push(this._getSlideAnimation(nextActiveItem, 1));
             }
-            Animated.parallel(animations, { stopTogether: false }).start();
+            if (animations.length) {
+                Animated.parallel(animations, { stopTogether: false }).start();
+            }
         }
 
         // When scrolling, we need to check that we are not "short snapping",
@@ -444,10 +485,10 @@ export default class Carousel extends Component {
         // that we are scrolling to the relevant slide,
         // and that callback can be fired
         if (!enableMomentum && this._canFireCallback && !this._isShortSnapping &&
-            (this._scrollStartActive !== newActiveItem || !this._hasFiredEdgeItemCallback) &&
-            this._itemToSnapTo === newActiveItem) {
-            this.setState({ activeItem: newActiveItem }, () => {
-                this._onSnap(newActiveItem);
+            (this._scrollStartActive !== nextActiveItem || !this._hasFiredEdgeItemCallback) &&
+            this._itemToSnapTo === nextActiveItem) {
+            this.setState({ activeItem: nextActiveItem }, () => {
+                this._onSnap(nextActiveItem);
             });
         }
 
@@ -541,7 +582,7 @@ export default class Carousel extends Component {
     // https://github.com/facebook/react-native/issues/6791
     // it's fine since we're only fixing an iOS bug in it, so ...
     _onTouchRelease (event) {
-        if (this.props.enableMomentum && Platform.OS === 'ios') {
+        if (this.props.enableMomentum && IS_IOS) {
             clearTimeout(this._snapNoMomentumTimeout);
             this._snapNoMomentumTimeout = setTimeout(() => {
                 this.snapToItem(this.currentIndex);
@@ -565,7 +606,7 @@ export default class Carousel extends Component {
 
         // When using momentum and releasing the touch with
         // no velocity, scrollEndActive will be undefined (iOS)
-        if (!this._scrollEndActive && this._scrollEndActive !== 0 && Platform.OS === 'ios') {
+        if (!this._scrollEndActive && this._scrollEndActive !== 0 && IS_IOS) {
             this._scrollEndActive = this._scrollStartActive;
         }
 
@@ -727,7 +768,7 @@ export default class Carousel extends Component {
             });
 
             // iOS fix, check the note in the constructor
-            if (!initial && Platform.OS === 'ios') {
+            if (!initial && IS_IOS) {
                 this._ignoreNextMomentum = true;
             }
         }
