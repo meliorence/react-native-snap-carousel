@@ -243,6 +243,7 @@ export default class Carousel extends Component {
         }
 
         const { activeItem } = this.state;
+        const { inactiveSlideOpacity, inactiveSlideScale } = this.props;
         let nextActiveItem = activeItem;
 
         if (nextActiveItem > itemsLength - 1) {
@@ -255,7 +256,10 @@ export default class Carousel extends Component {
 
         this.setState({ activeItem: nextActiveItem }, () => {
             this.snapToItem(nextActiveItem, false, true);
-            this._getSlideAnimation(nextActiveItem, 1).start();
+
+            if (inactiveSlideOpacity < 1 || inactiveSlideScale < 1) {
+                this._getSlideAnimation(nextActiveItem, 1).start();
+            }
         });
     }
 
@@ -440,7 +444,7 @@ export default class Carousel extends Component {
 
     _onScroll (event) {
         const { activeItem } = this.state;
-        const { data, enableMomentum, onScroll } = this.props;
+        const { data, enableMomentum, onScroll, inactiveSlideOpacity, inactiveSlideScale } = this.props;
 
         const scrollOffset = this._getScrollOffset(event);
         const nextActiveItem = this._getActiveItem(scrollOffset);
@@ -467,16 +471,18 @@ export default class Carousel extends Component {
                 }
             });
 
-            // With dynamically removed items, `activeItem` and
-            // `nextActiveItem`'s interpolators might be `undefined`
-            if (this.state.interpolators[activeItem]) {
-                animations.push(this._getSlideAnimation(activeItem, 0));
-            }
-            if (this.state.interpolators[nextActiveItem]) {
-                animations.push(this._getSlideAnimation(nextActiveItem, 1));
-            }
-            if (animations.length) {
-                Animated.parallel(animations, { stopTogether: false }).start();
+            if (inactiveSlideOpacity < 1 || inactiveSlideScale < 1) {
+                // With dynamically removed items, `activeItem` and
+                // `nextActiveItem`'s interpolators might be `undefined`
+                if (this.state.interpolators[activeItem]) {
+                    animations.push(this._getSlideAnimation(activeItem, 0));
+                }
+                if (this.state.interpolators[nextActiveItem]) {
+                    animations.push(this._getSlideAnimation(nextActiveItem, 1));
+                }
+                if (animations.length) {
+                    Animated.parallel(animations, { stopTogether: false }).start();
+                }
             }
         }
 
