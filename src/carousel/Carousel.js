@@ -40,6 +40,8 @@ export default class Carousel extends Component {
         hasParallaxImages: PropTypes.bool,
         inactiveSlideOpacity: PropTypes.number,
         inactiveSlideScale: PropTypes.number,
+        loop: PropTypes.bool,
+        loopClonesPerSide: PropTypes.number,
         slideStyle: Animated.View.propTypes.style,
         shouldOptimizeUpdates: PropTypes.bool,
         swipeThreshold: PropTypes.number,
@@ -63,6 +65,8 @@ export default class Carousel extends Component {
         hasParallaxImages: false,
         inactiveSlideOpacity: 0.7,
         inactiveSlideScale: 0.9,
+        loop: true,
+        loopClonesPerSide: 3,
         slideStyle: {},
         shouldOptimizeUpdates: true,
         swipeThreshold: 20,
@@ -680,6 +684,35 @@ export default class Carousel extends Component {
         this.snapToItem(newIndex, animated);
     }
 
+    get loopData () {
+        const { activeItem } = this.state;
+        const { data, loopClonesPerSide, firstItem } = this.props;
+
+        // CALLBACK ITEM / FIRST ITEM -> REAL INDEX
+
+        const previousItems = data.slice(-loopClonesPerSide);
+        const nextItems = data.slice(0, loopClonesPerSide);
+
+        const loopItems = previousItems.concat(data, nextItems).map((item, index) => {
+            return {
+                ...item,
+                loopIndex: index
+            };
+        });
+
+        // console.log('ITEMS', data)
+        // console.log('LOOP ITEMS', loopItems)
+
+        // return loopItems;
+
+        const customData = data;
+        if (customData.length < 21) {
+            customData.push(...data)
+        }
+        console.log('CUSTOM DATA', customData)
+        return customData;
+    }
+
     _renderItem ({ item, index }) {
         const { interpolators } = this.state;
         const {
@@ -744,6 +777,7 @@ export default class Carousel extends Component {
             itemWidth,
             itemHeight,
             keyExtractor,
+            loop,
             renderItem,
             sliderWidth,
             sliderHeight,
@@ -793,11 +827,13 @@ export default class Carousel extends Component {
               // updateCellsBatchingPeriod
               {...this.props}
               ref={(c) => { if (c) { this._flatlist = c._component; } }}
-              data={data}
+              // data={data}
+              data={loop ? this.loopData : data}
               renderItem={this._renderItem}
               // extraData={this.state}
               getItemLayout={this._getItemLayout}
               keyExtractor={keyExtractor || this._getKeyExtractor}
+              // keyExtractor={loop ? this._getKeyExtractor : keyExtractor || this._getKeyExtractor}
               initialScrollIndex={firstItem || undefined}
               numColumns={1}
               style={containerStyle}
