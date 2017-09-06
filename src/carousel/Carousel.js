@@ -162,15 +162,16 @@ export default class Carousel extends Component {
 
         setTimeout(() => {
             this.snapToItem(_firstItem, false, false, true);
-
-            if (autoplay) {
-                this.startAutoplay();
-            }
+            this._hackActiveSlideAnimation(_firstItem, 'start');
         }, 0);
 
         // hide FlatList's awful init
         setTimeout(() => {
             this.setState({ hideCarousel: false });
+
+            if (autoplay) {
+                this.startAutoplay();
+            }
         }, apparitionDelay);
     }
 
@@ -184,7 +185,7 @@ export default class Carousel extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { activeItem, interpolators, previousFirstItem, previousItemsLength } = this.state;
-        const { data, firstItem, itemHeight, itemWidth, sliderHeight, sliderWidth, vertical } = nextProps;
+        const { data, firstItem, itemHeight, itemWidth, sliderHeight, sliderWidth } = nextProps;
 
         const itemsLength = data.length;
 
@@ -200,7 +201,7 @@ export default class Carousel extends Component {
         const hasNewItemWidth = itemWidth && itemWidth !== this.props.itemWidth;
         const hasNewItemHeight = itemHeight && itemHeight !== this.props.itemHeight;
 
-        // Prevent issue with dynamically removed items
+        // Prevent issues with dynamically removed items
         if (nextActiveItem > itemsLength - 1) {
             nextActiveItem = itemsLength - 1;
         }
@@ -215,18 +216,15 @@ export default class Carousel extends Component {
                 this._calcCardPositions(nextProps);
                 this._initInterpolators(nextProps);
 
-                // Handle state and scroll issue when dynamically removing items (see #133)
-                const itemRemoved = previousItemsLength > itemsLength;
+                // Handle scroll issue when dynamically removing items (see #133)
+                // This also fixes first item's active state on Android
+                // Because 'initialScrollIndex' apparently doesn't trigger scroll
+                if (previousItemsLength > itemsLength) {
+                    const direction = itemsLength === 1 ? 'start' : 'end';
+                    this._hackActiveSlideAnimation(nextActiveItem, direction);
+                }
 
-                if (itemRemoved) {
-                    // trigger scroll to hack item's active animation
-                    this._flatlist.scrollToOffset({
-                        offset: this._positions[nextActiveItem].start + 1,
-                        horizontal: !vertical,
-                        animated: false
-                    });
-                    this.snapToItem(nextActiveItem, false, true);
-                } else if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth ||
+                if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth ||
                     hasNewItemHeight || (IS_RTL && !nextProps.vertical)) {
                     this.snapToItem(nextActiveItem, false, false);
                 }
@@ -333,6 +331,32 @@ export default class Carousel extends Component {
         });
 
         this.setState({ interpolators });
+    }
+
+    _hackActiveSlideAnimation (index, direction = 'start') {
+        const { vertical } = this.props;
+
+        if (!this._flatlist || !this._positions[index]) {
+            return;
+        }
+
+        const offset = this._positions[index].start;
+        const commonOptions = {
+            horizontal: !vertical,
+            animated: false
+        };
+
+        this._flatlist.scrollToOffset({
+            offset: offset + (direction === 'start' ? -1 : 1),
+            ...commonOptions
+        });
+
+        setTimeout(() => {
+            this._flatlist.scrollToOffset({
+                offset: offset,
+                ...commonOptions
+            });
+        }, 10); // works randomly when set to '0'
     }
 
     _getScrollOffset (event) {
@@ -735,7 +759,7 @@ export default class Carousel extends Component {
             });
 
             // iOS fix, check the note in the constructor
-            if (!initial && IS_IOS) {
+            if (!initial && IS_IOS && enableMomentum) {
                 this._ignoreNextMomentum = true;
             }
         }
@@ -829,6 +853,7 @@ export default class Carousel extends Component {
             scrollEventThrottle,
             sliderWidth,
             sliderHeight,
+            style,
             vertical
         } = this.props;
 
@@ -839,8 +864,8 @@ export default class Carousel extends Component {
         const nativePoweredScroll = this._shouldUseNativeOnScroll();
         const Component = nativePoweredScroll ? AnimatedFlatList : FlatList;
 
-        const style = [
-            containerCustomStyle || {},
+        const containerStyle = [
+            containerCustomStyle || style || {},
             hideCarousel ? { opacity: 0 } : {},
             vertical ?
                 { height: sliderHeight, flexDirection: 'column' } :
@@ -882,7 +907,7 @@ export default class Carousel extends Component {
               keyExtractor={keyExtractor || this._getKeyExtractor}
               initialScrollIndex={firstItem || undefined}
               numColumns={1}
-              style={style}
+              style={containerStyle}
               contentContainerStyle={contentContainerStyle}
               horizontal={!vertical}
               scrollEventThrottle={nativePoweredScroll ? 1 : (scrollEventThrottle || 16)}
