@@ -160,7 +160,7 @@ export default class Carousel extends Component {
 
         this._initInterpolators(this.props);
 
-        setTimeout(() => {
+        this._initTimeout = setTimeout(() => {
             this.snapToItem(_firstItem, false, false, true);
 
             if (autoplay) {
@@ -169,7 +169,7 @@ export default class Carousel extends Component {
         }, 0);
 
         // hide FlatList's awful init
-        setTimeout(() => {
+        this._hideFlatListTimeout = setTimeout(() => {
             this.setState({ hideCarousel: false });
         }, apparitionDelay);
     }
@@ -243,6 +243,8 @@ export default class Carousel extends Component {
 
     componentWillUnmount () {
         this.stopAutoplay();
+        clearTimeout(this._initTimeout);
+        clearTimeout(this._hideFlatListTimeout);
         clearTimeout(this._enableAutoplayTimeout);
         clearTimeout(this._autoplayTimeout);
         clearTimeout(this._snapNoMomentumTimeout);
