@@ -160,13 +160,10 @@ export default class Carousel extends Component {
 
         this._initInterpolators(this.props);
 
-        setTimeout(() => {
+        // hide FlatList's awful init
+        this._apparitionTimeout = setTimeout(() => {
             this.snapToItem(_firstItem, false, false, true);
             this._hackActiveSlideAnimation(_firstItem, 'start');
-        }, 0);
-
-        // hide FlatList's awful init
-        setTimeout(() => {
             this.setState({ hideCarousel: false });
 
             if (autoplay) {
@@ -220,8 +217,7 @@ export default class Carousel extends Component {
                 // This also fixes first item's active state on Android
                 // Because 'initialScrollIndex' apparently doesn't trigger scroll
                 if (previousItemsLength > itemsLength) {
-                    const direction = itemsLength === 1 ? 'start' : 'end';
-                    this._hackActiveSlideAnimation(nextActiveItem, direction);
+                    this._hackActiveSlideAnimation(nextActiveItem);
                 }
 
                 if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth ||
@@ -241,6 +237,8 @@ export default class Carousel extends Component {
 
     componentWillUnmount () {
         this.stopAutoplay();
+        clearTimeout(this._apparitionTimeout);
+        clearTimeout(this._hackSlideAnimationTimeout);
         clearTimeout(this._enableAutoplayTimeout);
         clearTimeout(this._autoplayTimeout);
         clearTimeout(this._snapNoMomentumTimeout);
@@ -333,13 +331,15 @@ export default class Carousel extends Component {
         this.setState({ interpolators });
     }
 
-    _hackActiveSlideAnimation (index, direction = 'start') {
-        const { vertical } = this.props;
+    _hackActiveSlideAnimation (index, goTo) {
+        const { data, vertical } = this.props;
 
-        if (!this._flatlist || !this._positions[index]) {
+        if (IS_IOS || !this._flatlist || !this._positions[index]) {
             return;
         }
 
+        const itemsLength = data && data.length;
+        const direction = goTo || itemsLength === 1 ? 'start' : 'end';
         const offset = this._positions[index].start;
         const commonOptions = {
             horizontal: !vertical,
@@ -351,12 +351,12 @@ export default class Carousel extends Component {
             ...commonOptions
         });
 
-        setTimeout(() => {
+        this._hackSlideAnimationTimeout = setTimeout(() => {
             this._flatlist.scrollToOffset({
                 offset: offset,
                 ...commonOptions
             });
-        }, 10); // works randomly when set to '0'
+        }, 50); // works randomly when set to '0'
     }
 
     _getScrollOffset (event) {
@@ -757,6 +757,9 @@ export default class Carousel extends Component {
                 viewOffset: 0,
                 animated
             });
+
+            // Android hack since `onScroll` sometimes seems to not be triggered
+            this._hackActiveSlideAnimation(index);
 
             // iOS fix, check the note in the constructor
             if (!initial && IS_IOS && enableMomentum) {
