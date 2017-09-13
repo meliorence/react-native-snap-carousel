@@ -164,17 +164,15 @@ Prop | Description | Type | Default
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-`activeSlideOffset` | From slider's center, minimum slide distance to be scrolled before being set to active | Number | `25`
+`activeSlideOffset` | From slider's center, minimum slide distance to be scrolled before being set to active. | Number | `20`
 `apparitionDelay` | `FlatList`'s init is a real mess, with lots of unneeded flickers and slides movement. This prop controls the delay during which the carousel will be hidden when mounted. | Number | `250`
+`callbackOffsetMargin` | Scroll events might not be triggered often enough to get a precise measure and, therefore, to provide a reliable callback. This usually is an Android issue, which might be linked to the version of React Native you're using (see ["Unreliable callbacks"](#unreliable-callbacks)). To work around this, you can define a small margin that will increase the "sweet spot"'s width. The default value should cover most cases, but **you will want to increase it if you experience missed callbacks**. | Number | `5`
 `enableMomentum` | See [momentum](#momentum) | Boolean | `false`
 `enableSnap` | If enabled, releasing the touch will scroll to the center of the nearest/active item | Boolean | `true`
 `firstItem` | Index of the first item to display | Number | `0`
 `hasParallaxImages` | Whether the carousel contains `<ParallaxImage />` components or not. Required for specific data to be passed to children. | Boolean | `false`
-`scrollEndDragDebounceValue` | **When momentum is disabled**, this prop defines the timeframe during which multiple callback calls should be "grouped" into a single one. This debounce also helps smoothing the snap effect by providing a bit of inertia when touch is released. **Note that this will delay callback's execution.** | Number | `50` for iOS, `150` for Android
 `shouldOptimizeUpdates` | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
-`snapOnAndroid` | Snapping on android is sometimes choppy, especially when swiping quickly, so you can disable it | Boolean | `true`
 `swipeThreshold` | Delta x when swiping to trigger the snap | Number | `20`
-`useNativeOnScroll` | Move `onScroll` events to the native thread in order to prevent the tiny lag associated with RN's JS bridge. **Activate this if you have a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely**. More info in [this post](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html). Note that it will be activated if `hasParallaxImages` is set to `true` and/or if `scrollEventThrottle` is set to less than `16`. | Boolean | `false`
 `vertical` | Layout slides vertically instead of horizontally | Boolean | `false`
 
 ### Autoplay
@@ -190,8 +188,6 @@ Prop | Description | Type | Default
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 `activeSlideAlignment` | Determine active slide's alignment relative to the carousel. Possible values are: `'start'`, `'center'` and `'end'`. | String | `'center'`
-`animationFunc` | Animated animation to use; you must provide the name of the method. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around) | String | `timing`
-`animationOptions` | Animation options to be merged with the default ones. Can be used without `animationFunc`. Note that opacity's easing will be kept linear. | Object | `{ duration: 600, easing: Easing.elastic(1) }`
 `containerCustomStyle` | Optional styles for Scrollview's global wrapper | View Style Object | `{}`
 `contentContainerCustomStyle` | Optional styles for Scrollview's items container | View Style Object | `{}`
 `inactiveSlideOpacity` | Value of the opacity effect applied to inactive slides | Number | `0.7`
@@ -321,6 +317,14 @@ const styles = Stylesheet.create({
 <Carousel sliderWidth={sliderWidth} itemWidth={itemWidth} />
 ```
 
+### Carousel's stretched height
+
+Since `<Carousel />` is, ultimately, based on `<ScrollView />`, it inherits [its default styles](https://github.com/facebook/react-native/blob/master/Libraries/Components/ScrollView/ScrollView.js#L864) and particularly `{ flexGrow: 1 }`. This means that, by default, **the carousel container will stretch to fill up all available space**.
+
+If this is not what you're after, you can prevent this behavior by passing `{ flexGrow: 0 }` to prop `containerCustomStyle`.
+
+Alternatively, you can either use this prop to pass a custom height to the container, or wrap the carousel in a `<View />` with a fixed height.
+
 ### Understanding styles
 
 Here is a screenshot that should help you understand how each of the above variables is used.
@@ -400,6 +404,10 @@ export class MyCarousel extends Component {
 
 [This plugin](https://github.com/shichongrui/react-native-on-layout) can also prove useful.
 
+### Native-powered animations
+
+Scroll events have been moved to the native thread in order to prevent the tiny lag associated with React Native's JavaScript bridge. This is really useful when displaying a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely. You can find more info in [this post from Facebook](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html).
+
 ## Known issues
 
 ### React Native version
@@ -427,9 +435,13 @@ We're trying to work around these issues, but the result is not always as smooth
 
 ### Unreliable callbacks
 
-When `enableMomentum` is disabled, providing a reliable callback is really tricky since no `scrollEnd` event has been exposed yet for the `ScrollView` component. We can only rely on the `scrollEndDrag` event, which comes with a huge bunch of issues. See [#34](https://github.com/archriss/react-native-snap-carousel/issues/34) for more information.
+When `enableMomentum` is disabled (default behavior), providing a reliable callback is really tricky since no `scrollEnd` event has been exposed yet for the `ScrollView` component. We can only rely on the `scrollEndDrag` event, which comes with a huge bunch of issues. See [#34](https://github.com/archriss/react-native-snap-carousel/issues/34) for more information.
 
-Version 2.3.0 tackled these issues with a bunch of flags and hacks. But you could still be facing the following one: **when you build a debug version of your app without enabling JS remote debugging**, timers will desynchronize and callbacks will be a complete mess. Try to either enable remote debugging or build a production version of your app, and everything should get back to normal.
+Version 2.3.0 tackled these issues with all sorts of flags and hacks. But you could still be facing the following one: **when you build a debug version of your app without enabling JS remote debugging, timers may desynchronize and cause a complete callback mess**. Try to either enable remote debugging or build a production version of your app, and everything should get back to normal.
+
+Callback handling has been completely revamped in version 3.2.0, in a less hacky and more reliable way. There is one issue though: callbacks now rely on scroll events. Usually, this is not a problem since the plugin features a native-powered scroll. **But there has been [a regression in React Native 0.46.x](https://github.com/facebook/react-native/issues/15769), that has been fixed in version 0.48.2.**
+
+If you're using an in-between version, you're in for some trouble since events won't be fired frequently enough (particularly on Android). **We've added a prop `callbackOffsetMargin` to help with this situation.**
 
 ### Error with Jest
 
@@ -447,6 +459,7 @@ As such, this feature should be considered experimental since it might break wit
 
 ## TODO
 
+- [ ] Implement a custom `PanResponder` for better control over carousel's callbacks and overall feeling
 - [ ] Implement 'loop' mode
 - [ ] Handle changing major props on-the-fly
 - [ ] Handle autoplay properly when updating children's length

@@ -19,9 +19,7 @@ All [`<Image />` props](https://facebook.github.io/react-native/docs/image.html#
 
 ## Usage
 
-The first thing you need to do is to **set `hasParallaxImages` to `true` on your `<Carousel />`**. This has two consequences:
-- migrating scroll events to the native driver for top-notch performances
-- your custom `renderItem` function now has access to a second argument that must be passed to the `<ParallaxImage />`.
+The first thing you need to do is to **set `hasParallaxImages` to `true` for your `<Carousel />`**. This will make a new argument available in your `renderItem()` function, which must then be passed to the `<ParallaxImage />`.
 
 Here is an example that shows how to connect images to your carousel (note the `parallaxProps` argument).
 
