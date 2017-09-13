@@ -1,8 +1,17 @@
+## v3.2.0
+* Refactor callback handling. **Make sure to use the new prop `callbackOffsetMargin` if you experience missed callbacks.**
+* Make item's scale and opacity animation follow scroll value (thanks [@hammadj](https://github.com/hammadj))
+* `Pagination` component: make dots tappable with new props `tappableDots` and `carouselRef` (see the [example](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/index.js))
+* Fix state and scroll issues when the currently active item is being dynamically removed
+* Improve snap feeling when momentum is disabled (default)
+* Add prop `callbackOffsetMargin`
+* Remove props `animationFunc`, `animationOptions`, `scrollEndDragDebounceValue`, `snapOnAndroid`, and `useNativeOnScroll`
+
 ## v3.1.0
 * `Pagination` component: add new props for advanced customization
 
 ## v3.0.0
-###WARNING
+### WARNING
 * **Do not use this version as some temporary code was pushed to `npm` by mistake. Make sure to use version `3.1.0` instead.**
 ### Breaking changes
 * Plugin is now built on top of `FlatList`, which allows for huge performance optimizations. From now on, items must be rendered using props `data` and `renderItem`.
