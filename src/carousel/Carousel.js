@@ -19,7 +19,6 @@ export default class Carousel extends Component {
 
     static propTypes = {
         ...FlatList.propTypes,
-        callbackOffsetMargin: PropTypes.number,
         data: PropTypes.array.isRequired,
         renderItem: PropTypes.func.isRequired,
         itemWidth: PropTypes.number, // required for horizontal carousel
@@ -32,6 +31,7 @@ export default class Carousel extends Component {
         autoplay: PropTypes.bool,
         autoplayDelay: PropTypes.number,
         autoplayInterval: PropTypes.number,
+        callbackOffsetMargin: PropTypes.number,
         containerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         contentContainerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         enableMomentum: PropTypes.bool,
@@ -43,7 +43,6 @@ export default class Carousel extends Component {
         slideStyle: Animated.View.propTypes.style,
         shouldOptimizeUpdates: PropTypes.bool,
         swipeThreshold: PropTypes.number,
-        useNativeOnScroll: PropTypes.bool,
         vertical: PropTypes.bool,
         onSnapToItem: PropTypes.func
     };
@@ -67,7 +66,6 @@ export default class Carousel extends Component {
         slideStyle: {},
         shouldOptimizeUpdates: true,
         swipeThreshold: 20,
-        useNativeOnScroll: false,
         vertical: false
     }
 
@@ -780,15 +778,16 @@ export default class Carousel extends Component {
         const visibleItems = Math.ceil(vertical ?
             sliderHeight / itemHeight :
             sliderWidth / itemWidth) + 1;
-        const decelerationRate = enableMomentum ? 0.9 : 'normal';
 
         return (
             <AnimatedFlatList
-              decelerationRate={decelerationRate}
+              decelerationRate={enableMomentum ? 0.9 : 'fast'}
               showsHorizontalScrollIndicator={false}
               showsVerticalScrollIndicator={false}
               overScrollMode={'never'}
               directionalLockEnabled={true}
+              automaticallyAdjustContentInsets={false}
+              scrollsToTop={false}
               initialNumToRender={visibleItems + 5}
               maxToRenderPerBatch={enableMomentum ? visibleItems * 2 : 5}
               windowSize={enableMomentum ? Math.max(11, (visibleItems * 2) + 1) : 11}
