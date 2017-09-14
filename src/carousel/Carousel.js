@@ -85,7 +85,7 @@ export default class Carousel extends Component {
         this._positions = [];
         this._currentContentOffset = 0; // store ScrollView's scroll position
         this._canFireCallback = false; // used only when `enableMomentum` is set to `false`
-        this._callbackScrollOffset = null; // used only when `enableMomentum` is set to `false`
+        this._scrollOffsetRef = null; // used only when `enableMomentum` is set to `false`
 
         this._getItemLayout = this._getItemLayout.bind(this);
         this._initPositionsAndInterpolators = this._initPositionsAndInterpolators.bind(this);
@@ -415,15 +415,15 @@ export default class Carousel extends Component {
 
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
-        } else if (this._canFireCallback &&
-            activeItem !== nextActiveItem &&
+        } else if (activeItem !== nextActiveItem &&
             nextActiveItem === this._itemToSnapTo &&
-            (scrollOffset >= this._callbackScrollOffset - callbackOffsetMargin ||
-            scrollOffset <= this._callbackScrollOffset + callbackOffsetMargin)) {
-            this._canFireCallback = false;
-            this.setState({ activeItem: nextActiveItem }, () => {
+            (scrollOffset >= this._scrollOffsetRef - callbackOffsetMargin ||
+            scrollOffset <= this._scrollOffsetRef + callbackOffsetMargin)) {
+            this.setState({ activeItem: nextActiveItem });
+            if (this._canFireCallback) {
+                this._canFireCallback = false;
                 this._onSnap(nextActiveItem);
-            });
+            }
         }
 
         if (onScroll) {
@@ -634,6 +634,8 @@ export default class Carousel extends Component {
                 this._onSnap(index);
             }
         } else {
+            this._scrollOffsetRef = this._positions[index] && this._positions[index].start;
+
             // 'scrollEndDrag' might be fired when "peaking" to another item. We need to
             // make sure that callback is fired when scrolling back to the right one.
             this._itemToSnapTo = index;
@@ -642,7 +644,6 @@ export default class Carousel extends Component {
             // Thus we need a flag to make sure that it's going to be called only once.
             if (onSnapToItem && fireCallback) {
                 this._canFireCallback = true;
-                this._callbackScrollOffset = this._positions[index] && this._positions[index].start;
             }
         }
 
