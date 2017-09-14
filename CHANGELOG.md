@@ -1,7 +1,11 @@
+## v3.2.1
+* Fix issue with active item when no callback has been specified (introduced in version `3.2.0`)
+
 ## v3.2.0
 * Refactor callback handling. **Make sure to use the new prop `callbackOffsetMargin` if you experience missed callbacks.**
-* Make item's scale and opacity animation follow scroll value (thanks [@hammadj](https://github.com/hammadj))
+* Make item's scale and opacity animations follow scroll value (thanks [@hammadj](https://github.com/hammadj))
 * `Pagination` component: make dots tappable with new props `tappableDots` and `carouselRef` (see the [example](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/index.js))
+* Fix issue when carousel has been unmounted but parent container requires to re-render
 * Fix state and scroll issues when the currently active item is being dynamically removed
 * Improve snap feeling when momentum is disabled (default)
 * Add prop `callbackOffsetMargin`
