@@ -29,8 +29,8 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 
 **The React Native version of this app (6.0.0) is going to be available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8) by mid-september** (the current one is Cordova-powered). It uses **version 3.1.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
 
-![react-native-snap-carousel archriss aix](http://i.imgur.com/vmMp520.gif)
-![react-native-snap-carousel archriss aix](http://i.imgur.com/OdQUYHS.gif)
+![react-native-snap-carousel archriss aix](http://i.imgur.com/pPm0csc.gif)
+![react-native-snap-carousel archriss aix](http://i.imgur.com/UFsPlz2.gif)
 
 ### Archriss' showcase app
 
@@ -416,9 +416,9 @@ Scroll events have been moved to the native thread in order to prevent the tiny 
 
 Bear in mind that we follow RN evolutions closely, which means newer versions of the plugin might break when used in conjunction with a version of RN that is not the latest stable one.
 
-### Android performances
+### Android performance
 
-:warning: **Make sure to test carousel's performances without JS Dev Mode enabled**.
+:warning: **Make sure to test carousel's performance and behavior without JS Dev Mode enabled, ideally with a production build.**.
 
 It can take user experience from "crappy and sluggish" to "pretty good" - it's Android though, so nothing like "perfect" or "incredibly smooth"...
 
