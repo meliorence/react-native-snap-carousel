@@ -149,6 +149,7 @@ export default class ParallaxImage extends Component {
         } = this.props;
 
         const parallaxPadding = (vertical ? height : width) * parallaxFactor;
+        const requiredStyles = { position: 'relative' };
         const dynamicStyles = {
             width: vertical ? width : width + parallaxPadding * 2,
             height: vertical ? height + parallaxPadding * 2 : height,
@@ -174,7 +175,7 @@ export default class ParallaxImage extends Component {
         return (
             <Animated.Image
               {...other}
-              style={[style, styles.image, dynamicStyles]}
+              style={[styles.image, style, requiredStyles, dynamicStyles]}
               onLoad={this._onLoad}
               onError={status !== 3 ? this._onError : undefined} // prevent infinite-loop bug
             />
