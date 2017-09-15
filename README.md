@@ -27,7 +27,7 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 
 ### Archriss' "Ville d'Aix-en-Provence" app
 
-**The React Native version of this app (6.0.0) is going to be available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8) by mid-september** (the current one is Cordova-powered). It uses **version 3.1.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
+**This app is available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8). It uses **version 3.2.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
 
 ![react-native-snap-carousel archriss aix](http://i.imgur.com/pPm0csc.gif)
 ![react-native-snap-carousel archriss aix](http://i.imgur.com/UFsPlz2.gif)
@@ -406,7 +406,16 @@ export class MyCarousel extends Component {
 
 ### Native-powered animations
 
-Scroll events have been moved to the native thread in order to prevent the tiny lag associated with React Native's JavaScript bridge. This is really useful when displaying a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely. You can find more info in [this post from Facebook](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html).
+Slides' animations are based on scroll events and have been moved to the native thread in order to prevent the tiny lag associated with React Native's JavaScript bridge. This is really useful when displaying a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely. You can find more info in [this post from Facebook](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html) or in [this one on Medium](https://medium.com/xebia/linking-animations-to-scroll-position-in-react-native-5c55995f5a6e).
+
+### Using a specific commit
+
+This plugin is regularly updated, and new versions are frequently pushed to `npm`. But you may want to use a specific commit, not yet merged or published.
+
+This is pretty easy: in your `package.json` file, use the GitHub link instead of a version number, and point to the specific commit using `#`. For example, if the commit reference is `fbdb671`, you would write:
+```javascript
+"react-native-snap-carousel": "https://github.com/archriss/react-native-snap-carousel#fbdb671"
+```
 
 ## Known issues
 
