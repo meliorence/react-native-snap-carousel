@@ -1,3 +1,10 @@
+## v3.2.2
+* Fix RTL issues
+* Fix issue with active item when `enableMomentum` was set to `true`
+* Fix issue with overlapping items (thanks [@henninghall](https://github.com/henninghall))
+* `ParallaxImage` component: allow overriding default styles
+* `Pagination` component: adapt to RTL layouts
+
 ## v3.2.1
 * Fix issue with active item when no callback has been specified (introduced in version `3.2.0`)
 

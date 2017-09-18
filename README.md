@@ -27,7 +27,7 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 
 ### Archriss' "Ville d'Aix-en-Provence" app
 
-**This app is available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8). It uses **version 3.2.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
+**This app is available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8).** It uses **version 3.2.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
 
 ![react-native-snap-carousel archriss aix](http://i.imgur.com/pPm0csc.gif)
 ![react-native-snap-carousel archriss aix](http://i.imgur.com/UFsPlz2.gif)
@@ -462,9 +462,9 @@ The easiest workaround is to add `jest.unmock('ScrollView')` before importing th
 
 ### RTL support (experimental)
 
-Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`.
+Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`. As such, this feature should be considered experimental since it might break with newer versions of React Native.
 
-As such, this feature should be considered experimental since it might break with newer versions of React Native.
+Note that you may want to reverse the order of your data array for your items to be displayed in the proper RTL order. We've tried implementing it internally, but this led to numerous and unnecessary issues. You'll just have to do something as simple as `myCustomData.reverse()`.
 
 ## TODO
 
