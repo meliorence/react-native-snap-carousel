@@ -730,7 +730,7 @@ export default class Carousel extends Component {
         } : undefined;
 
         return (
-            <Component style={[slideStyle, animatedStyle]}>
+            <Component style={[slideStyle, animatedStyle]} pointerEvents="box-none">
                 { renderItem({ item, index }, parallaxProps) }
             </Component>
         );
