@@ -1,8 +1,11 @@
 import React, { PureComponent } from 'react';
-import { View, ViewPropTypes } from 'react-native';
+import { I18nManager, Platform, View, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import PaginationDot from './PaginationDot';
 import styles from './Pagination.style';
+
+const IS_IOS = Platform.OS === 'ios';
+const IS_RTL = I18nManager.isRTL;
 
 export default class Pagination extends PureComponent {
 
@@ -55,9 +58,18 @@ export default class Pagination extends PureComponent {
         }
     }
 
+    _needsRTLAdaptations () {
+        const { vertical } = this.props;
+        return IS_RTL && !IS_IOS && !vertical;
+    }
+
+    get _activeDotIndex () {
+        const { activeDotIndex, dotsLength } = this.props;
+        return this._needsRTLAdaptations() ? dotsLength - activeDotIndex - 1 : activeDotIndex;
+    }
+
     get dots () {
         const {
-            activeDotIndex,
             carouselRef,
             dotsLength,
             dotColor,
@@ -73,7 +85,7 @@ export default class Pagination extends PureComponent {
         } = this.props;
 
         if (renderDots) {
-            return renderDots(activeDotIndex, dotsLength, this);
+            return renderDots(this._activeDotIndex, dotsLength, this);
         }
 
         const DefaultDot = <PaginationDot
@@ -90,12 +102,12 @@ export default class Pagination extends PureComponent {
         let dots = [];
 
         for (let i = 0; i < dotsLength; i++) {
-            const isActive = i === activeDotIndex;
+            const isActive = i === this._activeDotIndex;
             dots.push(React.cloneElement(
                 (isActive ? dotElement : inactiveDotElement) || DefaultDot,
                 {
                     key: `pagination-dot-${i}`,
-                    active: i === activeDotIndex,
+                    active: i === this._activeDotIndex,
                     index: i
                 }
             ));
@@ -113,7 +125,10 @@ export default class Pagination extends PureComponent {
 
         const style = [
             styles.sliderPagination,
-            { flexDirection: vertical ? 'column' : 'row' },
+            { flexDirection: vertical ?
+                'column' :
+                (this._needsRTLAdaptations() ? 'row-reverse' : 'row')
+            },
             containerStyle || {}
         ];
 
