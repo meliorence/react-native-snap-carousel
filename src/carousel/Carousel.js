@@ -415,12 +415,16 @@ export default class Carousel extends Component {
 
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
-        } else if (activeItem !== nextActiveItem &&
-            nextActiveItem === this._itemToSnapTo &&
-            (scrollOffset >= this._scrollOffsetRef - callbackOffsetMargin ||
-            scrollOffset <= this._scrollOffsetRef + callbackOffsetMargin)) {
+        }
+
+        if (activeItem !== nextActiveItem) {
             this.setState({ activeItem: nextActiveItem });
-            if (this._canFireCallback) {
+
+            if (!enableMomentum &&
+                this._canFireCallback &&
+                nextActiveItem === this._itemToSnapTo &&
+                (scrollOffset >= this._scrollOffsetRef - callbackOffsetMargin ||
+                scrollOffset <= this._scrollOffsetRef + callbackOffsetMargin)) {
                 this._canFireCallback = false;
                 this._onSnap(nextActiveItem);
             }
