@@ -196,8 +196,7 @@ export default class Carousel extends Component {
                     this._hackActiveSlideAnimation(nextActiveItem);
                 }
 
-                if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth ||
-                    hasNewItemHeight || (IS_RTL && !nextProps.vertical)) {
+                if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
                     this.snapToItem(nextActiveItem, false, false);
                 }
             });
@@ -234,6 +233,11 @@ export default class Carousel extends Component {
         return inactiveSlideOpacity < 1 || inactiveSlideScale < 1;
     }
 
+    _needsRTLAdaptations () {
+        const { vertical } = this.props;
+        return IS_RTL && !IS_IOS && !vertical;
+    }
+
     _getCustomIndex (index, props = this.props) {
         const itemsLength = props.data && props.data.length;
 
@@ -241,9 +245,7 @@ export default class Carousel extends Component {
             return 0;
         }
 
-        return IS_RTL && !props.vertical ?
-            itemsLength - index - 1 :
-            index;
+        return this._needsRTLAdaptations() ? itemsLength - index - 1 : index;
     }
 
     _getFirstItem (index, props = this.props) {
@@ -273,14 +275,18 @@ export default class Carousel extends Component {
         const { data, itemWidth, itemHeight, vertical } = props;
         const sizeRef = vertical ? itemHeight : itemWidth;
 
+        if (!data.length) {
+            return;
+        }
+
         let interpolators = [];
         this._positions = [];
 
         data.forEach((itemData, index) => {
             const _index = this._getCustomIndex(index, props);
-            const start = (index - 1) * sizeRef;
-            const middle = index * sizeRef;
-            const end = (index + 1) * sizeRef;
+            const start = (_index - 1) * sizeRef;
+            const middle = _index * sizeRef;
+            const end = (_index + 1) * sizeRef;
             const value = this._shouldAnimateSlides(props) ? this._scrollPos.interpolate({
                 inputRange: [start, middle, end],
                 outputRange: [0, 1, 0],
@@ -288,8 +294,8 @@ export default class Carousel extends Component {
             }) : 1;
 
             this._positions[index] = {
-                start: _index * sizeRef,
-                end: _index * sizeRef + sizeRef
+                start: index * sizeRef,
+                end: index * sizeRef + sizeRef
             };
 
             interpolators.push({
@@ -379,9 +385,7 @@ export default class Carousel extends Component {
     }
 
     _getCenter (offset) {
-        return offset +
-            this._getViewportOffet() -
-            (this._getContainerInnerMargin() * (IS_RTL ? -1 : 1));
+        return offset + this._getViewportOffet() - this._getContainerInnerMargin();
     }
 
     _getActiveItem (offset) {
@@ -534,7 +538,7 @@ export default class Carousel extends Component {
     }
 
     _snapScroll (delta) {
-        const { swipeThreshold, vertical } = this.props;
+        const { swipeThreshold } = this.props;
 
         // When using momentum and releasing the touch with
         // no velocity, scrollEndActive will be undefined (iOS)
@@ -549,21 +553,13 @@ export default class Carousel extends Component {
             // Snap depending on delta
             if (delta > 0) {
                 if (delta > swipeThreshold) {
-                    if (IS_RTL && !vertical) {
-                        this.snapToItem(this._scrollStartActive - 1);
-                    } else {
-                        this.snapToItem(this._scrollStartActive + 1);
-                    }
+                    this.snapToItem(this._scrollStartActive + 1);
                 } else {
                     this.snapToItem(this._scrollEndActive);
                 }
             } else if (delta < 0) {
                 if (delta < -swipeThreshold) {
-                    if (IS_RTL && !vertical) {
-                        this.snapToItem(this._scrollStartActive + 1);
-                    } else {
-                        this.snapToItem(this._scrollStartActive - 1);
-                    }
+                    this.snapToItem(this._scrollStartActive - 1);
                 } else {
                     this.snapToItem(this._scrollEndActive);
                 }
@@ -768,7 +764,8 @@ export default class Carousel extends Component {
             vertical ?
                 { height: sliderHeight, flexDirection: 'column' } :
                 // LTR hack; see https://github.com/facebook/react-native/issues/11960
-                { width: sliderWidth, flexDirection: IS_RTL ? 'row-reverse' : 'row' }
+                // and https://github.com/facebook/react-native/issues/13100#issuecomment-328986423
+                { width: sliderWidth, flexDirection: this._needsRTLAdaptations() ? 'row-reverse' : 'row' }
         ];
         const contentContainerStyle = [
             contentContainerCustomStyle || {},
@@ -809,6 +806,7 @@ export default class Carousel extends Component {
               style={containerStyle}
               contentContainerStyle={contentContainerStyle}
               horizontal={!vertical}
+              inverted={this._needsRTLAdaptations()}
               scrollEventThrottle={1}
               onScroll={this._onScrollHandler}
               onScrollBeginDrag={this._onScrollBeginDrag}
