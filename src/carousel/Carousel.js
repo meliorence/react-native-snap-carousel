@@ -79,11 +79,11 @@ export default class Carousel extends Component {
         const initialActiveItem = this._getFirstItem(props.firstItem);
         this.state = {
             activeItem: initialActiveItem,
+            hideCarousel: true,
+            interpolators: [],
             previousActiveItem: initialActiveItem,
             previousFirstItem: initialActiveItem,
-            previousItemsLength: initialActiveItem,
-            hideCarousel: true,
-            interpolators: []
+            previousItemsLength: initialActiveItem
         };
 
         this._positions = [];
@@ -166,7 +166,8 @@ export default class Carousel extends Component {
         const { activeItem, interpolators, previousFirstItem, previousItemsLength } = this.state;
         const { data, firstItem, itemHeight, itemWidth, sliderHeight, sliderWidth } = nextProps;
 
-        const itemsLength = data.length;
+        // const itemsLength = data.length;
+        const itemsLength = this._getCustomDataLength(nextProps);
 
         if (!itemsLength) {
             return;
@@ -225,7 +226,7 @@ export default class Carousel extends Component {
     }
 
     get currentIndex () {
-        return this.state.activeItem;
+        return this._getRealIndex(this.state.activeItem);
     }
 
     get currentScrollPosition () {
@@ -242,8 +243,36 @@ export default class Carousel extends Component {
         return IS_RTL && !IS_IOS && !vertical;
     }
 
+    _getCustomData (props = this.props) {
+        const { data, loop, loopClonesPerSide } = props;
+
+        if (!data) {
+            return [];
+        }
+
+        if (!loop) {
+            return data;
+        }
+
+        const previousItems = data.slice(-loopClonesPerSide);
+        const nextItems = data.slice(0, loopClonesPerSide);
+
+        return previousItems.concat(data, nextItems);
+    }
+
+    _getCustomDataLength (props = this.props) {
+        const { data, loop, loopClonesPerSide } = props;
+        const dataLength = data && data.length;
+
+        if (!dataLength) {
+            return 0;
+        }
+
+        return loop ? dataLength + (2 * loopClonesPerSide) : dataLength;
+    }
+
     _getCustomIndex (index, props = this.props) {
-        const itemsLength = props.data && props.data.length;
+        const itemsLength = this._getCustomDataLength(props);
 
         if (!itemsLength || (!index && index !== 0)) {
             return 0;
@@ -252,92 +281,32 @@ export default class Carousel extends Component {
         return this._needsRTLAdaptations() ? itemsLength - index - 1 : index;
     }
 
+    _getRealIndex (index) {
+        const { data, loop, loopClonesPerSide } = this.props;
+        const dataLength = data && data.length;
+
+        if (!loop || !dataLength) {
+            return index;
+        }
+
+        if (index - loopClonesPerSide > dataLength - 1) {
+            return index - dataLength - loopClonesPerSide;
+        } else if (index < loopClonesPerSide) {
+            return index + dataLength - loopClonesPerSide;
+        } else {
+            return index - loopClonesPerSide;
+        }
+    }
+
     _getFirstItem (index, props = this.props) {
-        const itemsLength = props.data && props.data.length;
+        const { loop, loopClonesPerSide } = props;
+        const itemsLength = this._getCustomDataLength(props);
 
         if (!itemsLength || index > itemsLength - 1 || index < 0) {
             return 0;
         }
 
-        return index;
-    }
-
-    _didMountDelayedInit () {
-        const { firstItem, autoplay } = this.props;
-        const _firstItem = this._getFirstItem(firstItem);
-
-        this.snapToItem(_firstItem, false, false, true);
-        this._hackActiveSlideAnimation(_firstItem, 'start');
-        this.setState({ hideCarousel: false });
-
-        if (autoplay) {
-            this.startAutoplay();
-        }
-    }
-
-    _initPositionsAndInterpolators (props = this.props) {
-        const { data, itemWidth, itemHeight, vertical } = props;
-        const sizeRef = vertical ? itemHeight : itemWidth;
-
-        if (!data.length) {
-            return;
-        }
-
-        let interpolators = [];
-        this._positions = [];
-
-        data.forEach((itemData, index) => {
-            const _index = this._getCustomIndex(index, props);
-            const start = (_index - 1) * sizeRef;
-            const middle = _index * sizeRef;
-            const end = (_index + 1) * sizeRef;
-            const value = this._shouldAnimateSlides(props) ? this._scrollPos.interpolate({
-                inputRange: [start, middle, end],
-                outputRange: [0, 1, 0],
-                extrapolate: 'clamp'
-            }) : 1;
-
-            this._positions[index] = {
-                start: index * sizeRef,
-                end: index * sizeRef + sizeRef
-            };
-
-            interpolators.push({
-                opacity: value,
-                scale: value
-            });
-        });
-
-        this.setState({ interpolators });
-    }
-
-    _hackActiveSlideAnimation (index, goTo) {
-        const { data, vertical } = this.props;
-
-        if (IS_IOS || !this._flatlist || !this._positions[index]) {
-            return;
-        }
-
-        const itemsLength = data && data.length;
-        const direction = goTo || itemsLength === 1 ? 'start' : 'end';
-        const offset = this._positions[index].start;
-        const commonOptions = {
-            horizontal: !vertical,
-            animated: false
-        };
-
-        this._flatlist && this._flatlist.scrollToOffset({
-            offset: offset + (direction === 'start' ? -1 : 1),
-            ...commonOptions
-        });
-
-        this._hackSlideAnimationTimeout = setTimeout(() => {
-            // https://github.com/facebook/react-native/issues/10635
-            this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
-                offset: offset,
-                ...commonOptions
-            });
-        }, 50); // works randomly when set to '0'
+        return loop ? index + loopClonesPerSide : index;
     }
 
     _getKeyExtractor (item, index) {
@@ -413,6 +382,84 @@ export default class Carousel extends Component {
         return 0;
     }
 
+    _didMountDelayedInit () {
+        const { firstItem, autoplay } = this.props;
+        const _firstItem = this._getFirstItem(firstItem);
+
+        this.snapToItem(_firstItem, false, false, true);
+        this._hackActiveSlideAnimation(_firstItem, 'start');
+        this.setState({ hideCarousel: false });
+
+        if (autoplay) {
+            this.startAutoplay();
+        }
+    }
+
+    _initPositionsAndInterpolators (props = this.props) {
+        const { data, itemWidth, itemHeight, vertical } = props;
+        const sizeRef = vertical ? itemHeight : itemWidth;
+
+        if (!data.length) {
+            return;
+        }
+
+        let interpolators = [];
+        this._positions = [];
+
+        this._getCustomData(props).forEach((itemData, index) => {
+            const _index = this._getCustomIndex(index, props);
+            const start = (_index - 1) * sizeRef;
+            const middle = _index * sizeRef;
+            const end = (_index + 1) * sizeRef;
+            const value = this._shouldAnimateSlides(props) ? this._scrollPos.interpolate({
+                inputRange: [start, middle, end],
+                outputRange: [0, 1, 0],
+                extrapolate: 'clamp'
+            }) : 1;
+
+            this._positions[index] = {
+                start: index * sizeRef,
+                end: index * sizeRef + sizeRef
+            };
+
+            interpolators.push({
+                opacity: value,
+                scale: value
+            });
+        });
+
+        this.setState({ interpolators });
+    }
+
+    _hackActiveSlideAnimation (index, goTo) {
+        const { data, vertical } = this.props;
+
+        if (IS_IOS || !this._flatlist || !this._positions[index]) {
+            return;
+        }
+
+        const itemsLength = data && data.length;
+        const direction = goTo || itemsLength === 1 ? 'start' : 'end';
+        const offset = this._positions[index].start;
+        const commonOptions = {
+            horizontal: !vertical,
+            animated: false
+        };
+
+        this._flatlist && this._flatlist.scrollToOffset({
+            offset: offset + (direction === 'start' ? -1 : 1),
+            ...commonOptions
+        });
+
+        this._hackSlideAnimationTimeout = setTimeout(() => {
+            // https://github.com/facebook/react-native/issues/10635
+            this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
+                offset: offset,
+                ...commonOptions
+            });
+        }, 50); // works randomly when set to '0'
+    }
+
     _onScroll (event) {
         const { activeItem } = this.state;
         const { enableMomentum, onScroll, callbackOffsetMargin } = this.props;
@@ -421,6 +468,17 @@ export default class Carousel extends Component {
         const nextActiveItem = this._getActiveItem(scrollOffset);
 
         this._currentContentOffset = scrollOffset;
+
+        console.log('ONSCROLL', {
+            activeItem,
+            nextActiveItem,
+            callback: this._canFireCallback,
+            snapTo: this._itemToSnapTo,
+            scrollOffset,
+            scrollOffsetRef: this._scrollOffsetRef,
+            scrollOffsetMin: this._scrollOffsetRef - callbackOffsetMargin,
+            scrollOffsetMax: this._scrollOffsetRef + callbackOffsetMargin
+        })
 
         if (activeItem !== nextActiveItem) {
             this.setState({ activeItem: nextActiveItem });
@@ -436,6 +494,9 @@ export default class Carousel extends Component {
             (scrollOffset >= this._scrollOffsetRef - callbackOffsetMargin ||
             scrollOffset <= this._scrollOffsetRef + callbackOffsetMargin)) {
             this._canFireCallback = false;
+
+            // Rearrange items here
+
             this._onSnap(nextActiveItem);
         }
 
@@ -577,9 +638,10 @@ export default class Carousel extends Component {
 
     _onSnap (index) {
         const { onSnapToItem } = this.props;
+        const _index = this._getRealIndex(index);
 
         if (this._flatlist) {
-            onSnapToItem && onSnapToItem(index);
+            onSnapToItem && onSnapToItem(_index);
         }
     }
 
@@ -609,7 +671,8 @@ export default class Carousel extends Component {
     snapToItem (index, animated = true, fireCallback = true, initial = false) {
         const { previousActiveItem } = this.state;
         const { data, enableMomentum, onSnapToItem } = this.props;
-        const itemsLength = data.length;
+        // const itemsLength = data.length;
+        const itemsLength = this._getCustomDataLength();
 
         if (!itemsLength || !this._flatlist || !this._flatlist._listRef) {
             return;
@@ -656,6 +719,8 @@ export default class Carousel extends Component {
                     this._ignoreNextMomentum = true;
                 }
 
+                // Rearrange items here
+
                 // Callback can be fired here when relying on 'onMomentumScrollEnd'
                 if (fireCallback) {
                     this._onSnap(index);
@@ -665,52 +730,33 @@ export default class Carousel extends Component {
     }
 
     snapToNext (animated = true) {
-        const itemsLength = this.props.data.length;
+        const { loop } = this.props;
+        // const itemsLength = this.props.data.length;
+        const itemsLength = this._getCustomDataLength();
 
         let newIndex = this.currentIndex + 1;
         if (newIndex > itemsLength - 1) {
+            if (!loop) {
+                return;
+            }
             newIndex = 0;
         }
         this.snapToItem(newIndex, animated);
     }
 
     snapToPrev (animated = true) {
-        const itemsLength = this.props.data.length;
+        const { loop } = this.props;
+        // const itemsLength = this.props.data.length;
+        const itemsLength = this._getCustomDataLength();
 
         let newIndex = this.currentIndex - 1;
         if (newIndex < 0) {
+            if (!loop) {
+                return;
+            }
             newIndex = itemsLength - 1;
         }
         this.snapToItem(newIndex, animated);
-    }
-
-    get loopData () {
-        const { activeItem } = this.state;
-        const { data, loopClonesPerSide, firstItem } = this.props;
-
-        // CALLBACK ITEM / FIRST ITEM -> REAL INDEX
-
-        const previousItems = data.slice(-loopClonesPerSide);
-        const nextItems = data.slice(0, loopClonesPerSide);
-
-        const loopItems = previousItems.concat(data, nextItems).map((item, index) => {
-            return {
-                ...item,
-                loopIndex: index
-            };
-        });
-
-        // console.log('ITEMS', data)
-        // console.log('LOOP ITEMS', loopItems)
-
-        // return loopItems;
-
-        const customData = data;
-        if (customData.length < 21) {
-            customData.push(...data)
-        }
-        console.log('CUSTOM DATA', customData)
-        return customData;
     }
 
     _renderItem ({ item, index }) {
@@ -760,7 +806,7 @@ export default class Carousel extends Component {
         } : undefined;
 
         return (
-            <Component style={[slideStyle, animatedStyle]} pointerEvents="box-none">
+            <Component style={[slideStyle, animatedStyle]} pointerEvents={'box-none'}>
                 { renderItem({ item, index }, parallaxProps) }
             </Component>
         );
@@ -777,7 +823,6 @@ export default class Carousel extends Component {
             itemWidth,
             itemHeight,
             keyExtractor,
-            loop,
             renderItem,
             sliderWidth,
             sliderHeight,
@@ -828,13 +873,13 @@ export default class Carousel extends Component {
               {...this.props}
               ref={(c) => { if (c) { this._flatlist = c._component; } }}
               // data={data}
-              data={loop ? this.loopData : data}
+              data={this._getCustomData()}
               renderItem={this._renderItem}
               // extraData={this.state}
               getItemLayout={this._getItemLayout}
               keyExtractor={keyExtractor || this._getKeyExtractor}
               // keyExtractor={loop ? this._getKeyExtractor : keyExtractor || this._getKeyExtractor}
-              initialScrollIndex={firstItem || undefined}
+              initialScrollIndex={firstItem ? this._getFirstItem(firstItem) : undefined}
               numColumns={1}
               style={containerStyle}
               contentContainerStyle={contentContainerStyle}
