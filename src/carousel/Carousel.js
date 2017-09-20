@@ -75,7 +75,7 @@ export default class Carousel extends Component {
         const initialActiveItem = this._getFirstItem(props.firstItem);
         this.state = {
             activeItem: initialActiveItem,
-            previousActiveItem: initialActiveItem, // used only when `enableMomentum` is set to `true`
+            previousActiveItem: initialActiveItem,
             previousFirstItem: initialActiveItem,
             previousItemsLength: initialActiveItem,
             hideCarousel: true,
@@ -606,34 +606,21 @@ export default class Carousel extends Component {
         const { data, enableMomentum, onSnapToItem } = this.props;
         const itemsLength = data.length;
 
-        if (!itemsLength) {
+        if (!itemsLength || !this._flatlist) {
             return;
         }
 
-        if (!index) {
+        if (!index || index < 0) {
             index = 0;
+        } else if (itemsLength > 0 && index >= itemsLength) {
+            index = itemsLength - 1;
         }
 
-        if (itemsLength > 0 && index >= itemsLength) {
-            index = itemsLength - 1;
-        } else if (index < 0) {
-            index = 0;
-        } else if (enableMomentum && index === previousActiveItem) {
+        if (index === previousActiveItem) {
             fireCallback = false;
         }
 
-        // Make sure the component hasn't been unmounted
-        if (!this._flatlist) {
-            return;
-        }
-
-        if (enableMomentum) {
-            this.setState({ previousActiveItem: index });
-            // Callback can be fired here when relying on 'onMomentumScrollEnd'
-            if (fireCallback) {
-                this._onSnap(index);
-            }
-        } else {
+        if (!enableMomentum) {
             this._scrollOffsetRef = this._positions[index] && this._positions[index].start;
 
             // 'scrollEndDrag' might be fired when "peaking" to another item. We need to
@@ -647,20 +634,29 @@ export default class Carousel extends Component {
             }
         }
 
-        this._flatlist.scrollToIndex({
-            index,
-            viewPosition: 0,
-            viewOffset: 0,
-            animated
+        this.setState({ previousActiveItem: index }, () => {
+            this._flatlist.scrollToIndex({
+                index,
+                viewPosition: 0,
+                viewOffset: 0,
+                animated
+            });
+
+            // Android hack since `onScroll` sometimes seems to not be triggered
+            this._hackActiveSlideAnimation(index);
+
+            if (enableMomentum) {
+                // iOS fix, check the note in the constructor
+                if (!initial && IS_IOS) {
+                    this._ignoreNextMomentum = true;
+                }
+
+                // Callback can be fired here when relying on 'onMomentumScrollEnd'
+                if (fireCallback) {
+                    this._onSnap(index);
+                }
+            }
         });
-
-        // Android hack since `onScroll` sometimes seems to not be triggered
-        this._hackActiveSlideAnimation(index);
-
-        // iOS fix, check the note in the constructor
-        if (!initial && IS_IOS && enableMomentum) {
-            this._ignoreNextMomentum = true;
-        }
     }
 
     snapToNext (animated = true) {
