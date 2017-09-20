@@ -22,6 +22,7 @@
     "rules": {
         "indent": [2, 4],
         "generator-star-spacing": 0,
+        "padded-blocks": 0,
         "react/jsx-indent": [0, 4],
         "jsx-indent-props": [0, 4],
         "react/jsx-curly-spacing": [0, "never"],
