@@ -1,3 +1,6 @@
+## v3.2.3
+* Fix issue with callback not fired when doing a long swipe
+
 ## v3.2.2
 * Fix RTL issues
 * Fix issue with active item when `enableMomentum` was set to `true`
