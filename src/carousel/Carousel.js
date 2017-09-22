@@ -322,13 +322,14 @@ export default class Carousel extends Component {
             animated: false
         };
 
-        this._flatlist.scrollToOffset({
+        this._flatlist && this._flatlist.scrollToOffset({
             offset: offset + (direction === 'start' ? -1 : 1),
             ...commonOptions
         });
 
         this._hackSlideAnimationTimeout = setTimeout(() => {
-            this._flatlist.scrollToOffset({
+            // https://github.com/facebook/react-native/issues/10635
+            this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
                 offset: offset,
                 ...commonOptions
             });
@@ -606,7 +607,7 @@ export default class Carousel extends Component {
         const { data, enableMomentum, onSnapToItem } = this.props;
         const itemsLength = data.length;
 
-        if (!itemsLength || !this._flatlist) {
+        if (!itemsLength || !this._flatlist || !this._flatlist._listRef) {
             return;
         }
 
