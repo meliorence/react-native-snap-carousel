@@ -243,8 +243,8 @@ export default class Carousel extends Component {
     }
 
     _enableLoop () {
-        const { enableSnap, loop } = this.props;
-        return enableSnap && loop;
+        const { data, enableSnap, loop } = this.props;
+        return enableSnap && loop && data.length && data.length > 1;
     }
 
     _getCustomData (props = this.props) {
@@ -550,7 +550,7 @@ export default class Carousel extends Component {
         this._scrollStartOffset = this._getScrollOffset(event);
         this._scrollStartActive = this._getActiveItem(this._scrollStartOffset);
         this._ignoreNextMomentum = false;
-        this._canFireCallback = false;
+        // this._canFireCallback = false;
 
         if (onScrollBeginDrag) {
             onScrollBeginDrag(event);
@@ -721,18 +721,14 @@ export default class Carousel extends Component {
             index = itemsLength - 1;
         }
 
-        if (index === previousActiveItem) {
-            fireCallback = false;
+        if (onSnapToItem && fireCallback && index !== previousActiveItem) {
+            this._canFireCallback = true;
         }
 
+        this._itemToSnapTo = index;
+        this._scrollOffsetRef = this._positions[index] && this._positions[index].start;
+
         this.setState({ previousActiveItem: index }, () => {
-            this._itemToSnapTo = index;
-            this._scrollOffsetRef = this._positions[index] && this._positions[index].start;
-
-            if (onSnapToItem && fireCallback) {
-                this._canFireCallback = true;
-            }
-
             this._flatlist.scrollToIndex({
                 index,
                 viewPosition: 0,
