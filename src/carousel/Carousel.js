@@ -636,7 +636,7 @@ export default class Carousel extends Component {
         }
 
         this.setState({ previousActiveItem: index }, () => {
-            this._flatlist.scrollToIndex({
+            this._flatlist && this._flatlist._listRef && this._flatlist.scrollToIndex({
                 index,
                 viewPosition: 0,
                 viewOffset: 0,
