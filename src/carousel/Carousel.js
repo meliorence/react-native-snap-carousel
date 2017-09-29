@@ -94,6 +94,7 @@ export default class Carousel extends Component {
         this._initDone = false; // prevent unwanted executions of 'snapToItem'
         this._canFireCallback = false;
         this._scrollOffsetRef = null;
+        this._onScrollTriggered = true; // used when momentum is enabled to prevent an issue with edges items
 
         this._getItemLayout = this._getItemLayout.bind(this);
         this._initPositionsAndInterpolators = this._initPositionsAndInterpolators.bind(this);
@@ -199,7 +200,7 @@ export default class Carousel extends Component {
             // This also fixes first item's active state on Android
             // Because 'initialScrollIndex' apparently doesn't trigger scroll
             if (this._previousItemsLength > itemsLength) {
-                this._hackActiveSlideAnimation(nextActiveItem);
+                this._hackActiveSlideAnimation(nextActiveItem, null, !IS_IOS);
             }
 
             if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
@@ -219,7 +220,7 @@ export default class Carousel extends Component {
         clearTimeout(this._enableAutoplayTimeout);
         clearTimeout(this._autoplayTimeout);
         clearTimeout(this._snapNoMomentumTimeout);
-        clearTimeout(this._scrollToTimeout);
+        clearTimeout(this._edgeItemTimeout);
     }
 
     get currentIndex () {
@@ -406,7 +407,7 @@ export default class Carousel extends Component {
         const _firstItem = this._getFirstItem(firstItem);
 
         this.snapToItem(_firstItem, false, false, true);
-        this._hackActiveSlideAnimation(_firstItem, 'start');
+        this._hackActiveSlideAnimation(_firstItem, 'start', !IS_IOS);
         this.setState({ hideCarousel: false });
 
         if (autoplay) {
@@ -450,10 +451,10 @@ export default class Carousel extends Component {
         this.setState({ interpolators });
     }
 
-    _hackActiveSlideAnimation (index, goTo) {
+    _hackActiveSlideAnimation (index, goTo, force = false) {
         const { data, vertical } = this.props;
 
-        if (IS_IOS || !this._flatlist || !this._positions[index] || this._enableLoop()) {
+        if (!force && (IS_IOS || !this._flatlist || !this._positions[index] || this._enableLoop())) {
             return;
         }
 
@@ -465,7 +466,7 @@ export default class Carousel extends Component {
             animated: false
         };
 
-        this._flatlist && this._flatlist.scrollToOffset({
+        this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
             offset: offset + (direction === 'start' ? -1 : 1),
             ...commonOptions
         });
@@ -502,14 +503,14 @@ export default class Carousel extends Component {
     _onScroll (event) {
         const { enableMomentum, onScroll, callbackOffsetMargin } = this.props;
 
-        const scrollOffset = this._getScrollOffset(event);
+        const scrollOffset = event ? this._getScrollOffset(event) : this._currentContentOffset;
         const nextActiveItem = this._getActiveItem(scrollOffset);
-
         const scrollConditions = nextActiveItem === this._itemToSnapTo &&
             scrollOffset >= this._scrollOffsetRef - callbackOffsetMargin &&
             scrollOffset <= this._scrollOffsetRef + callbackOffsetMargin;
 
         this._currentContentOffset = scrollOffset;
+        this._onScrollTriggered = true;
 
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
@@ -534,7 +535,7 @@ export default class Carousel extends Component {
             this._repositionScroll(nextActiveItem);
         }
 
-        if (onScroll) {
+        if (onScroll && event) {
             onScroll(event);
         }
     }
@@ -729,6 +730,7 @@ export default class Carousel extends Component {
 
         this._itemToSnapTo = index;
         this._scrollOffsetRef = this._positions[index] && this._positions[index].start;
+        this._onScrollTriggered = false;
 
         this._flatlist.scrollToIndex({
             index,
@@ -737,22 +739,25 @@ export default class Carousel extends Component {
             animated
         });
 
-        // Android hack since `onScroll` sometimes seems to not be triggered
-        this._hackActiveSlideAnimation(index);
-
         if (enableMomentum) {
-            // When momentum is enabled and the user is overscrolling or swiping very quickly,
-            // 'onScroll' is not going to be triggered and thus callback is not going to be fired
-            // until the next scroll action. As a workaround, callback will be fired here for edges items.
-            // WARNING: this is ok only when relying on 'momentumScrollEnd', not with 'scrollEndDrag'
-            if (this._canFireCallback &&
-                (index === 0 || index === itemsLength - 1)) {
-                this._onSnap(this._getDataIndex(index));
-            }
-
             // iOS fix, check the note in the constructor
             if (IS_IOS && !initial) {
                 this._ignoreNextMomentum = true;
+            }
+
+            // When momentum is enabled and the user is overscrolling or swiping very quickly,
+            // 'onScroll' is not going to be triggered for edge items. Then callback won't be
+            // fired and loop won't work since the scrollview is not going to be repositioned.
+            // As a workaround, '_onScroll()' will be called manually for these items if a given
+            // condition hasn't been met after a small delay.
+            // WARNING: this is ok only when relying on 'momentumScrollEnd', not with 'scrollEndDrag'
+            if (index === 0 || index === itemsLength - 1) {
+                clearTimeout(this._edgeItemTimeout);
+                this._edgeItemTimeout = setTimeout(() => {
+                    if (!initial && index === this._activeItem && !this._onScrollTriggered) {
+                        this._onScroll();
+                    }
+                }, 250);
             }
         }
     }
