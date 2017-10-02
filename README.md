@@ -20,7 +20,7 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
-1. [TODO](#todo)
+1. [Roadmap](#roadmap)
 1. [Credits](#credits)
 
 ## Showcase
@@ -171,6 +171,7 @@ Prop | Description | Type | Default
 `enableSnap` | If enabled, releasing the touch will scroll to the center of the nearest/active item | Boolean | `true`
 `firstItem` | Index of the first item to display | Number | `0`
 `hasParallaxImages` | Whether the carousel contains `<ParallaxImage />` components or not. Required for specific data to be passed to children. | Boolean | `false`
+`lockScrollWhileSnapping` | Prevent the user from swiping again while the carousel is snapping to a position. This prevents miscellaneous minor issues (inadvertently tapping an item while scrolling, stopping the scrolling animation if the carousel is tapped in the middle of a snap, clunky behavior on Android when short snapping quickly in opposite directions). On iOS, it will also make the carousel snaps to the immediate previous or next item as soon as it becomes active. The only drawback is that enabling the prop hinders the ability to swipe quickly between items as a little pause between swipes is needed. **Note that the prop won't have any effect if `enableMomentum` is set to `true`, since it would otherwise impede the natural and expected behavior.** | Boolean | `false`
 `shouldOptimizeUpdates` | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
 `swipeThreshold` | Delta x when swiping to trigger the snap | Number | `20`
 `vertical` | Layout slides vertically instead of horizontally | Boolean | `false`
@@ -186,7 +187,7 @@ Prop | Description | Type | Default
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-`autoplay` | Trigger autoplay on mount. **Warning: this prop cannot be changed dynamically.** | Boolean | `false`
+`autoplay` | Trigger autoplay on mount. If you enable autoplay, we recommend you to set `enableMomentum` to `false` (default) and `lockScrollWhileSnapping` to `true`; this will enhance user experience a bit. | Boolean | `false`
 `autoplayDelay` | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
 `autoplayInterval` | Delay in ms until navigating to the next item | Number |  `3000`
 
@@ -473,12 +474,11 @@ Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementati
 
 Note that you may want to reverse the order of your data array for your items to be displayed in the proper RTL order. We've tried implementing it internally, but this led to numerous and unnecessary issues. You'll just have to do something as simple as `myCustomData.reverse()`.
 
-## TODO
+## Roadmap
 
 - [ ] Implement a custom `PanResponder` for better control over carousel's callbacks and overall feeling
-- [ ] Implement 'loop' mode
-- [ ] Handle changing major props on-the-fly
-- [ ] Handle autoplay properly when updating children's length
+- [X] Implement 'loop' mode
+- [X] Improve Android's behavior
 - [x] Add parallax image component
 - [x] Base the plugin on `FlatList` instead of `ScrollView`
 - [x] Add alignment option
@@ -493,5 +493,5 @@ Note that you may want to reverse the order of your data array for your items to
 
 ## Credits
 
-Written by [Maxime Bertonnier](https://fr.linkedin.com/in/maxime-bertonnier-744351aa) ([Exilz](https://github.com/Exilz)) and [Benoît Delmaire](https://fr.linkedin.com/in/benoitdelmaire) ([bd-arc](https://github.com/bd-arc)) at
+Written by [Benoît Delmaire](https://fr.linkedin.com/in/benoitdelmaire) ([bd-arc](https://github.com/bd-arc)) and [Maxime Bertonnier](https://fr.linkedin.com/in/maxime-bertonnier-744351aa) ([Exilz](https://github.com/Exilz)) at
 [Archriss](http://www.archriss.com/).
