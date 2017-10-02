@@ -1,3 +1,9 @@
+## v3.3.0
+* Bring in the most wanted 'infinite loop' feature :tada: (see [the 'Loop' section](#loop) for more info about the new props `loop` and `loopClonesPerSide`)
+* Improve Android behavior when momentum is disabled
+* Guard against potential errors when component is unmounted
+* Add prop `lockScrollWhileSnapping` to improve behavior when momentum is disabled
+
 ## v3.2.3
 * Fix issue with callback not fired when doing a long swipe
 
