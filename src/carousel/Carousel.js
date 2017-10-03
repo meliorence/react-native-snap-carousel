@@ -203,7 +203,7 @@ export default class Carousel extends Component {
             // This also fixes first item's active state on Android
             // Because 'initialScrollIndex' apparently doesn't trigger scroll
             if (this._previousItemsLength > itemsLength) {
-                this._hackActiveSlideAnimation(nextActiveItem, null, !IS_IOS);
+                this._hackActiveSlideAnimation(nextActiveItem);
             }
 
             if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
@@ -225,6 +225,10 @@ export default class Carousel extends Component {
         clearTimeout(this._snapNoMomentumTimeout);
         clearTimeout(this._edgeItemTimeout);
         clearTimeout(this._lockScrollTimeout);
+    }
+
+    get realIndex () {
+        return this._activeItem;
     }
 
     get currentIndex () {
@@ -431,7 +435,7 @@ export default class Carousel extends Component {
         const _firstItem = this._getFirstItem(firstItem);
 
         this.snapToItem(_firstItem, false, false, true, false);
-        this._hackActiveSlideAnimation(_firstItem, 'start', !IS_IOS);
+        this._hackActiveSlideAnimation(_firstItem, 'start');
         this.setState({ hideCarousel: false });
 
         if (autoplay) {
@@ -475,16 +479,21 @@ export default class Carousel extends Component {
         this.setState({ interpolators });
     }
 
-    _hackActiveSlideAnimation (index, goTo, force = false) {
+    _hackActiveSlideAnimation (index, goTo) {
         const { data, vertical } = this.props;
 
-        if (!force && (IS_IOS || !this._flatlist || !this._positions[index] || this._enableLoop())) {
+        if (IS_IOS || !this._flatlist || !this._positions[index] || this._enableLoop()) {
+            return;
+        }
+
+        const offset = this._positions[index] && this._positions[index].start;
+
+        if (!offset) {
             return;
         }
 
         const itemsLength = data && data.length;
         const direction = goTo || itemsLength === 1 ? 'start' : 'end';
-        const offset = this._positions[index].start;
         const commonOptions = {
             horizontal: !vertical,
             animated: false
