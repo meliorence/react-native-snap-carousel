@@ -12,9 +12,11 @@ export default class Pagination extends PureComponent {
     static propTypes = {
         activeDotIndex: PropTypes.number.isRequired,
         dotsLength: PropTypes.number.isRequired,
+        activeOpacity: PropTypes.number,
         carouselRef: PropTypes.object,
         containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         dotColor: PropTypes.string,
+        dotContainerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         dotElement: PropTypes.element,
         dotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         inactiveDotColor: PropTypes.string,
@@ -70,9 +72,11 @@ export default class Pagination extends PureComponent {
 
     get dots () {
         const {
+            activeOpacity,
             carouselRef,
             dotsLength,
             dotColor,
+            dotContainerStyle,
             dotElement,
             dotStyle,
             inactiveDotColor,
@@ -91,7 +95,9 @@ export default class Pagination extends PureComponent {
         const DefaultDot = <PaginationDot
           carouselRef={carouselRef}
           tappable={tappableDots && typeof carouselRef !== 'undefined'}
+          activeOpacity={activeOpacity}
           color={dotColor}
+          containerStyle={dotContainerStyle}
           style={dotStyle}
           inactiveColor={inactiveDotColor}
           inactiveOpacity={inactiveDotOpacity}

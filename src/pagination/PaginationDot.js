@@ -9,8 +9,10 @@ export default class PaginationDot extends PureComponent {
         inactiveOpacity: PropTypes.number.isRequired,
         inactiveScale: PropTypes.number.isRequired,
         active: PropTypes.bool,
+        activeOpacity: PropTypes.number,
         carouselRef: PropTypes.object,
         color: PropTypes.string,
+        containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         inactiveColor: PropTypes.string,
         inactiveStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         index: PropTypes.number,
@@ -80,14 +82,16 @@ export default class PaginationDot extends PureComponent {
         const { animColor, animOpacity, animTransform } = this.state;
         const {
             active,
+            activeOpacity,
             carouselRef,
             color,
-            style,
+            containerStyle,
             inactiveColor,
             inactiveStyle,
             inactiveOpacity,
             inactiveScale,
             index,
+            style,
             tappable
         } = this.props;
 
@@ -110,6 +114,11 @@ export default class PaginationDot extends PureComponent {
             })
         } : {};
 
+        const dotContainerStyle = [
+            styles.sliderPaginationDotContainer,
+            containerStyle || {}
+        ];
+
         const dotStyle = [
             styles.sliderPaginationDot,
             style || {},
@@ -123,7 +132,11 @@ export default class PaginationDot extends PureComponent {
         } : undefined;
 
         return (
-            <TouchableOpacity activeOpacity={1} onPress={onPress}>
+            <TouchableOpacity
+              style={dotContainerStyle}
+              activeOpacity={tappable ? activeOpacity : 1}
+              onPress={onPress}
+            >
                 <Animated.View style={dotStyle} />
             </TouchableOpacity>
         );
