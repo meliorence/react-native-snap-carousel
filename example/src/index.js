@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, StatusBar, Platform } from 'react-native';
+import { View, ScrollView, Text, StatusBar } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { sliderWidth, itemWidth } from 'example/src/styles/SliderEntry.style';
@@ -46,7 +46,7 @@ export default class example extends Component {
             <View style={styles.exampleContainer}>
                 <Text style={styles.title}>Example 1</Text>
                 <Text style={styles.subtitle}>
-                    No momentum | Parallax | Scale | Opacity | Pagination with tappable dots
+                    No momentum | Loop | Autoplay | Parallax | Scale | Opacity | Pagination with tappable dots
                 </Text>
                 <Carousel
                   ref={(c) => { if (!this.state.slider1Ref) { this.setState({ slider1Ref: c }); } }}
@@ -57,11 +57,15 @@ export default class example extends Component {
                   hasParallaxImages={true}
                   firstItem={SLIDER_1_FIRST_ITEM}
                   inactiveSlideScale={0.94}
-                  inactiveSlideOpacity={0.6}
+                  inactiveSlideOpacity={0.7}
                   enableMomentum={false}
                   containerCustomStyle={styles.slider}
                   contentContainerCustomStyle={styles.sliderContentContainer}
-                  scrollEndDragDebounceValue={Platform.OS === 'ios' ? 0 : 100}
+                  loop={true}
+                  loopClonesPerSide={2}
+                  autoplay={true}
+                  autoplayDelay={500}
+                  autoplayInterval={3000}
                   onSnapToItem={(index) => this.setState({ slider1ActiveSlide: index }) }
                 />
                 <Pagination
@@ -84,7 +88,7 @@ export default class example extends Component {
         return (
             <View style={styles.exampleContainer}>
                 <Text style={styles.title}>Example 2</Text>
-                <Text style={styles.subtitle}>Momentum | Left-aligned | Autoplay</Text>
+                <Text style={styles.subtitle}>Momentum | Left-aligned</Text>
                 <Carousel
                   data={ENTRIES2}
                   renderItem={this._renderItem}
@@ -94,9 +98,6 @@ export default class example extends Component {
                   inactiveSlideOpacity={1}
                   enableMomentum={true}
                   activeSlideAlignment={'start'}
-                  autoplay={true}
-                  autoplayDelay={500}
-                  autoplayInterval={2500}
                   containerCustomStyle={styles.slider}
                   contentContainerCustomStyle={styles.sliderContentContainer}
                   removeClippedSubviews={false}
