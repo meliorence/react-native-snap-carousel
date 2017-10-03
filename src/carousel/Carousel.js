@@ -577,6 +577,10 @@ export default class Carousel extends Component {
         } else if (scrollConditions && this._activeItem !== nextActiveItem) {
             this._activeItem = nextActiveItem;
 
+            if (this._canLockScroll()) {
+                this._releaseScroll();
+            }
+
             if (this._canFireCallback) {
                 this._onSnap(this._getDataIndex(nextActiveItem));
             }
@@ -756,10 +760,6 @@ export default class Carousel extends Component {
 
         if (!this._flatlist) {
             return;
-        }
-
-        if (this._canLockScroll()) {
-            this._releaseScroll();
         }
 
         this._canFireCallback = false;
