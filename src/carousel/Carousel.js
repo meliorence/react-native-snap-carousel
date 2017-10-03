@@ -331,6 +331,12 @@ export default class Carousel extends Component {
         }
     }
 
+    // Used with 'PaginationDot'
+    _getPositionIndex (index) {
+        const { loop, loopClonesPerSide } = this.props;
+        return loop ? index + loopClonesPerSide : index;
+    }
+
     _getFirstItem (index, props = this.props) {
         const { loopClonesPerSide } = props;
         const itemsLength = this._getCustomDataLength(props);

@@ -119,7 +119,7 @@ export default class PaginationDot extends PureComponent {
         ];
 
         const onPress = tappable ? () => {
-            carouselRef && carouselRef.snapToItem && carouselRef.snapToItem(index);
+            carouselRef && carouselRef.snapToItem(carouselRef._getPositionIndex(index));
         } : undefined;
 
         return (
