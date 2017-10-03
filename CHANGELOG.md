@@ -1,3 +1,7 @@
+## v3.3.2
+* Fix issue with `lockScrollWhileSnapping` when no callback was provided
+* `Pagination` component: add props `activeOpacity` and `dotContainerStyle`
+
 ## v3.3.1
 * Fix issue when initializing the carousel with empty data
 * Make tappable `PaginationDot` snaps to the right item when loop is enabled
