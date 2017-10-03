@@ -1,5 +1,9 @@
+## v3.3.1
+* Fix issue when initializing the carousel with empty data
+* Make tappable `PaginationDot` snaps to the right item when loop is enabled
+
 ## v3.3.0
-* Bring in the most wanted 'infinite loop' feature :tada: (see [the 'Loop' section](#loop) for more info about the new props `loop` and `loopClonesPerSide`)
+* Bring in the most wanted 'infinite loop' feature :tada: (see [the 'Loop' section](https://github.com/archriss/react-native-snap-carousel#loop) for more info about the new props `loop` and `loopClonesPerSide`)
 * Improve Android behavior when momentum is disabled
 * Guard against potential errors when component is unmounted
 * Add prop `lockScrollWhileSnapping` to improve behavior when momentum is disabled
