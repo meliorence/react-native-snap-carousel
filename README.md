@@ -10,8 +10,8 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 ## Table of contents
 
 1. [Showcase](#showcase)
-1. [Important note regarding Android](#important-note-regarding-android)
 1. [Usage](#usage)
+1. [Important note regarding Android](#important-note-regarding-android)
 1. [Migration from version 2.x](#migration-from-version-2x)
 1. [Props](#props)
 1. [Methods](#methods)
@@ -43,14 +43,6 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 
 > Please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
 > The folks at [codedaily.io](https://codedaily.io) have put together a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
-
-## Important note regarding Android
-
-Android's debug mode is a mess: timeouts regularly desynchronize and scroll events are fired with some lag, which completely alters the inner logic of the carousel. **On Android, you *will* experience issues with carousel's behavior when JS Dev Mode is enabled, and you *might* have trouble with unreliable callbacks when it isn't**. This is unfortunate, but it's rooted in various flaws of the `ScrollView`/`FlatList`'s implementation and the miscellaneous workarounds we had to implement to compensate for it.
-
-:warning: **Therefore you should always check if the issue you experience also happens in a production environment. This is, sadly, the only way to test the real performance and behavior of the carousel.**
-
-For more information, you can read the following notes: ["Unreliable callbacks"]((#unreliable-callbacks) and ["Android performance"](#android-performance).
 
 ## Usage
 
@@ -84,6 +76,16 @@ export class MyCarousel extends Component {
     }
 }
 ```
+
+## Important note regarding Android
+
+![react-native-snap-carousel android](https://i.imgur.com/03iuB2Um.jpg)
+
+Android's debug mode is a mess: timeouts regularly desynchronize and scroll events are fired with some lag, which completely alters the inner logic of the carousel. **On Android, you *will* experience issues with carousel's behavior when JS Dev Mode is enabled, and you *might* have trouble with unreliable callbacks when it isn't**. This is unfortunate, but it's rooted in various flaws of the `ScrollView`/`FlatList`'s implementation and the miscellaneous workarounds we had to implement to compensate for it.
+
+:warning: **Therefore you should always check if the issue you experience also happens in a production environment. This is, sadly, the only way to test the real performance and behavior of the carousel.**
+
+> For more information, you can read the following notes: ["Android performance"](#android-performance) and ["Unreliable callbacks"](#unreliable-callbacks).
 
 ## Migration from version 2.x
 
