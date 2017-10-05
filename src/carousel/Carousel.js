@@ -985,8 +985,9 @@ export default class Carousel extends Component {
               showsHorizontalScrollIndicator={false}
               showsVerticalScrollIndicator={false}
               overScrollMode={'never'}
-              directionalLockEnabled={true}
               automaticallyAdjustContentInsets={false}
+              directionalLockEnabled={true}
+              pinchGestureEnabled={false}
               scrollsToTop={false}
               initialNumToRender={initialNumToRender}
               maxToRenderPerBatch={maxToRenderPerBatch}
