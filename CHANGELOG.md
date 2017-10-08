@@ -1,3 +1,6 @@
+## v3.3.3
+* Prevent issue on iOS when `enableSnap` is set to `false` while `lockScrollWhileSnapping` is set to `true`
+
 ## v3.3.2
 * Fix issue with `lockScrollWhileSnapping` when no callback was provided
 * `Pagination` component: add props `activeOpacity` and `dotContainerStyle`
