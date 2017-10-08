@@ -591,7 +591,7 @@ export default class Carousel extends Component {
         if (this._canLockScroll() && IS_IOS &&
             (nextActiveItem === this._activeItem - 1 || nextActiveItem === this._activeItem + 1) &&
             (this._itemToSnapTo !== this._activeItem - 1 && this._itemToSnapTo !== this._activeItem + 1)) {
-            this._onScrollEnd(event);
+            this._onScrollEnd && this._onScrollEnd(event);
         }
 
         if (nextActiveItem === this._itemToSnapTo &&
@@ -644,7 +644,7 @@ export default class Carousel extends Component {
         const { onScrollEndDrag } = this.props;
 
         if (this._flatlist) {
-            this._onScrollEnd();
+            this._onScrollEnd && this._onScrollEnd();
         }
 
         if (onScrollEndDrag) {
@@ -657,7 +657,7 @@ export default class Carousel extends Component {
         const { onMomentumScrollEnd } = this.props;
 
         if (this._flatlist) {
-            this._onScrollEnd();
+            this._onScrollEnd && this._onScrollEnd();
         }
 
         if (onMomentumScrollEnd) {
