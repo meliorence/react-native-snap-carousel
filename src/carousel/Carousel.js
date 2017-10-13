@@ -93,7 +93,6 @@ export default class Carousel extends Component {
 
         this._positions = [];
         this._currentContentOffset = 0; // store ScrollView's scroll position
-        this._initDone = false; // prevent unwanted executions of 'snapToItem'
         this._canFireCallback = false;
         this._scrollOffsetRef = null;
         this._onScrollTriggered = true; // used when momentum is enabled to prevent an issue with edges items
@@ -203,7 +202,7 @@ export default class Carousel extends Component {
             // This also fixes first item's active state on Android
             // Because 'initialScrollIndex' apparently doesn't trigger scroll
             if (this._previousItemsLength > itemsLength) {
-                this._hackActiveSlideAnimation(nextActiveItem);
+                this._hackActiveSlideAnimation(nextActiveItem, null, true);
             }
 
             if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
@@ -353,13 +352,13 @@ export default class Carousel extends Component {
     }
 
     _setScrollEnabled (value = true) {
-        if (this.props.scrollEnabled === false) {
+        if (this.props.scrollEnabled === false || !this._flatlist || !this._flatlist.setNativeProps) {
             return;
         }
 
         // 'setNativeProps()' is used instead of 'setState()' because the latter
         // really takes a toll on Android behavior when momentum is disabled
-        this._flatlist && this._flatlist.setNativeProps({ scrollEnabled: value });
+        this._flatlist.setNativeProps({ scrollEnabled: value });
         this._scrollEnabled = value;
     }
 
@@ -441,7 +440,7 @@ export default class Carousel extends Component {
         const _firstItem = this._getFirstItem(firstItem);
 
         this.snapToItem(_firstItem, false, false, true, false);
-        this._hackActiveSlideAnimation(_firstItem, 'start');
+        this._hackActiveSlideAnimation(_firstItem, 'start', true);
         this.setState({ hideCarousel: false });
 
         if (autoplay) {
@@ -485,10 +484,10 @@ export default class Carousel extends Component {
         this.setState({ interpolators });
     }
 
-    _hackActiveSlideAnimation (index, goTo) {
+    _hackActiveSlideAnimation (index, goTo, force = false) {
         const { data, vertical } = this.props;
 
-        if (IS_IOS || !this._flatlist || !this._positions[index] || this._enableLoop()) {
+        if (IS_IOS || !this._flatlist || !this._positions[index] || (!force && this._enableLoop())) {
             return;
         }
 
@@ -584,14 +583,6 @@ export default class Carousel extends Component {
             if (this._canFireCallback) {
                 this._onSnap(this._getDataIndex(nextActiveItem));
             }
-        }
-
-        // Snap as soon as next or previous item becomes active on iOS (buggy on Android)
-        // WARNING: '_onScrollEnd()' is going to be called twice in a row
-        if (this._canLockScroll() && IS_IOS &&
-            (nextActiveItem === this._activeItem - 1 || nextActiveItem === this._activeItem + 1) &&
-            (this._itemToSnapTo !== this._activeItem - 1 && this._itemToSnapTo !== this._activeItem + 1)) {
-            this._onScrollEnd && this._onScrollEnd(event);
         }
 
         if (nextActiveItem === this._itemToSnapTo &&
@@ -710,11 +701,12 @@ export default class Carousel extends Component {
     _onLayout (event) {
         const { onLayout } = this.props;
 
-        if (this._initDone) {
+        // Prevent unneeded actions during the first 'onLayout' (triggered on init)
+        if (this._onLayoutInitDone) {
             this._initPositionsAndInterpolators();
             this.snapToItem(this._activeItem, false, false, false, false);
         } else {
-            this._initDone = true;
+            this._onLayoutInitDone = true;
         }
 
         if (onLayout) {
@@ -893,7 +885,9 @@ export default class Carousel extends Component {
 
         const animatedValue = interpolators && interpolators[index];
 
-        if (!animatedValue || !animatedValue.opacity || !animatedValue.scale) {
+        if (!animatedValue ||
+            (!animatedValue.opacity && animatedValue.opacity !== 0) ||
+            (!animatedValue.scale && animatedValue.scale !== 0)) {
             return false;
         }
 
