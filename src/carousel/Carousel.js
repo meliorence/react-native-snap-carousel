@@ -322,9 +322,30 @@ export default class Carousel extends Component {
         }
 
         if (index >= dataLength + loopClonesPerSide) {
-            return index - dataLength - loopClonesPerSide;
+            return loopClonesPerSide > dataLength ?
+                (index - loopClonesPerSide) % dataLength :
+                index - dataLength - loopClonesPerSide;
         } else if (index < loopClonesPerSide) {
-            return index + dataLength - loopClonesPerSide;
+            // TODO: is there a simpler way of determining the interpolated index?
+            if (loopClonesPerSide > dataLength) {
+                const baseDataIndexes = [];
+                const dataIndexes = [];
+                const dataMultiplier = Math.floor(loopClonesPerSide / dataLength);
+                const remainder = loopClonesPerSide % dataLength;
+
+                for (let i = 0; i < dataLength; i++) {
+                    baseDataIndexes.push(i);
+                }
+
+                for (let j = 0; j < dataMultiplier; j++) {
+                    dataIndexes.push(...baseDataIndexes);
+                }
+
+                dataIndexes.unshift(...baseDataIndexes.slice(-remainder));
+                return dataIndexes[index];
+            } else {
+                return index + dataLength - loopClonesPerSide;
+            }
         } else {
             return index - loopClonesPerSide;
         }
