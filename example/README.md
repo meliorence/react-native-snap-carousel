@@ -1,8 +1,10 @@
 ## Example
 
+:warning: **Before anything, make sure to read [this note](https://github.com/archriss/react-native-snap-carousel/#important-note-regarding-android) regarding Android.**
+
 ![react-native-snap-carousel](http://i.imgur.com/m0297Ys.gif)
 
-The example is a basic React Native app, which means you should follow [the official doc](https://facebook.github.io/react-native/docs/getting-started.html) to get started with it. Make sure to read the instructions found in tab "Building Projects with Native Code".
+The example is a basic React Native app, which means you should follow [the official doc](https://facebook.github.io/react-native/docs/getting-started.html) to get started with it. Make sure to read the instructions found in tab "**Building Projects with Native Code**".
 
 To sum up:
 - make sure that everything you need has been properly installed (Node, Watchman, RN command line interface, XCode...)
