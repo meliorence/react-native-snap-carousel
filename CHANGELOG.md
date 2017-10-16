@@ -1,3 +1,9 @@
+## v3.3.4
+* Fix issue with possible faulty index when `loopClonesPerSide` is greater than data length
+* Guard against `setNativeProps()` being `undefined`
+* On Android, make sure that the first item has the proper active style after init
+* On iOS, remove the feature "snap as soon as the previous/next item becomes active when `lockScrollWhileSnapping` is enabled" since it messes with direct calls to `snapToItem()`
+
 ## v3.3.3
 * Prevent issue on iOS when `enableSnap` is set to `false` while `lockScrollWhileSnapping` is set to `true`
 
