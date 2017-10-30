@@ -35,6 +35,16 @@
 
 (Write your answer here and specify the iOS/Android versions on which you've been able to reproduce the issue.)
 
+### Have you been able to reproduce the bug in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)?
+
+(Write your answer here.)
+
+<!--
+  If you haven't been able to reproduce the issue in the example, chances are that your code is to blame.
+  Take the time to import your code in it bit by bit until you figure out what's wrong.
+  If you're positive that it has to do with the plugin rather than with React Native or your own code, then you may continue filling out this template and post an issue.
+-->
+
 ### Environment
 
 <!--
