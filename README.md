@@ -7,6 +7,12 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 [![github issues](https://img.shields.io/github/issues/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/issues)
 [![github closed issues](https://img.shields.io/github/issues-closed/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/issues?q=is%3Aissue+is%3Aclosed)
 
+-----
+
+### :warning: Before submitting a new issue, make sure to read [these guidelines](#reporting-an-issue) and to fill out the [issue template](https://github.com/archriss/react-native-snap-carousel/blob/master/ISSUE_TEMPLATE.md)!
+
+-----
+
 ## Table of contents
 
 1. [Showcase](#showcase)
@@ -21,6 +27,7 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
+1. [Reporting an issue](#reporting-an-issue)
 1. [Roadmap](#roadmap)
 1. [Credits](#credits)
 
@@ -81,7 +88,7 @@ export class MyCarousel extends Component {
 
 ![react-native-snap-carousel android](https://i.imgur.com/03iuB2Um.jpg)
 
-Android's debug mode is a mess: timeouts regularly desynchronize and scroll events are fired with some lag, which completely alters the inner logic of the carousel. **On Android, you *will* experience issues with carousel's behavior when JS Dev Mode is enabled, and you *might* have trouble with unreliable callbacks when it isn't**. This is unfortunate, but it's rooted in various flaws of `ScrollView`/`FlatList`'s implementation and the miscellaneous workarounds we had to implement to compensate for it.
+Android's debug mode is a mess: timeouts regularly desynchronize and scroll events are fired with some lag, which completely alters the inner logic of the carousel. **On Android, you *will* experience issues with carousel's behavior when JS Dev Mode is enabled, and you *might* have trouble with unreliable callbacks and loop mode when it isn't**. This is unfortunate, but it's rooted in various flaws of `ScrollView`/`FlatList`'s implementation and the miscellaneous workarounds we had to implement to compensate for it.
 
 :warning: **Therefore you should always check if the issue you experience also happens in a production environment. This is, sadly, the only way to test the real performance and behavior of the carousel.**
 
@@ -344,6 +351,62 @@ If this is not what you're after, you can prevent this behavior by passing `{ fl
 
 Alternatively, you can either use this prop to pass a custom height to the container, or wrap the carousel in a `<View />` with a fixed height.
 
+### Items' dynamic height
+
+If you want your slides to have dynamic height (e.g. to fill up the entirety of the available space), you need to transfer `{ flex: 1 }` to all the relevant wrappers. Here is a minimal example:
+
+```javascript
+_renderItem ({item, index}) {
+    return (
+        <View style={{ flex: 1 }} />
+    );
+}
+
+render () {
+    return (
+        <Carousel
+          data={this.state.data}
+          renderItem={this._renderItem}
+          containerCustomStyle={{ flex: 1 }}
+          slideStyle={{ flex: 1 }}
+        />
+    );
+}
+```
+
+### Fullscreen slides
+
+While the plugin hasn't been designed with this use case in mind, you can easily implement fullscreen slides. The following code can serve as a good starting point.
+
+```javascript
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
+
+export class MyCarousel extends Component {
+
+    _renderItem ({item, index}) {
+        return (
+            <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
+        );
+    }
+
+    render () {
+        return (
+            <Carousel
+              data={this.state.entries}
+              renderItem={this._renderItem}
+              sliderWidth={viewportWidth}
+              itemWidth={viewportWidth}
+              slideStyle={{ width: viewportWidth }}
+              inactiveSlideOpacity={1}
+              inactiveSlideScale={1}
+            />
+        );
+    }
+}
+```
+
+[This plugin](https://github.com/shichongrui/react-native-on-layout) can also prove useful.
+
 ### Understanding styles
 
 Here is a screenshot that should help you understand how each of the above variables is used.
@@ -389,39 +452,6 @@ render() {
     );
 }
 ```
-
-### Fullscreen slides
-
-While the plugin hasn't been designed with this use case in mind, you can easily implement fullscreen slides. The following code can serve as a good starting point.
-
-```javascript
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
-
-export class MyCarousel extends Component {
-
-    _renderItem ({item, index}) {
-        return (
-            <View style={{ height: viewportHeight }} /> // or { flex: 1 } for responsive height
-        );
-    }
-
-    render () {
-        return (
-            <Carousel
-              data={this.state.entries}
-              renderItem={this._renderItem}
-              sliderWidth={viewportWidth}
-              itemWidth={viewportWidth}
-              slideStyle={{ width: viewportWidth }}
-              inactiveSlideOpacity={1}
-              inactiveSlideScale={1}
-            />
-        );
-    }
-}
-```
-
-[This plugin](https://github.com/shichongrui/react-native-on-layout) can also prove useful.
 
 ### Native-powered animations
 
@@ -484,6 +514,23 @@ The easiest workaround is to add `jest.unmock('ScrollView')` before importing th
 Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`. As such, this feature should be considered experimental since it might break with newer versions of React Native.
 
 Note that you may want to reverse the order of your data array for your items to be displayed in the proper RTL order. We've tried implementing it internally, but this led to numerous and unnecessary issues. You'll just have to do something as simple as `myCustomData.reverse()`.
+
+## Reporting an issue
+
+![react-native-snap-carousel issues](https://i.imgur.com/BjWWFdj.png)
+
+:warning: **From now on, users that don't adhere to the following guidelines when submitting an issue will see it closed without warning.**
+
+> This project is the result of countless hours of work and is maintained for free on our spare time. Show some love and respect by making it easier for us to help you!
+
+If you would like to report a problem, take a look around and see if someone already opened an issue about it. If you a are certain this is a new, unreported bug, you can submit a bug report by [opening a new issue](https://github.com/archriss/react-native-snap-carousel/issues/new).
+
+:warning: When doing so, you need to fill out the [issue template](https://github.com/archriss/react-native-snap-carousel/blob/master/ISSUE_TEMPLATE.md). **This step is mandatory!** Not doing so will result in your issue getting closed. Don't take this personally if this happens, and feel free to open a new issue once you've gathered all the information required by the template.
+
+* **One issue, one bug:** Please report a single bug per issue.
+* **Provide reproduction steps:** List all the steps necessary to reproduce the issue. Provide a Snack, share the relevant source code or upload a sample project to GitHub. We should be able to follow these steps to reproduce your issue with minimal effort.
+* **Provide a Snack and/or a screencast:** The best way to get attention on your issue is to provide a reduced test case. You can use [Snack](https://snack.expo.io/) to demonstrate the issue. More often than not, providing a screencast will also be of tremendous help to understand the matter at stake (a screenshot may sometimes be enough).
+* **Try out the latest version:** Verify that the issue can be reproduced locally by updating your project to use [the latest commit from `master`](https://github.com/archriss/react-native-snap-carousel/#using-a-specific-commit). The bug may have already been fixed! Also make sure to test the latest stable release of React Native as your issue could be linked to RN's core.
 
 ## Roadmap
 
