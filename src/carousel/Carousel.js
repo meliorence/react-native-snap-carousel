@@ -1008,6 +1008,7 @@ export default class Carousel extends Component {
               maxToRenderPerBatch={maxToRenderPerBatch}
               windowSize={windowSize}
               // updateCellsBatchingPeriod
+              inverted={this._needsRTLAdaptations()}
               {...this.props}
               ref={(c) => { if (c) { this._flatlist = c._component; } }}
               data={this._getCustomData()}
@@ -1020,7 +1021,6 @@ export default class Carousel extends Component {
               style={containerStyle}
               contentContainerStyle={contentContainerStyle}
               horizontal={!vertical}
-              inverted={this._needsRTLAdaptations()}
               scrollEventThrottle={1}
               onScroll={this._onScrollHandler}
               onScrollBeginDrag={this._onScrollBeginDrag}
