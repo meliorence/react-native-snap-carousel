@@ -467,6 +467,25 @@ This is pretty easy: in your `package.json` file, use the GitHub link instead of
 
 ## Known issues
 
+### FlatList and ScrollView's limitations
+
+Note that this plugin is built on top of React Native's `FlatList` which, in turn, is based on `VirtualizedList` and `ScrollView`. Unfortunately, their implementations have flaws that affect the plugin, the most problematic ones being the following:
+- there is no `scrollEnd` event
+- `scrollTo` method doesn't accept any callback
+- Android's `scrollTo` animation is quite brutal
+- it is not possible to specify a scroll duration.
+
+On top of that, `FlatList` has [its own set of bugs and buggy behaviors](https://github.com/facebook/react-native/issues?utf8=%E2%9C%93&q=flatlist).
+
+We're trying to work around these issues, but the result is not always as smooth as we'd want it to be. **You can help by letting the React Native team know how badly we need those features!** React Native has [a dedicated canny](https://react-native.canny.io/feature-requests) for feature requests; here are the ones that need your vote:
+- [[ScrollView] Add completion callback to scrollTo](https://react-native.canny.io/feature-requests/p/scrollview-add-completion-callback-to-scrollto)
+- [snapToInterval for Android](https://react-native.canny.io/feature-requests/p/snaptointerval-for-android)
+- [Add speed attribute to scrollTo](https://react-native.canny.io/feature-requests/p/add-speed-attribute-to-scrollto)
+- [Bring ios only methods to Android ScrollView](https://react-native.canny.io/feature-requests/p/bring-ios-only-methods-to-android-scrollview)
+- [ScrollView Animation Events (e.g. onScrollAnimationEnd)](https://react-native.canny.io/feature-requests/p/scrollview-animation-events-eg-onscrollanimationend)
+
+Remember that very vote counts ;-)
+
 ### React Native version
 
 :warning: **RN 0.43.x is the minimum required to use versions `>= 3.0.0` of the plugin. If you're using an older release of React Native, you are stuck with version `2.4.0`. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
@@ -478,17 +497,6 @@ Bear in mind that we follow RN evolutions closely, which means newer versions of
 :warning: **Make sure to test carousel's performance and behavior without JS Dev Mode enabled, ideally with a production build.**.
 
 It can take user experience from "crappy and sluggish" to "pretty good" - it's Android though, so nothing like "perfect" or "incredibly smooth"...
-
-### FlatList and ScrollView's limitations
-
-Note that this plugin is built on top of React Native's `FlatList` which, in turn, is based on `ScrollView`. Unfortunately, its implementation shows flaws that affect the plugin, the main ones being the following:
-- there is no `scrollEnd` event
-- `scrollTo` method doesn't accept any callback
-- Android's `scrollTo` animation is quite brutal.
-
-On top of that, `FlatList` has [its own set of bugs and buggy behaviors](https://github.com/facebook/react-native/issues?utf8=%E2%9C%93&q=flatlist).
-
-We're trying to work around these issues, but the result is not always as smooth as we'd want it to be. Keep that in mind and go spam [React Native's Feature Request](https://react-native.canny.io/feature-requests) ;-)
 
 ### Unreliable callbacks
 
