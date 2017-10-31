@@ -40,6 +40,7 @@ export default class Carousel extends Component {
         hasParallaxImages: PropTypes.bool,
         inactiveSlideOpacity: PropTypes.number,
         inactiveSlideScale: PropTypes.number,
+        inactiveSlideShift: PropTypes.number,
         lockScrollWhileSnapping: PropTypes.bool,
         loop: PropTypes.bool,
         loopClonesPerSide: PropTypes.number,
@@ -66,6 +67,7 @@ export default class Carousel extends Component {
         hasParallaxImages: false,
         inactiveSlideOpacity: 0.7,
         inactiveSlideScale: 0.9,
+        inactiveSlideShift: 0,
         lockScrollWhileSnapping: false,
         loop: false,
         loopClonesPerSide: 3,
@@ -239,8 +241,8 @@ export default class Carousel extends Component {
     }
 
     _shouldAnimateSlides (props = this.props) {
-        const { inactiveSlideOpacity, inactiveSlideScale } = props;
-        return inactiveSlideOpacity < 1 || inactiveSlideScale < 1;
+        const { inactiveSlideOpacity, inactiveSlideScale, inactiveSlideShift } = props;
+        return inactiveSlideOpacity < 1 || inactiveSlideScale < 1 || inactiveSlideShift !== 0;
     }
 
     _needsRTLAdaptations () {
@@ -485,7 +487,7 @@ export default class Carousel extends Component {
             const start = (_index - 1) * sizeRef;
             const middle = _index * sizeRef;
             const end = (_index + 1) * sizeRef;
-            const value = this._shouldAnimateSlides(props) ? this._scrollPos.interpolate({
+            const animatedValue = this._shouldAnimateSlides(props) ? this._scrollPos.interpolate({
                 inputRange: [start, middle, end],
                 outputRange: [0, 1, 0],
                 extrapolate: 'clamp'
@@ -496,10 +498,7 @@ export default class Carousel extends Component {
                 end: index * sizeRef + sizeRef
             };
 
-            interpolators.push({
-                opacity: value,
-                scale: value
-            });
+            interpolators.push(animatedValue);
         });
 
         this.setState({ interpolators });
@@ -892,40 +891,46 @@ export default class Carousel extends Component {
     _renderItem ({ item, index }) {
         const { interpolators } = this.state;
         const {
-            renderItem,
-            sliderWidth,
-            sliderHeight,
-            itemWidth,
-            itemHeight,
-            slideStyle,
+            inactiveSlideShift,
+            hasParallaxImages,
             inactiveSlideScale,
             inactiveSlideOpacity,
-            vertical,
-            hasParallaxImages
+            itemWidth,
+            itemHeight,
+            renderItem,
+            sliderHeight,
+            sliderWidth,
+            slideStyle,
+            vertical
         } = this.props;
 
         const animatedValue = interpolators && interpolators[index];
 
-        if (!animatedValue ||
-            (!animatedValue.opacity && animatedValue.opacity !== 0) ||
-            (!animatedValue.scale && animatedValue.scale !== 0)) {
+        if (!animatedValue && animatedValue !== 0) {
             return false;
         }
 
         const animate = this._shouldAnimateSlides();
         const Component = animate ? Animated.View : View;
-        const animatedStyle = {
-            opacity: animate ? animatedValue.opacity.interpolate({
+        const translateProp = vertical ? 'translateX' : 'translateY';
+
+        const animatedStyle = animate ? {
+            opacity: animatedValue.interpolate({
                 inputRange: [0, 1],
                 outputRange: [inactiveSlideOpacity, 1]
-            }) : 1,
+            }),
             transform: [{
-                scale: animate ? animatedValue.scale.interpolate({
+                scale: animatedValue.interpolate({
                     inputRange: [0, 1],
                     outputRange: [inactiveSlideScale, 1]
-                }) : 1
+                })
+            }, {
+                [translateProp]: animatedValue.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [inactiveSlideShift, 0]
+                })
             }]
-        };
+        } : {};
 
         const parallaxProps = hasParallaxImages ? {
             scrollPosition: this._scrollPos,
