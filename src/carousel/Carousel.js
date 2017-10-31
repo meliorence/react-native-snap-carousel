@@ -208,12 +208,12 @@ export default class Carousel extends Component {
             }
 
             if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
-                this.snapToItem(nextActiveItem, false, false, false, false);
+                this._snapToItem(nextActiveItem, false, false, false, false);
             }
         } else if (nextFirstItem !== this._previousFirstItem && nextFirstItem !== this._activeItem) {
             this._activeItem = nextFirstItem;
             this._previousFirstItem = nextFirstItem;
-            this.snapToItem(nextFirstItem, true, true, false, false);
+            this._snapToItem(nextFirstItem, true, true, false, false);
         }
     }
 
@@ -353,7 +353,7 @@ export default class Carousel extends Component {
         }
     }
 
-    // Used with 'PaginationDot'
+    // Used with `snapToItem()` and 'PaginationDot'
     _getPositionIndex (index) {
         const { loop, loopClonesPerSide } = this.props;
         return loop ? index + loopClonesPerSide : index;
@@ -462,7 +462,7 @@ export default class Carousel extends Component {
         const { firstItem, autoplay } = this.props;
         const _firstItem = this._getFirstItem(firstItem);
 
-        this.snapToItem(_firstItem, false, false, true, false);
+        this._snapToItem(_firstItem, false, false, true, false);
         this._hackActiveSlideAnimation(_firstItem, 'start', true);
         this.setState({ hideCarousel: false });
 
@@ -568,7 +568,7 @@ export default class Carousel extends Component {
             repositionTo = index + dataLength;
         }
 
-        this.snapToItem(repositionTo, false, false, false, false);
+        this._snapToItem(repositionTo, false, false, false, false);
     }
 
     _onScroll (event) {
@@ -713,7 +713,7 @@ export default class Carousel extends Component {
         if (enableMomentum && IS_IOS) {
             clearTimeout(this._snapNoMomentumTimeout);
             this._snapNoMomentumTimeout = setTimeout(() => {
-                this.snapToItem(this._activeItem);
+                this._snapToItem(this._activeItem);
             }, 100);
         }
     }
@@ -724,7 +724,7 @@ export default class Carousel extends Component {
         // Prevent unneeded actions during the first 'onLayout' (triggered on init)
         if (this._onLayoutInitDone) {
             this._initPositionsAndInterpolators();
-            this.snapToItem(this._activeItem, false, false, false, false);
+            this._snapToItem(this._activeItem, false, false, false, false);
         } else {
             this._onLayoutInitDone = true;
         }
@@ -745,63 +745,29 @@ export default class Carousel extends Component {
 
         if (this._scrollStartActive !== this._scrollEndActive) {
             // Snap to the new active item
-            this.snapToItem(this._scrollEndActive);
+            this._snapToItem(this._scrollEndActive);
         } else {
             // Snap depending on delta
             if (delta > 0) {
                 if (delta > swipeThreshold) {
-                    this.snapToItem(this._scrollStartActive + 1);
+                    this._snapToItem(this._scrollStartActive + 1);
                 } else {
-                    this.snapToItem(this._scrollEndActive);
+                    this._snapToItem(this._scrollEndActive);
                 }
             } else if (delta < 0) {
                 if (delta < -swipeThreshold) {
-                    this.snapToItem(this._scrollStartActive - 1);
+                    this._snapToItem(this._scrollStartActive - 1);
                 } else {
-                    this.snapToItem(this._scrollEndActive);
+                    this._snapToItem(this._scrollEndActive);
                 }
             } else {
                 // Snap to current
-                this.snapToItem(this._scrollEndActive);
+                this._snapToItem(this._scrollEndActive);
             }
         }
     }
 
-    _onSnap (index) {
-        const { onSnapToItem } = this.props;
-
-        if (!this._flatlist) {
-            return;
-        }
-
-        this._canFireCallback = false;
-        onSnapToItem && onSnapToItem(index);
-    }
-
-    startAutoplay () {
-        const { autoplayInterval, autoplayDelay } = this.props;
-
-        if (this._autoplaying) {
-            return;
-        }
-
-        clearTimeout(this._autoplayTimeout);
-        this._autoplayTimeout = setTimeout(() => {
-            this._autoplaying = true;
-            this._autoplayInterval = setInterval(() => {
-                if (this._autoplaying) {
-                    this.snapToNext();
-                }
-            }, autoplayInterval);
-        }, autoplayDelay);
-    }
-
-    stopAutoplay () {
-        this._autoplaying = false;
-        clearInterval(this._autoplayInterval);
-    }
-
-    snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true) {
+    _snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true) {
         const { enableMomentum, onSnapToItem } = this.props;
         const itemsLength = this._getCustomDataLength();
 
@@ -862,6 +828,54 @@ export default class Carousel extends Component {
         }
     }
 
+    _onSnap (index) {
+        const { onSnapToItem } = this.props;
+
+        if (!this._flatlist) {
+            return;
+        }
+
+        this._canFireCallback = false;
+        onSnapToItem && onSnapToItem(index);
+    }
+
+    startAutoplay () {
+        const { autoplayInterval, autoplayDelay } = this.props;
+
+        if (this._autoplaying) {
+            return;
+        }
+
+        clearTimeout(this._autoplayTimeout);
+        this._autoplayTimeout = setTimeout(() => {
+            this._autoplaying = true;
+            this._autoplayInterval = setInterval(() => {
+                if (this._autoplaying) {
+                    this.snapToNext();
+                }
+            }, autoplayInterval);
+        }, autoplayDelay);
+    }
+
+    stopAutoplay () {
+        this._autoplaying = false;
+        clearInterval(this._autoplayInterval);
+    }
+
+    snapToItem (index, animated = true) {
+        if (!index || index < 0) {
+            index = 0;
+        }
+
+        const positionIndex = this._getPositionIndex(index);
+
+        if (positionIndex === this._activeItem) {
+            return;
+        }
+
+        this._snapToItem(positionIndex, animated);
+    }
+
     snapToNext (animated = true) {
         const itemsLength = this._getCustomDataLength();
 
@@ -872,7 +886,7 @@ export default class Carousel extends Component {
             }
             newIndex = 0;
         }
-        this.snapToItem(newIndex, animated);
+        this._snapToItem(newIndex, animated);
     }
 
     snapToPrev (animated = true) {
@@ -885,7 +899,7 @@ export default class Carousel extends Component {
             }
             newIndex = itemsLength - 1;
         }
-        this.snapToItem(newIndex, animated);
+        this._snapToItem(newIndex, animated);
     }
 
     _renderItem ({ item, index }) {
