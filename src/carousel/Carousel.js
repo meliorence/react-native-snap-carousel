@@ -100,7 +100,6 @@ export default class Carousel extends Component {
         this._onScrollTriggered = true; // used when momentum is enabled to prevent an issue with edges items
         this._scrollEnabled = props.scrollEnabled === false ? false : true;
 
-        this._getItemLayout = this._getItemLayout.bind(this);
         this._initPositionsAndInterpolators = this._initPositionsAndInterpolators.bind(this);
         this._renderItem = this._renderItem.bind(this);
         this._onSnap = this._onSnap.bind(this);
@@ -389,17 +388,6 @@ export default class Carousel extends Component {
         return `carousel-item-${index}`;
     }
 
-    _getItemLayout (data, index) {
-        const { itemWidth, itemHeight, vertical } = this.props;
-        const itemSize = vertical ? itemHeight : itemWidth;
-
-        return {
-            length: itemSize,
-            offset: itemSize * index,
-            index
-        };
-    }
-
     _getScrollOffset (event) {
         const { vertical } = this.props;
         return (event && event.nativeEvent && event.nativeEvent.contentOffset &&
@@ -505,7 +493,7 @@ export default class Carousel extends Component {
     }
 
     _hackActiveSlideAnimation (index, goTo, force = false) {
-        const { data, vertical } = this.props;
+        const { data } = this.props;
 
         if (IS_IOS || !this._flatlist || !this._positions[index] || (!force && this._enableLoop())) {
             return;
@@ -513,27 +501,24 @@ export default class Carousel extends Component {
 
         const offset = this._positions[index] && this._positions[index].start;
 
-        if (!offset) {
+        if (!offset && offset !== 0) {
             return;
         }
 
         const itemsLength = data && data.length;
         const direction = goTo || itemsLength === 1 ? 'start' : 'end';
-        const commonOptions = {
-            horizontal: !vertical,
-            animated: false
-        };
 
         this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
             offset: offset + (direction === 'start' ? -1 : 1),
-            ...commonOptions
+            animated: false
         });
 
+        clearTimeout(this._hackSlideAnimationTimeout);
         this._hackSlideAnimationTimeout = setTimeout(() => {
             // https://github.com/facebook/react-native/issues/10635
             this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
                 offset: offset,
-                ...commonOptions
+                animated: false
             });
         }, 50); // works randomly when set to '0'
     }
@@ -798,10 +783,12 @@ export default class Carousel extends Component {
         this._scrollOffsetRef = this._positions[index] && this._positions[index].start;
         this._onScrollTriggered = false;
 
-        this._flatlist.scrollToIndex({
-            index,
-            viewPosition: 0,
-            viewOffset: 0,
+        if (!this._scrollOffsetRef && this._scrollOffsetRef !== 0) {
+            return;
+        }
+
+        this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
+            offset: this._scrollOffsetRef,
             animated
         });
 
@@ -970,7 +957,6 @@ export default class Carousel extends Component {
             contentContainerCustomStyle,
             data,
             enableMomentum,
-            firstItem,
             itemWidth,
             itemHeight,
             keyExtractor,
@@ -1033,9 +1019,9 @@ export default class Carousel extends Component {
               data={this._getCustomData()}
               renderItem={this._renderItem}
               // extraData={this.state}
-              getItemLayout={this._getItemLayout}
+              getItemLayout={undefined} // see #193
+              initialScrollIndex={undefined} // see #193
               keyExtractor={keyExtractor || this._getKeyExtractor}
-              initialScrollIndex={firstItem ? this._getFirstItem(firstItem) : undefined}
               numColumns={1}
               style={containerStyle}
               contentContainerStyle={contentContainerStyle}
