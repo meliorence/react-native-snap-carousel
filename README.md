@@ -1,11 +1,13 @@
 # react-native-snap-carousel
 Swiper component for React Native featuring **previews**, **snapping effect**, **parallax images**, **performant handling of huge numbers of items**, and **RTL support**. Compatible with Android & iOS.
 
-![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square)
+![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-snap-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-snap-carousel)
-[![github release](https://img.shields.io/github/release/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/releases)
+[![npm](https://img.shields.io/npm/dm/react-native-snap-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-snap-carousel)
+<!-- [![github release](https://img.shields.io/github/release/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/releases) -->
 [![github issues](https://img.shields.io/github/issues/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/issues)
-[![github closed issues](https://img.shields.io/github/issues-closed/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/issues?q=is%3Aissue+is%3Aclosed)
+[![github closed issues](https://img.shields.io/github/issues-closed/archriss/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/archriss/react-native-snap-carousel/issues?q=is%3Aissue+is%3Aclosed)
+[![Issue Stats](https://img.shields.io/issuestats/i/github/archriss/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](http://github.com/archriss/react-native-snap-carousel/issues)
 
 -----
 
@@ -217,6 +219,7 @@ Prop | Description | Type | Default
 `contentContainerCustomStyle` | Optional styles for Scrollview's items container | View Style Object | `{}`
 `inactiveSlideOpacity` | Value of the opacity effect applied to inactive slides | Number | `0.7`
 `inactiveSlideScale` | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
+`inactiveSlideShift` | Value of the 'translate' transform applied to inactive slides (see [#204](https://github.com/archriss/react-native-snap-carousel/issues/204) for an example usage) | Number | `0`
 `slideStyle` | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | `{}`
 
 ### Callbacks
@@ -406,6 +409,12 @@ export class MyCarousel extends Component {
 
 [This plugin](https://github.com/shichongrui/react-native-on-layout) can also prove useful.
 
+### Viewport wide slides / no preview effect
+
+**If you are using the plugin without the preview effect (meaning that your slides, as well as your slider, are viewport wide), we do not recommend using this plugin.**
+
+You'll be better off with [`react-native-swiper](https://github.com/leecade/react-native-swiper) for the simple reason that it implements the `ViewPagerAndroid` component, which provides a way better overall feeling on Android, whereas we must hack our way around [the miscellaneous `ScrollView` limitations](#flatlist-and-scrollviews-limitations).
+
 ### Understanding styles
 
 Here is a screenshot that should help you understand how each of the above variables is used.
@@ -473,18 +482,19 @@ Note that this plugin is built on top of React Native's `FlatList` which, in tur
 - there is no `scrollEnd` event
 - `scrollTo` method doesn't accept any callback
 - Android's `scrollTo` animation is quite brutal
-- it is not possible to specify a scroll duration.
+- it is not possible to specify a scroll duration
+- there are performance issues with the `FlatList` component.
 
 On top of that, `FlatList` has [its own set of bugs and buggy behaviors](https://github.com/facebook/react-native/issues?utf8=%E2%9C%93&q=flatlist).
 
-We're trying to work around these issues, but the result is not always as smooth as we'd want it to be. **You can help by letting the React Native team know how badly we need those features!** React Native has [a dedicated canny](https://react-native.canny.io/feature-requests) for feature requests; here are the ones that need your vote:
+We're trying to work around these issues, but the result is not always as smooth as we'd want it to be. **You can help by letting the React Native team know how badly we need those features!** React Native has [a dedicated canny](https://react-native.canny.io/feature-requests) for feature requests; here are the ones that need your vote the most:
 - [[ScrollView] Add completion callback to scrollTo](https://react-native.canny.io/feature-requests/p/scrollview-add-completion-callback-to-scrollto)
 - [snapToInterval for Android](https://react-native.canny.io/feature-requests/p/snaptointerval-for-android)
 - [Add speed attribute to scrollTo](https://react-native.canny.io/feature-requests/p/add-speed-attribute-to-scrollto)
 - [Bring ios only methods to Android ScrollView](https://react-native.canny.io/feature-requests/p/bring-ios-only-methods-to-android-scrollview)
 - [ScrollView Animation Events (e.g. onScrollAnimationEnd)](https://react-native.canny.io/feature-requests/p/scrollview-animation-events-eg-onscrollanimationend)
 
-Remember that very vote counts ;-)
+Remember that every vote counts and take a look at [#203](https://github.com/archriss/react-native-snap-carousel/issues/203) for more info!
 
 ### React Native version
 
@@ -497,6 +507,14 @@ Bear in mind that we follow RN evolutions closely, which means newer versions of
 :warning: **Make sure to test carousel's performance and behavior without JS Dev Mode enabled, ideally with a production build.**.
 
 It can take user experience from "crappy and sluggish" to "pretty good" - it's Android though, so nothing like "perfect" or "incredibly smooth"...
+
+### Performance tips
+
+Here are a few good practices to keep in mind when dealing with the component (or any `FlatList` for that matter):
+1. **Implement `shouldComponentUpdate`** (see [the `shallowCompare` addon](https://www.npmjs.com/package/react-addons-shallow-compare`)) for the `renderItem` component or **make it a `PureComponent`** (some users report that `shouldComponentUpdate` is faster, but you should try both and decide for yourself).
+1. Make sure the carousel **isn't a child of a `ScrollView`** (this includes `FlatList`, `VirtualizedList` and many plugins). Apparently, it would render all child components, even those currently off-screen.
+1. **Add [prop `removeClippedSubviews`](https://facebook.github.io/react-native/docs/scrollview.html#removeclippedsubviews)** and set it to `true` so that out-of-view items are removed.
+1. If your data set is huge, **consider loading additional chunks of data only when the user has reached the end of the current set**. In order to do this, you'll have to play with `VirtualizedList`'s props `onEndReached` and `onEndReachedThreshold`
 
 ### Unreliable callbacks
 
@@ -524,6 +542,7 @@ Note that you may want to reverse the order of your data array for your items to
 
 ## Roadmap
 
+- [ ] Add more examples
 - [ ] Implement a custom `PanResponder` for better control over carousel's callbacks and overall feeling
 - [X] Implement 'loop' mode
 - [X] Improve Android's behavior
