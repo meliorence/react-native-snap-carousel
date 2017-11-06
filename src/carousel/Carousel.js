@@ -1013,6 +1013,8 @@ export default class Carousel extends Component {
               maxToRenderPerBatch={maxToRenderPerBatch}
               windowSize={windowSize}
               // updateCellsBatchingPeriod
+              // renderToHardwareTextureAndroid={true}
+              removeClippedSubviews={true}
               inverted={this._needsRTLAdaptations()}
               {...this.props}
               ref={(c) => { if (c) { this._flatlist = c._component; } }}
