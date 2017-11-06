@@ -1,3 +1,11 @@
+## v3.4.0
+* Fix `snapToItem` call that results in snapping to the wrong item when `loop` is enabled
+* Fix issue that, in some use cases, prevents every items but the initial ones to be rendered
+* On Android, prevent loop and callback issues because scroll offset's value doesn't return an integer
+* Add prop `inactiveSlideShift` (see #204)
+* Expose `FlatList`'s prop `inverted` (**use at your own risk since it will mess with the current handling of RTL layouts**)
+* Set `removeClippedSubviews` to `true` by default
+
 ## v3.3.4
 * Fix issue with possible faulty index when `loopClonesPerSide` is greater than data length
 * Guard against `setNativeProps()` being `undefined`
