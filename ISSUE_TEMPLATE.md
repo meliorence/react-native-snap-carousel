@@ -1,5 +1,5 @@
 <!--
-  COPY/PASTE THIS TEMPLATE IN YOUR ISSUE MESSAGE AND MODIFY IT ACCORDINGLY
+  MAKE SURE TO READ AND FOLLOW THIS TEMPLATE CLOSELY OR YOUR ISSUE WILL BE CLOSED WITHOUT NOTICE
 -->
 
 ### Is this a bug report or a feature request?
@@ -15,8 +15,8 @@
 
   If you answered "Feature request":
 
-    Make sure to describe as precisely as possible the feature you'd like to see implemented. If relevant, provide visual examples.
-    You can ignore the next steps as long as you've made sure that your description is as clear and thorough as possible.
+    Make sure to describe as precisely as possible the feature you'd like to see implemented. When relevant, provide visual examples (screenshots, screencasts, diagrams...).
+    You can ignore the next steps as long as you've made sure that your description is as clear, thorough and illustrated as possible.
 -->
 
 ### Have you read [the guidelines](https://github.com/archriss/react-native-snap-carousel#reporting-an-issue) regarding bug report?
@@ -34,6 +34,14 @@
 ### Is the bug specific to iOS or Android? Or can it be reproduced on both platforms?
 
 (Write your answer here and specify the iOS/Android versions on which you've been able to reproduce the issue.)
+
+### Is the bug reproductible in a production environment (not a debug one)?
+
+(Write your answer here.)
+
+<!--
+  If you haven't been able to reproduce the bug in production mode, it probably has to do with React Native's limitations (see ["Known issues"](https://github.com/archriss/react-native-snap-carousel/#known-issues)). Chances are we won't be able to do anything about it.
+-->
 
 ### Have you been able to reproduce the bug in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)?
 

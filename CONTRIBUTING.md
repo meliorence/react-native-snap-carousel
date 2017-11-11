@@ -4,7 +4,7 @@
 
 If you would like to report a problem, take a look around and see if someone already opened an issue about it. If you a are certain this is a new, unreported bug, you can submit a bug report by [opening a new issue](https://github.com/archriss/react-native-snap-carousel/issues/new).
 
-:warning: When doing so, you need to fill out the [issue template](https://github.com/archriss/react-native-snap-carousel/blob/master/ISSUE_TEMPLATE.md). **This step is mandatory!** Not doing so will result in your issue getting closed. Don't take this personally if this happens, and feel free to open a new issue once you've gathered all the information required by the template.
+:warning: When doing so, you need to fill out [the issue template](https://raw.githubusercontent.com/archriss/react-native-snap-carousel/master/ISSUE_TEMPLATE.md). **This step is mandatory!** Not doing so will result in your issue getting closed. Don't take this personally if this happens, and feel free to open a new issue once you've gathered all the information required by the template.
 
 * **One issue, one bug:** Please report a single bug per issue.
 * **Provide reproduction steps:** List all the steps necessary to reproduce the issue. Provide a Snack, share the relevant source code or upload a sample project to GitHub. We should be able to follow these steps to reproduce your issue with minimal effort.
