@@ -336,13 +336,35 @@ const itemHeight = 200;
 const styles = Stylesheet.create({
     slide: {
         width: itemWidth,
-        height: itemHeight
-        // other styles for your item's container
+        height: itemHeight,
+        paddingHorizontal: horizontalMargin
+        // other styles for the item container
+    },
+    slideInnerContainer: {
+        width: slideWidth,
+        flex: 1
+        // other styles for the inner container
     }
 };
 ```
 ```javascript
-<Carousel sliderWidth={sliderWidth} itemWidth={itemWidth} />
+    _renderItem ({item, index}) {
+        return (
+            <View style={styles.slide}>
+                <View style={styles.slideInnerContainer} />
+            </View>
+        );
+    }
+
+    render () {
+        return (
+            <Carousel
+              renderItem={this._renderItem}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+            />
+        );
+    }
 ```
 
 ### Carousel's stretched height
