@@ -11,7 +11,7 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 
 -----
 
-### Do you want a better plugin? [Vote for React Native's feature requests](https://github.com/archriss/react-native-snap-carousel/issues/203)
+### :sparkles: Do you want an even better plugin? [Vote for React Native's feature requests](https://github.com/archriss/react-native-snap-carousel/issues/203) to let the Facebook team know what they need to improve!
 
 -----
 
