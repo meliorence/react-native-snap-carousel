@@ -155,7 +155,7 @@ export default class Carousel extends Component {
         const { apparitionDelay } = this.props;
 
         this._initPositionsAndInterpolators();
-        this._initCustomSnapAnimation()
+        this._initCustomSnapAnimation();
 
         if (apparitionDelay) {
             // Hide FlatList's awful init
@@ -177,7 +177,7 @@ export default class Carousel extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { interpolators } = this.state;
-        const { firstItem, itemHeight, itemWidth, sliderHeight, sliderWidth, vertical, scrollAnimationValue, customSnapAnimation } = nextProps;
+        const { firstItem, itemHeight, itemWidth, sliderHeight, sliderWidth, vertical } = nextProps;
         const itemsLength = this._getCustomDataLength(nextProps);
 
         if (!itemsLength) {
@@ -507,12 +507,12 @@ export default class Carousel extends Component {
     }
 
     _initCustomSnapAnimation(props = this.props) {
-        const { customSnapAnimation, scrollAnimationValue } = props
+        const { customSnapAnimation, scrollAnimationValue } = props;
         if(!customSnapAnimation || !scrollAnimationValue) {
-            this._animatedListener = undefined
+            this._animatedListener = undefined;
         }
         else {
-            this._animatedListener = scrollAnimationValue.addListener(this._customAnimatedListener.bind(this))
+            this._animatedListener = scrollAnimationValue.addListener(this._customAnimatedListener.bind(this));
         }
     }
 
@@ -778,7 +778,7 @@ export default class Carousel extends Component {
 
     _scrollToOffset(offset, animated) {
         if(animated && this.props.customSnapAnimation) {
-            this.props.customSnapAnimation(offset)
+            this.props.customSnapAnimation(offset);
         }
         else {
             this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
