@@ -19,7 +19,7 @@
     You can ignore the next steps as long as you've made sure that your description is as clear, thorough and illustrated as possible.
 -->
 
-### Have you read [the guidelines](https://github.com/archriss/react-native-snap-carousel#reporting-an-issue) regarding bug report?
+### Have you read [the guidelines](https://github.com/archriss/react-native-snap-carousel/blob/master/CONTRIBUTING.md) regarding bug report?
 
 (Write your answer here.)
 
