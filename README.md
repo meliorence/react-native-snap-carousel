@@ -577,7 +577,7 @@ Note that you may want to reverse the order of your data array for your items to
 - [x] Add alignment option
 - [x] Add pagination component
 - [x] Add vertical implementation
-- [x] Handle device orientation event (see [this note] (https://github.com/archriss/react-native-snap-carousel#handling-device-rotation))
+- [x] Handle device orientation event (see [this note](https://github.com/archriss/react-native-snap-carousel#handling-device-rotation))
 - [x] Add RTL support
 - [x] Improve momemtum handling
 - [x] Improve snap on Android
