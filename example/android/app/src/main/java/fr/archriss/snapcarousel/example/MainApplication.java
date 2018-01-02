@@ -1,4 +1,4 @@
-package com.example;
+package fr.archriss.snapcarousel.example;
 
 import android.app.Application;
 
