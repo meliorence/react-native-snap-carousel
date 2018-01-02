@@ -51,3 +51,7 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
+
+#LOCK
+package-lock.json
+yarn.lock
