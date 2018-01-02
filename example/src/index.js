@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, StatusBar } from 'react-native';
+import { View, ScrollView, Text, StatusBar, SafeAreaView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { sliderWidth, itemWidth } from 'example/src/styles/SliderEntry.style';
@@ -110,8 +110,8 @@ export default class example extends Component {
         return (
             <LinearGradient
               colors={[colors.background1, colors.background2]}
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 1 }}
+              startPoint={{ x: 1, y: 0 }}
+              endPoint={{ x: 0, y: 1 }}
               style={styles.gradient}
             />
         );
@@ -119,24 +119,26 @@ export default class example extends Component {
 
     render () {
         return (
-            <View style={styles.container}>
-                <StatusBar
-                  translucent={true}
-                  backgroundColor={'rgba(0, 0, 0, 0.3)'}
-                  barStyle={'light-content'}
-                />
-                { this.gradient }
-                <ScrollView
-                  style={styles.scrollview}
-                  contentContainerStyle={styles.scrollviewContentContainer}
-                  indicatorStyle={'white'}
-                  scrollEventThrottle={200}
-                  directionalLockEnabled={true}
-                >
-                    { this.example1 }
-                    { this.example2 }
-                </ScrollView>
-            </View>
+            <SafeAreaView style={styles.safeArea}>
+                <View style={styles.container}>
+                    <StatusBar
+                      translucent={true}
+                      backgroundColor={'rgba(0, 0, 0, 0.3)'}
+                      barStyle={'light-content'}
+                    />
+                    { this.gradient }
+                    <ScrollView
+                      style={styles.scrollview}
+                      contentContainerStyle={styles.scrollviewContentContainer}
+                      indicatorStyle={'white'}
+                      scrollEventThrottle={200}
+                      directionalLockEnabled={true}
+                    >
+                        { this.example1 }
+                        { this.example2 }
+                    </ScrollView>
+                </View>
+            </SafeAreaView>
         );
     }
 }

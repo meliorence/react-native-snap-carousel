@@ -8,6 +8,10 @@ export const colors = {
 };
 
 export default StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: colors.black
+    },
     container: {
         flex: 1,
         backgroundColor: colors.background1
