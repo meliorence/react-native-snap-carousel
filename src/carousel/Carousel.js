@@ -48,7 +48,10 @@ export default class Carousel extends Component {
         shouldOptimizeUpdates: PropTypes.bool,
         swipeThreshold: PropTypes.number,
         vertical: PropTypes.bool,
-        onSnapToItem: PropTypes.func
+        onSnapToItem: PropTypes.func,
+
+        customSnapAnimation: PropTypes.func,
+        scrollAnimationValue: PropTypes.object,
     };
 
     static defaultProps = {
@@ -101,6 +104,7 @@ export default class Carousel extends Component {
         this._scrollEnabled = props.scrollEnabled === false ? false : true;
 
         this._initPositionsAndInterpolators = this._initPositionsAndInterpolators.bind(this);
+        this._initCustomSnapAnimation = this._initCustomSnapAnimation.bind(this);
         this._renderItem = this._renderItem.bind(this);
         this._onSnap = this._onSnap.bind(this);
 
@@ -151,6 +155,7 @@ export default class Carousel extends Component {
         const { apparitionDelay } = this.props;
 
         this._initPositionsAndInterpolators();
+        this._initCustomSnapAnimation();
 
         if (apparitionDelay) {
             // Hide FlatList's awful init
@@ -172,7 +177,7 @@ export default class Carousel extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { interpolators } = this.state;
-        const { firstItem, itemHeight, itemWidth, sliderHeight, sliderWidth } = nextProps;
+        const { firstItem, itemHeight, itemWidth, sliderHeight, sliderWidth, vertical } = nextProps;
         const itemsLength = this._getCustomDataLength(nextProps);
 
         if (!itemsLength) {
@@ -492,6 +497,25 @@ export default class Carousel extends Component {
         this.setState({ interpolators });
     }
 
+    _customAnimatedListener({value}) {
+        if(this._flatlist && this._flatlist._listRef) {
+            this._flatlist.scrollToOffset({
+                offset: value,
+                animated: false
+            })
+        }
+    }
+
+    _initCustomSnapAnimation(props = this.props) {
+        const { customSnapAnimation, scrollAnimationValue } = props;
+        if(!customSnapAnimation || !scrollAnimationValue) {
+            this._animatedListener = undefined;
+        }
+        else {
+            this._animatedListener = scrollAnimationValue.addListener(this._customAnimatedListener.bind(this));
+        }
+    }
+
     _hackActiveSlideAnimation (index, goTo, force = false) {
         const { data } = this.props;
 
@@ -752,6 +776,18 @@ export default class Carousel extends Component {
         }
     }
 
+    _scrollToOffset(offset, animated) {
+        if(animated && this.props.customSnapAnimation) {
+            this.props.customSnapAnimation(offset);
+        }
+        else {
+            this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
+                offset: offset,
+                animated
+            });
+        }
+    }
+
     _snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true) {
         const { enableMomentum, onSnapToItem } = this.props;
         const itemsLength = this._getCustomDataLength();
@@ -787,10 +823,7 @@ export default class Carousel extends Component {
             return;
         }
 
-        this._flatlist && this._flatlist._listRef && this._flatlist.scrollToOffset({
-            offset: this._scrollOffsetRef,
-            animated
-        });
+        this._scrollToOffset(this._scrollOffsetRef, animated)
 
         if (enableMomentum) {
             // iOS fix, check the note in the constructor
