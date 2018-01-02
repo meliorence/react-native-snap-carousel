@@ -98,7 +98,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.example"
+        applicationId "fr.archriss.snapcarousel.example"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
