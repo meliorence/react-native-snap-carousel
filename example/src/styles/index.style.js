@@ -47,9 +47,10 @@ export default StyleSheet.create({
         textAlign: 'center'
     },
     slider: {
-        marginTop: 25
+        marginTop: 15
     },
     sliderContentContainer: {
+        paddingVertical: 10 // for custom animation
     },
     paginationContainer: {
         paddingVertical: 8

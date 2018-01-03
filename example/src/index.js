@@ -88,19 +88,24 @@ export default class example extends Component {
         return (
             <View style={styles.exampleContainer}>
                 <Text style={styles.title}>Example 2</Text>
-                <Text style={styles.subtitle}>Momentum | Left-aligned</Text>
+                <Text style={styles.subtitle}>Momentum | Left-aligned | Custom animation</Text>
                 <Carousel
                   data={ENTRIES2}
                   renderItem={this._renderItem}
                   sliderWidth={sliderWidth}
                   itemWidth={itemWidth}
-                  inactiveSlideScale={1}
+                  inactiveSlideScale={0.95}
                   inactiveSlideOpacity={1}
                   enableMomentum={true}
                   activeSlideAlignment={'start'}
                   containerCustomStyle={styles.slider}
                   contentContainerCustomStyle={styles.sliderContentContainer}
                   removeClippedSubviews={false}
+                  customAnimationType={'spring'}
+                  customAnimationOptions={{
+                      friction: 4,
+                      tension: 40
+                  }}
                 />
             </View>
         );
