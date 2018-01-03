@@ -188,7 +188,7 @@ Prop | Description | Type | Default
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 `activeSlideOffset` | From slider's center, minimum slide distance to be scrolled before being set to active. | Number | `20`
-`apparitionDelay` | `FlatList`'s init is a real mess, with lots of unneeded flickers and slides movement. This prop controls the delay during which the carousel will be hidden when mounted. | Number | `250`
+`apparitionDelay` | `FlatList`'s init is a real mess, with lots of unneeded flickers and slides movement. This prop controls the delay during which the carousel will be hidden when mounted. **WARNING: on Android, using it may lead to [rendering issues](https://github.com/archriss/react-native-snap-carousel/issues/236) (i.e. images not showing up)**. Make sure to test thoroughly if you decide on using it. | Number | `0`
 `callbackOffsetMargin` | Scroll events might not be triggered often enough to get a precise measure and, therefore, to provide a reliable callback. This usually is an Android issue, which might be linked to the version of React Native you're using (see ["Unreliable callbacks"](#unreliable-callbacks)). To work around this, you can define a small margin that will increase the "sweet spot"'s width. The default value should cover most cases, but **you will want to increase it if you experience missed callbacks**. | Number | `5`
 `enableMomentum` | See [momentum](#momentum) | Boolean | `false`
 `enableSnap` | If enabled, releasing the touch will scroll to the center of the nearest/active item | Boolean | `true`
@@ -197,6 +197,7 @@ Prop | Description | Type | Default
 `lockScrollWhileSnapping` | Prevent the user from swiping again while the carousel is snapping to a position. This prevents miscellaneous minor issues (inadvertently tapping an item while scrolling, stopping the scrolling animation if the carousel is tapped in the middle of a snap, clunky behavior on Android when short snapping quickly in opposite directions). The only drawback is that enabling the prop hinders the ability to swipe quickly between items as a little pause between swipes is needed. **Note that the prop won't have any effect if `enableMomentum` is set to `true`, since it would otherwise impede the natural and expected behavior.** | Boolean | `false`
 `shouldOptimizeUpdates` | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
 `swipeThreshold` | Delta x when swiping to trigger the snap | Number | `20`
+`useScrollView` | Whether to use a `ScrollView` component instead of the default `FlatList` one. The advantages are to avoid rendering issues that can arise with `FlatList` and to provide compatibility with React Native pre- `0.43`. The major drawback is that you won't benefit from any of `FlatList`'s advanced optimizations. **We recommend activating it only with a small set of slides and to test performance thoroughly in production mode.** | Boolean | `false`
 `vertical` | Layout slides vertically instead of horizontally | Boolean | `false`
 
 ### Loop
@@ -221,9 +222,11 @@ Prop | Description | Type | Default
 `activeSlideAlignment` | Determine active slide's alignment relative to the carousel. Possible values are: `'start'`, `'center'` and `'end'`. | String | `'center'`
 `containerCustomStyle` | Optional styles for Scrollview's global wrapper | View Style Object | `{}`
 `contentContainerCustomStyle` | Optional styles for Scrollview's items container | View Style Object | `{}`
+`customAnimationOptions` | Custom animation options. Note that `useNativeDriver` will be enabled by default and that opacity's easing will always be kept linear. **Setting this prop to something other than `null` will trigger custom animations and will completely change the way items are animated**: rather than having their opacity and scale interpolated based the scroll value (default behavior), they will now play the custom animation you provide as soon as they become active. | Object | `null`
+`customAnimationType` | Custom [animation type](https://facebook.github.io/react-native/docs/animated.html#configuring-animations): either `'decay`, `'spring'` or `'timing'`. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around). | String | `'timing'`
 `inactiveSlideOpacity` | Value of the opacity effect applied to inactive slides | Number | `0.7`
 `inactiveSlideScale` | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
-`inactiveSlideShift` | Value of the 'translate' transform applied to inactive slides (see [#204](https://github.com/archriss/react-native-snap-carousel/issues/204) for an example usage) | Number | `0`
+`inactiveSlideShift` | Value of the 'translate' transform applied to inactive slides (see [#204](https://github.com/archriss/react-native-snap-carousel/issues/204) for an example usage). **It is not recommended to use this prop in conjunction with `customItemAnimationOptions`**. | Number | `0`
 `slideStyle` | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | `{}`
 
 ### Callbacks
@@ -281,6 +284,7 @@ Method | Description
 `snapToItem (index, animated = true)` | Snap to an item manually
 `snapToNext (animated = true)` | Snap to next item manually
 `snapToPrev (animated = true)` | Snap to previous item manually
+`triggerRenderingHack (offset)` | Call this when needed to work around [a random `FlatList` bug](https://github.com/facebook/react-native/issues/1831) that keeps content hidden until the carousel is scrolled. Note that the `offset` parameter is not required and will default to either `1` or `-1` depending on the current scroll position.
 
 ## Getters
 
@@ -439,7 +443,7 @@ export class MyCarousel extends Component {
 
 **If you are using the plugin without the preview effect (meaning that your slides, as well as your slider, are viewport wide), we do not recommend using this plugin.**
 
-You'll be better off with [`react-native-swiper](https://github.com/leecade/react-native-swiper) for the simple reason that it implements the `ViewPagerAndroid` component, which provides a way better overall feeling on Android, whereas we must hack our way around [the miscellaneous `ScrollView` limitations](#flatlist-and-scrollviews-limitations).
+You'll be better off with [`react-native-swiper`](https://github.com/leecade/react-native-swiper) for the simple reason that it implements the `ViewPagerAndroid` component, which provides a way better overall feeling on Android, whereas we must hack our way around [the frustrating limitations of the `ScrollView` component](#flatlist-and-scrollviews-limitations).
 
 ### Understanding styles
 
@@ -524,7 +528,7 @@ Remember that every vote counts and take a look at [#203](https://github.com/arc
 
 ### React Native version
 
-:warning: **RN 0.43.x is the minimum required to use versions `>= 3.0.0` of the plugin. If you're using an older release of React Native, you are stuck with version `2.4.0`. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
+:warning: **RN 0.43.x is the minimum recommended version for plugin releases `>= 3.0.0` since it was the first version to introduce the `FlatList` component.** Since version `3.5.0`, the component will fall back to rendering a `ScrollView` if you're using an older version of React Native (mirroring the effect of setting prop `useScrollView` to `true`). **But keep in mind that the `ScrollView` component is not suited to render huge number of items.** If you experience performance issues, consider updating your React Native version and using the default `FlatList` version.
 
 Bear in mind that we follow RN evolutions closely, which means newer versions of the plugin might break when used in conjunction with a version of RN that is not the latest stable one.
 
@@ -569,7 +573,10 @@ Note that you may want to reverse the order of your data array for your items to
 ## Roadmap
 
 - [ ] Add more examples
+- [ ] Handle different items' width/height
 - [ ] Implement a custom `PanResponder` for better control over carousel's callbacks and overall feeling
+- [X] Implement both `FlatList` and `ScrollView` handling
+- [X] Add the ability to provide custom items animation
 - [X] Implement 'loop' mode
 - [X] Improve Android's behavior
 - [x] Add parallax image component
@@ -577,7 +584,7 @@ Note that you may want to reverse the order of your data array for your items to
 - [x] Add alignment option
 - [x] Add pagination component
 - [x] Add vertical implementation
-- [x] Handle device orientation event (see [this note] (https://github.com/archriss/react-native-snap-carousel#handling-device-rotation))
+- [x] Handle device orientation event (see [this note](https://github.com/archriss/react-native-snap-carousel#handling-device-rotation))
 - [x] Add RTL support
 - [x] Improve momemtum handling
 - [x] Improve snap on Android
