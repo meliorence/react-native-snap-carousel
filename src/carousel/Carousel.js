@@ -104,6 +104,7 @@ export default class Carousel extends Component {
         this._canFireCallback = false;
         this._scrollOffsetRef = null;
         this._onScrollTriggered = true; // used when momentum is enabled to prevent an issue with edges items
+        this._lastScrollDate = 0; // used to work around a FlatList bug
         this._scrollEnabled = props.scrollEnabled === false ? false : true;
 
         this._initPositionsAndInterpolators = this._initPositionsAndInterpolators.bind(this);
@@ -169,7 +170,8 @@ export default class Carousel extends Component {
 
         this._initPositionsAndInterpolators();
 
-        this._didMountTimeout = setTimeout(() => {
+        // Without 'requestAnimationFrame' or a `0` timeout, images will randomly not be rendered on Android...
+        requestAnimationFrame(() => {
             this._snapToItem(_firstItem, false, false, true, false);
             this._hackActiveSlideAnimation(_firstItem, 'start', true);
 
@@ -180,7 +182,7 @@ export default class Carousel extends Component {
             } else {
                 apparitionCallback();
             }
-        }, 0);
+        });
     }
 
     shouldComponentUpdate (nextProps, nextState) {
@@ -239,7 +241,6 @@ export default class Carousel extends Component {
 
     componentWillUnmount () {
         this.stopAutoplay();
-        clearTimeout(this._didMountTimeout);
         clearTimeout(this._apparitionTimeout);
         clearTimeout(this._hackSlideAnimationTimeout);
         clearTimeout(this._enableAutoplayTimeout);
@@ -669,6 +670,7 @@ export default class Carousel extends Component {
 
         this._currentContentOffset = scrollOffset;
         this._onScrollTriggered = true;
+        this._lastScrollDate = Date.now();
 
         if (this._activeItem !== nextActiveItem && this._shouldUseCustomAnimation()) {
             this._playCustomSlideAnimation(this._activeItem, nextActiveItem);
@@ -990,6 +992,22 @@ export default class Carousel extends Component {
             newIndex = itemsLength - 1;
         }
         this._snapToItem(newIndex, animated);
+    }
+
+    // https://github.com/facebook/react-native/issues/1831#issuecomment-231069668
+    triggerRenderingHack (offset) {
+        // Avoid messing with user scroll
+        if (Date.now() - this._lastScrollDate < 500) {
+            return;
+        }
+
+        const scrollPosition = this._currentContentOffset;
+        if (!scrollPosition && scrollPosition !== 0) {
+            return;
+        }
+
+        const scrollOffset = offset || (scrollPosition === 0 ? 1 : -1);
+        this._scrollTo(scrollPosition + scrollOffset, false);
     }
 
     _getComponentOverridableProps () {
