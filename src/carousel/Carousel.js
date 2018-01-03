@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, FlatList, Animated, Platform, I18nManager, ViewPropTypes } from 'react-native';
+import { Animated, Easing, FlatList, I18nManager, Platform, ScrollView, View, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 
@@ -34,6 +34,8 @@ export default class Carousel extends Component {
         callbackOffsetMargin: PropTypes.number,
         containerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         contentContainerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        customAnimationType: PropTypes.string,
+        customAnimationOptions: PropTypes.object,
         enableMomentum: PropTypes.bool,
         enableSnap: PropTypes.bool,
         firstItem: PropTypes.number,
@@ -62,6 +64,8 @@ export default class Carousel extends Component {
         callbackOffsetMargin: 5,
         containerCustomStyle: {},
         contentContainerCustomStyle: {},
+        customAnimationType: 'timing',
+        customAnimationOptions: null,
         enableMomentum: false,
         enableSnap: true,
         firstItem: 0,
@@ -282,6 +286,11 @@ export default class Carousel extends Component {
         return inactiveSlideOpacity < 1 || inactiveSlideScale < 1 || inactiveSlideShift !== 0;
     }
 
+    _shouldUseCustomAnimation () {
+        const { customAnimationOptions } = this.props;
+        return !!customAnimationOptions;
+    }
+
     _getCustomData (props = this.props) {
         const { data, loopClonesPerSide } = props;
         const dataLength = data.length;
@@ -484,24 +493,86 @@ export default class Carousel extends Component {
 
         this._getCustomData(props).forEach((itemData, index) => {
             const _index = this._getCustomIndex(index, props);
-            const start = (_index - 1) * sizeRef;
-            const middle = _index * sizeRef;
-            const end = (_index + 1) * sizeRef;
-            const animatedValue = this._shouldAnimateSlides(props) ? this._scrollPos.interpolate({
-                inputRange: [start, middle, end],
-                outputRange: [0, 1, 0],
-                extrapolate: 'clamp'
-            }) : 1;
+            let animatedValue;
 
             this._positions[index] = {
                 start: index * sizeRef,
                 end: index * sizeRef + sizeRef
             };
 
-            interpolators.push(animatedValue);
+            if (!this._shouldAnimateSlides(props)) {
+                animatedValue = 1;
+            } else if (this._shouldUseCustomAnimation()) {
+                animatedValue = new Animated.Value(_index === this._activeItem ? 1 : 0);
+            } else {
+                const start = (_index - 1) * sizeRef;
+                const middle = _index * sizeRef;
+                const end = (_index + 1) * sizeRef;
+                animatedValue = this._scrollPos.interpolate({
+                    inputRange: [start, middle, end],
+                    outputRange: [0, 1, 0],
+                    extrapolate: 'clamp'
+                });
+            }
+
+            interpolators.push({
+                opacity: animatedValue,
+                scale: animatedValue
+            });
         });
 
         this.setState({ interpolators });
+    }
+
+    _getSlideAnimation (index, toValue) {
+        const { customAnimationType, customAnimationOptions } = this.props;
+        const animationCommonOptions = {
+            isInteraction: false,
+            useNativeDriver: true,
+            ...customAnimationOptions,
+            toValue: toValue
+        };
+
+        return Animated.parallel([
+            Animated['timing'](
+                this.state.interpolators[index].opacity,
+                { ...animationCommonOptions, easing: Easing.linear }
+            ),
+            Animated[customAnimationType](
+                this.state.interpolators[index].scale,
+                { ...animationCommonOptions }
+            )
+        ]);
+    }
+
+    _playCustomSlideAnimation (current, next) {
+        const { interpolators } = this.state;
+        const itemsLength = this._getCustomDataLength();
+        const _currentIndex = this._getCustomIndex(current);
+        const _currentDataIndex = this._getDataIndex(_currentIndex);
+        const _nextIndex = this._getCustomIndex(next);
+        const _nextDataIndex = this._getDataIndex(_nextIndex);
+        let animations = [];
+
+        // Keep animations in sync when looping
+        if (this._enableLoop()) {
+            for (let i = 0; i < itemsLength; i++) {
+                if (this._getDataIndex(i) === _currentDataIndex && interpolators[i]) {
+                    animations.push(this._getSlideAnimation(i, 0));
+                } else if (this._getDataIndex(i) === _nextDataIndex && interpolators[i]) {
+                    animations.push(this._getSlideAnimation(i, 1));
+                }
+            }
+        } else {
+            if (interpolators[current]) {
+                animations.push(this._getSlideAnimation(current, 0));
+            }
+            if (interpolators[next]) {
+                animations.push(this._getSlideAnimation(next, 1));
+            }
+        }
+
+        Animated.parallel(animations, { stopTogether: false }).start();
     }
 
     _hackActiveSlideAnimation (index, goTo, force = false) {
@@ -588,7 +659,7 @@ export default class Carousel extends Component {
     }
 
     _onScroll (event) {
-        const { enableMomentum, onScroll, callbackOffsetMargin } = this.props;
+        const { callbackOffsetMargin, enableMomentum, onScroll } = this.props;
 
         const scrollOffset = event ? this._getScrollOffset(event) : this._currentContentOffset;
         const nextActiveItem = this._getActiveItem(scrollOffset);
@@ -598,6 +669,10 @@ export default class Carousel extends Component {
 
         this._currentContentOffset = scrollOffset;
         this._onScrollTriggered = true;
+
+        if (this._activeItem !== nextActiveItem && this._shouldUseCustomAnimation()) {
+            this._playCustomSlideAnimation(this._activeItem, nextActiveItem);
+        }
 
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
@@ -1037,7 +1112,9 @@ export default class Carousel extends Component {
 
         const animatedValue = interpolators && interpolators[index];
 
-        if (!animatedValue && animatedValue !== 0) {
+        if (!animatedValue ||
+            (!animatedValue.opacity && animatedValue.opacity !== 0) ||
+            (!animatedValue.scale && animatedValue.scale !== 0)) {
             return false;
         }
 
@@ -1046,17 +1123,17 @@ export default class Carousel extends Component {
         const translateProp = vertical ? 'translateX' : 'translateY';
 
         const animatedStyle = animate ? {
-            opacity: animatedValue.interpolate({
+            opacity: animatedValue.opacity.interpolate({
                 inputRange: [0, 1],
                 outputRange: [inactiveSlideOpacity, 1]
             }),
             transform: [{
-                scale: animatedValue.interpolate({
+                scale: animatedValue.scale.interpolate({
                     inputRange: [0, 1],
                     outputRange: [inactiveSlideScale, 1]
                 })
             }, {
-                [translateProp]: animatedValue.interpolate({
+                [translateProp]: animatedValue.opacity.interpolate({
                     inputRange: [0, 1],
                     outputRange: [inactiveSlideShift, 0]
                 })
