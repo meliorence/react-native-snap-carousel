@@ -1,3 +1,11 @@
+## v3.5.0
+* Add the ability to render either a `ScrollView` component or a `FlatList` one (default) ([see prop `useScrollView`](https://github.com/archriss/react-native-snap-carousel/#behavior))
+* Add support for versions of React Native < `0.43` (see [this note](https://github.com/archriss/react-native-snap-carousel/#react-native-version))
+* Add support for custom animations ([see props `customAnimationType` and `customAnimationOptions`](https://github.com/archriss/react-native-snap-carousel/#style-and-animation))
+* Add method [`triggerRenderingHack()`](https://github.com/archriss/react-native-snap-carousel/#available-methods) to work around [a random `FlatList` bug](https://github.com/facebook/react-native/issues/1831) that keeps content hidden until the carousel is scrolled
+* Hack around `ScrollView`/`FlatList` image rendering issues on Android
+* Fix issue with tappable dots when loop is enabled
+
 ## v3.4.0
 * Fix `snapToItem` call that results in snapping to the wrong item when `loop` is enabled
 * Fix issue that, in some use cases, prevents every items but the initial ones to be rendered
