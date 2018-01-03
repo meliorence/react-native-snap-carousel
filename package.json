@@ -1,6 +1,6 @@
 {
     "name": "react-native-snap-carousel",
-    "version": "3.4.0",
+    "version": "3.5.0",
     "description": "Swiper component for React Native with previews, snapping effect, parallax images, performant handling of huge numbers of items, and RTL support. Compatible with Android & iOS.",
     "main": "src/index.js",
     "repository": {
@@ -21,6 +21,7 @@
         "scroll",
         "scrolling",
         "items",
+        "edge",
         "snap",
         "android",
         "ios",
@@ -29,24 +30,24 @@
         "rtl"
     ],
     "author": "Archriss <contact@archriss.com> (github.com/archriss)",
-    "license": "ISC",
+    "license": "BSD-3-Clause",
     "dependencies": {
-        "prop-types": "^15.5.10",
-        "react-addons-shallow-compare": "15.6.0"
+        "prop-types": "^15.6.0",
+        "react-addons-shallow-compare": "15.6.2"
     },
     "peerDependencies": {
         "react": ">=15.0.0",
-        "react-native": ">=0.43.0"
+        "react-native": "*"
     },
     "devDependencies": {
-        "babel-eslint": "^7.2.3",
-        "eslint": "^3.19.0",
+        "babel-eslint": "^8.1.2",
+        "eslint": "^4.14.0",
         "eslint-config-standard": "^10.2.1",
         "eslint-config-standard-react": "^5.0.0",
-        "eslint-plugin-import": "^2.3.0",
-        "eslint-plugin-node": "^5.0.0",
-        "eslint-plugin-promise": "^3.5.0",
-        "eslint-plugin-react": "^7.0.1",
+        "eslint-plugin-import": "^2.8.0",
+        "eslint-plugin-node": "^5.2.1",
+        "eslint-plugin-promise": "^3.6.0",
+        "eslint-plugin-react": "^7.5.1",
         "eslint-plugin-standard": "^3.0.1"
     }
 }
