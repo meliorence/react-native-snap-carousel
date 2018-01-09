@@ -51,6 +51,7 @@ export default class Carousel extends Component {
         swipeThreshold: PropTypes.number,
         useScrollView: PropTypes.bool,
         vertical: PropTypes.bool,
+        shouldRTLAdaptations: PropTypes.bool,
         onSnapToItem: PropTypes.func
     };
 
@@ -80,7 +81,8 @@ export default class Carousel extends Component {
         shouldOptimizeUpdates: true,
         swipeThreshold: 20,
         useScrollView: !AnimatedFlatList,
-        vertical: false
+        vertical: false,
+        shouldRTLAdaptations: true
     }
 
     constructor (props) {
@@ -268,8 +270,8 @@ export default class Carousel extends Component {
     }
 
     _needsRTLAdaptations () {
-        const { vertical } = this.props;
-        return IS_RTL && !IS_IOS && !vertical;
+        const { vertical, shouldRTLAdaptations } = this.props;
+        return shouldRTLAdaptations && IS_RTL && !IS_IOS && !vertical;
     }
 
     _canLockScroll () {
