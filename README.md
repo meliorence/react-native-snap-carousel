@@ -11,6 +11,12 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 
 -----
 
+### :raised_hands: Coming soon: custom layouts
+
+![react-native-snap-carousel custom animations](https://i.imgur.com/IICEJkR.gif)
+
+-----
+
 ### :sparkles: Do you want an even better plugin? [Vote for React Native's feature requests](https://github.com/archriss/react-native-snap-carousel/issues/203) to let the Facebook team know what they need to improve!
 
 -----
@@ -24,7 +30,6 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 1. [Showcase](#showcase)
 1. [Usage](#usage)
 1. [Important note regarding Android](#important-note-regarding-android)
-1. [Migration from version 2.x](#migration-from-version-2x)
 1. [Props](#props)
 1. [Methods](#methods)
 1. [Getters](#getters)
@@ -33,6 +38,7 @@ Swiper component for React Native featuring **previews**, **snapping effect**, *
 1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
+1. [Migration from version 2.x](#migration-from-version-2x)
 1. [Roadmap](#roadmap)
 1. [Credits](#credits)
 
@@ -99,77 +105,6 @@ Android's debug mode is a mess: timeouts regularly desynchronize and scroll even
 
 > For more information, you can read the following notes: ["Android performance"](#android-performance) and ["Unreliable callbacks"](#unreliable-callbacks).
 
-## Migration from version 2.x
-
-Slides are no longer appended as direct children of the component since the plugin is now based on `FlatList` instead of `ScrollView`. There are two new props that takes care of their rendering: `data` and `renderItem` (both are inherited from `FlatList`).
-
-> :warning: **Since `FlatList` was introduced in React Native `0.43.x`, you need to use version `2.4.0` of the plugin if you're currently using an older release of RN. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
-
-If you were already looping throught an array of data to populate the carousel, the migration is pretty straightforward. Just pass your slides' data to the `data` prop, convert your slides' getter to a function and pass it to the `renderItem` prop: you're good to go!
-
-**From**
-```javascript
-    get slides () {
-        return this.state.entries.map((entry, index) => {
-            return (
-                <View key={`entry-${index}`} style={styles.slide}>
-                    <Text style={styles.title}>{ entry.title }</Text>
-                </View>
-            );
-        });
-    }
-
-    render () {
-        return (
-            <Carousel
-              sliderWidth={sliderWidth}
-              itemWidth={itemWidth}
-            >
-                { this.slides }
-            </Carousel>
-        );
-    }
-```
-
-**To**
-```javascript
-    _renderItem ({item, index}) {
-        return (
-            <View style={styles.slide}>
-                <Text style={styles.title}>{ item.title }</Text>
-            </View>
-        );
-    }
-
-    render () {
-        return (
-            <Carousel
-              data={this.state.entries}
-              renderItem={this._renderItem}
-              sliderWidth={sliderWidth}
-              itemWidth={itemWidth}
-            />
-        );
-    }
-```
-
-> Note that the `key` prop is no longer needed for carousel's items. If you want to provide a custom key, you should pass your own [`keyExtractor`](https://facebook.github.io/react-native/docs/flatlist.html#keyextractor) to the `<Carousel />`.
-
-If you were previously appending random types of children, you will need to rely on a specific bit of data to return the proper element from your `renderItem` function.
-
-**Example**
-```javascript
-    _renderItem ({item, index}) {
-        if (item.type === 'text') {
-            return <Text style={styles.textSlide} />;
-        } else if (item.type === 'image') {
-            return <Image style={styles.imageSlide} />;
-        } else {
-            return <View style={styles.viewSlide} />;
-        }
-    }
-```
-
 ## Props
 
 ### Required
@@ -226,7 +161,7 @@ Prop | Description | Type | Default
 `customAnimationType` | Custom [animation type](https://facebook.github.io/react-native/docs/animated.html#configuring-animations): either `'decay`, `'spring'` or `'timing'`. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around). | String | `'timing'`
 `inactiveSlideOpacity` | Value of the opacity effect applied to inactive slides | Number | `0.7`
 `inactiveSlideScale` | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
-`inactiveSlideShift` | Value of the 'translate' transform applied to inactive slides (see [#204](https://github.com/archriss/react-native-snap-carousel/issues/204) for an example usage). **It is not recommended to use this prop in conjunction with `customItemAnimationOptions`**. | Number | `0`
+`inactiveSlideShift` | Value of the 'translate' transform applied to inactive slides (see [#204](https://github.com/archriss/react-native-snap-carousel/issues/204) for an example usage). **It is not recommended to use this prop in conjunction with `customAnimationOptions`**. | Number | `0`
 `slideStyle` | Optional style for each item's container (the one whose scale and opacity are animated) | Animated View Style Object | `{}`
 
 ### Callbacks
@@ -569,6 +504,77 @@ The easiest workaround is to add `jest.unmock('ScrollView')` before importing th
 Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`. As such, this feature should be considered experimental since it might break with newer versions of React Native.
 
 Note that you may want to reverse the order of your data array for your items to be displayed in the proper RTL order. We've tried implementing it internally, but this led to numerous and unnecessary issues. You'll just have to do something as simple as `myCustomData.reverse()`.
+
+## Migration from version 2.x
+
+Slides are no longer appended as direct children of the component since the plugin is now based on `FlatList` instead of `ScrollView`. There are two new props that takes care of their rendering: `data` and `renderItem` (both are inherited from `FlatList`).
+
+> :warning: **Since `FlatList` was introduced in React Native `0.43.x`, you need to use version `2.4.0` of the plugin if you're currently using an older release of RN. Please note that we won't support this older version of the plugin.** Also, make sure to check [the relevant documentation](https://github.com/archriss/react-native-snap-carousel/blob/v2.4.0/README.md).
+
+If you were already looping throught an array of data to populate the carousel, the migration is pretty straightforward. Just pass your slides' data to the `data` prop, convert your slides' getter to a function and pass it to the `renderItem` prop: you're good to go!
+
+**From**
+```javascript
+    get slides () {
+        return this.state.entries.map((entry, index) => {
+            return (
+                <View key={`entry-${index}`} style={styles.slide}>
+                    <Text style={styles.title}>{ entry.title }</Text>
+                </View>
+            );
+        });
+    }
+
+    render () {
+        return (
+            <Carousel
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+            >
+                { this.slides }
+            </Carousel>
+        );
+    }
+```
+
+**To**
+```javascript
+    _renderItem ({item, index}) {
+        return (
+            <View style={styles.slide}>
+                <Text style={styles.title}>{ item.title }</Text>
+            </View>
+        );
+    }
+
+    render () {
+        return (
+            <Carousel
+              data={this.state.entries}
+              renderItem={this._renderItem}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+            />
+        );
+    }
+```
+
+> Note that the `key` prop is no longer needed for carousel's items. If you want to provide a custom key, you should pass your own [`keyExtractor`](https://facebook.github.io/react-native/docs/flatlist.html#keyextractor) to the `<Carousel />`.
+
+If you were previously appending random types of children, you will need to rely on a specific bit of data to return the proper element from your `renderItem` function.
+
+**Example**
+```javascript
+    _renderItem ({item, index}) {
+        if (item.type === 'text') {
+            return <Text style={styles.textSlide} />;
+        } else if (item.type === 'image') {
+            return <Image style={styles.imageSlide} />;
+        } else {
+            return <View style={styles.viewSlide} />;
+        }
+    }
+```
 
 ## Roadmap
 
