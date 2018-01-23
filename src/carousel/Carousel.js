@@ -149,8 +149,8 @@ export default class Carousel extends Component {
         if (props.vertical && (!props.sliderHeight || !props.itemHeight)) {
             console.warn('react-native-snap-carousel: You need to specify both `sliderHeight` and `itemHeight` for vertical carousels');
         }
-        if (props.apparitionDelay && !IS_IOS) {
-            console.warn('react-native-snap-carousel: Using `apparitionDelay` is not recommended since it can lead to rendering issues on Android');
+        if (props.apparitionDelay && !IS_IOS && !props.useScrollView) {
+            console.warn('react-native-snap-carousel: Using `apparitionDelay` on Android is not recommended since it can lead to rendering issues');
         }
         if (props.onScrollViewScroll) {
             console.warn('react-native-snap-carousel: Prop `onScrollViewScroll` has been removed. Use `onScroll` instead');
@@ -516,17 +516,22 @@ export default class Carousel extends Component {
                 });
             }
 
-            interpolators.push({
-                opacity: animatedValue,
-                scale: animatedValue
-            });
+            interpolators.push(animatedValue);
         });
 
         this.setState({ interpolators });
     }
 
     _getSlideAnimation (index, toValue) {
+        const { interpolators } = this.state;
         const { customAnimationType, customAnimationOptions } = this.props;
+
+        const animatedValue = interpolators && interpolators[index];
+
+        if (!animatedValue && animatedValue !== 0) {
+            return false;
+        }
+
         const animationCommonOptions = {
             isInteraction: false,
             useNativeDriver: true,
@@ -536,11 +541,11 @@ export default class Carousel extends Component {
 
         return Animated.parallel([
             Animated['timing'](
-                this.state.interpolators[index].opacity,
+                animatedValue,
                 { ...animationCommonOptions, easing: Easing.linear }
             ),
             Animated[customAnimationType](
-                this.state.interpolators[index].scale,
+                animatedValue,
                 { ...animationCommonOptions }
             )
         ]);
@@ -1130,9 +1135,7 @@ export default class Carousel extends Component {
 
         const animatedValue = interpolators && interpolators[index];
 
-        if (!animatedValue ||
-            (!animatedValue.opacity && animatedValue.opacity !== 0) ||
-            (!animatedValue.scale && animatedValue.scale !== 0)) {
+        if (!animatedValue && animatedValue !== 0) {
             return false;
         }
 
@@ -1141,17 +1144,17 @@ export default class Carousel extends Component {
         const translateProp = vertical ? 'translateX' : 'translateY';
 
         const animatedStyle = animate ? {
-            opacity: animatedValue.opacity.interpolate({
+            opacity: animatedValue.interpolate({
                 inputRange: [0, 1],
                 outputRange: [inactiveSlideOpacity, 1]
             }),
             transform: [{
-                scale: animatedValue.scale.interpolate({
+                scale: animatedValue.interpolate({
                     inputRange: [0, 1],
                     outputRange: [inactiveSlideScale, 1]
                 })
             }, {
-                [translateProp]: animatedValue.opacity.interpolate({
+                [translateProp]: animatedValue.interpolate({
                     inputRange: [0, 1],
                     outputRange: [inactiveSlideShift, 0]
                 })
