@@ -94,6 +94,7 @@ export default class Carousel extends Component {
         // The following values are not stored in the state because 'setState()' is asynchronous
         // and this results in an absolutely crappy behavior on Android while swiping (see #156)
         const initialActiveItem = this._getFirstItem(props.firstItem);
+        this._mounted = true;
         this._activeItem = initialActiveItem;
         this._previousActiveItem = initialActiveItem;
         this._previousFirstItem = initialActiveItem;
@@ -162,6 +163,7 @@ export default class Carousel extends Component {
         const _firstItem = this._getFirstItem(firstItem);
 
         const apparitionCallback = () => {
+            if (!this._mounted) return;
             this.setState({ hideCarousel: false });
             if (autoplay) {
                 this.startAutoplay();
@@ -240,6 +242,7 @@ export default class Carousel extends Component {
     }
 
     componentWillUnmount () {
+        this._mounted = false;
         this.stopAutoplay();
         clearTimeout(this._apparitionTimeout);
         clearTimeout(this._hackSlideAnimationTimeout);
