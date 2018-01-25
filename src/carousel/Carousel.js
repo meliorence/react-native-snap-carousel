@@ -5,9 +5,11 @@ import shallowCompare from 'react-addons-shallow-compare';
 import {
     defaultScrollInterpolator,
     stackScrollInterpolator,
+    tinderScrollInterpolator,
     defaultAnimatedStyles,
     shiftAnimatedStyles,
-    stackAnimatedStyles
+    stackAnimatedStyles,
+    tinderAnimatedStyles
 } from '../utils/animations';
 
 const IS_IOS = Platform.OS === 'ios';
@@ -50,12 +52,13 @@ export default class Carousel extends Component {
         inactiveSlideOpacity: PropTypes.number,
         inactiveSlideScale: PropTypes.number,
         inactiveSlideShift: PropTypes.number,
-        layout: PropTypes.oneOf(['default', 'stack']),
+        layout: PropTypes.oneOf(['default', 'stack', 'tinder']),
+        layoutCardOffset: PropTypes.number,
         lockScrollWhileSnapping: PropTypes.bool,
         loop: PropTypes.bool,
         loopClonesPerSide: PropTypes.number,
         scrollInterpolator: PropTypes.func,
-        slideInterpolatedStyle: PropTypes.object,
+        slideInterpolatedStyle: PropTypes.func,
         slideStyle: Animated.View.propTypes.style,
         shouldOptimizeUpdates: PropTypes.bool,
         swipeThreshold: PropTypes.number,
@@ -278,7 +281,7 @@ export default class Carousel extends Component {
 
     _needsScrollView () {
         const { useScrollView } = this.props;
-        return useScrollView || !AnimatedFlatList;
+        return useScrollView || !AnimatedFlatList || this._shouldUseStackLayout() || this._shouldUseTinderLayout();
     }
 
     _needsRTLAdaptations () {
@@ -300,10 +303,11 @@ export default class Carousel extends Component {
         const { inactiveSlideOpacity, inactiveSlideScale, scrollInterpolator, slideInterpolatedStyle } = props;
         return inactiveSlideOpacity < 1 ||
             inactiveSlideScale < 1 ||
-            scrollInterpolator ||
-            slideInterpolatedStyle ||
+            !!scrollInterpolator ||
+            !!slideInterpolatedStyle ||
             this._shouldUseShiftLayout() ||
-            this._shouldUseStackLayout();
+            this._shouldUseStackLayout() ||
+            this._shouldUseTinderLayout();
     }
 
     _shouldUseCustomAnimation () {
@@ -318,6 +322,10 @@ export default class Carousel extends Component {
 
     _shouldUseStackLayout () {
         return this.props.layout === 'stack';
+    }
+
+    _shouldUseTinderLayout () {
+        return this.props.layout === 'tinder';
     }
 
     _getCustomData (props = this.props) {
@@ -540,6 +548,8 @@ export default class Carousel extends Component {
                     interpolator = scrollInterpolator(_index, props);
                 } else if (this._shouldUseStackLayout()) {
                     interpolator = stackScrollInterpolator(_index, props);
+                } else if (this._shouldUseTinderLayout()) {
+                    interpolator = tinderScrollInterpolator(_index, props);
                 }
 
                 if (!interpolator || !interpolator.inputRange || !interpolator.outputRange) {
@@ -1052,12 +1062,14 @@ export default class Carousel extends Component {
     }
 
     _getSlideInterpolatedStyle (index, animatedValue) {
-        const { slideInterpolatedStyle } = this.props;
+        const { layoutCardOffset, slideInterpolatedStyle } = this.props;
 
         if (slideInterpolatedStyle) {
-            return slideInterpolatedStyle(index, animatedValue, this.props);
+            return slideInterpolatedStyle(index, animatedValue, this.props, this._activeItem);
+        } else if (this._shouldUseTinderLayout()) {
+            return tinderAnimatedStyles(index, animatedValue, this.props, layoutCardOffset);
         } else if (this._shouldUseStackLayout()) {
-            return stackAnimatedStyles(index, animatedValue, this.props);
+            return stackAnimatedStyles(index, animatedValue, this.props, layoutCardOffset);
         } else if (this._shouldUseShiftLayout()) {
             return shiftAnimatedStyles(index, animatedValue, this.props);
         } else {
