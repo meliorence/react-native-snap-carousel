@@ -20,14 +20,16 @@ export default StyleSheet.create({
         ...StyleSheet.absoluteFillObject
     },
     scrollview: {
-        flex: 1,
-        paddingTop: 50
-    },
-    scrollviewContentContainer: {
-        paddingBottom: 50
+        flex: 1
     },
     exampleContainer: {
-        marginBottom: 30
+        paddingVertical: 30
+    },
+    exampleContainerDark: {
+        backgroundColor: colors.black
+    },
+    exampleContainerLight: {
+        backgroundColor: 'white'
     },
     title: {
         paddingHorizontal: 30,
@@ -36,6 +38,9 @@ export default StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center'
+    },
+    titleDark: {
+        color: colors.black
     },
     subtitle: {
         marginTop: 5,
@@ -47,7 +52,8 @@ export default StyleSheet.create({
         textAlign: 'center'
     },
     slider: {
-        marginTop: 15
+        marginTop: 15,
+        overflow: 'visible' // for custom animations
     },
     sliderContentContainer: {
         paddingVertical: 10 // for custom animation
