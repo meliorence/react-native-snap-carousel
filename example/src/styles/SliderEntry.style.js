@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { colors } from 'example/src/styles/index.style';
 
+const IS_IOS = Platform.OS === 'ios';
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 function wp (percentage) {
@@ -8,7 +9,7 @@ function wp (percentage) {
     return Math.round(value);
 }
 
-const slideHeight = viewportHeight * 0.4;
+const slideHeight = viewportHeight * 0.36;
 const slideWidth = wp(75);
 const itemHorizontalMargin = wp(2);
 
@@ -24,8 +25,21 @@ export default StyleSheet.create({
         paddingHorizontal: itemHorizontalMargin,
         paddingBottom: 18 // needed for shadow
     },
+    shadow: {
+        position: 'absolute',
+        top: 0,
+        left: itemHorizontalMargin,
+        right: itemHorizontalMargin,
+        bottom: 18,
+        shadowColor: colors.black,
+        shadowOpacity: 0.25,
+        shadowOffset: { width: 0, height: 10 },
+        shadowRadius: 10,
+        borderRadius: entryBorderRadius
+    },
     imageContainer: {
         flex: 1,
+        marginBottom: IS_IOS ? 0 : -1, // Prevent a random Android rendering issue
         backgroundColor: 'white',
         borderTopLeftRadius: entryBorderRadius,
         borderTopRightRadius: entryBorderRadius
@@ -36,11 +50,11 @@ export default StyleSheet.create({
     image: {
         ...StyleSheet.absoluteFillObject,
         resizeMode: 'cover',
-        borderRadius: Platform.OS === 'ios' ? entryBorderRadius : 0,
+        borderRadius: IS_IOS ? entryBorderRadius : 0,
         borderTopLeftRadius: entryBorderRadius,
         borderTopRightRadius: entryBorderRadius
     },
-    // image's border radius is buggy on ios; let's hack it!
+    // image's border radius is buggy on iOS; let's hack it!
     radiusMask: {
         position: 'absolute',
         bottom: 0,
