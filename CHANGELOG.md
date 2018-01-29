@@ -1,8 +1,16 @@
+## v3.6.0
+* Add the `layout` prop to let users choose between 3 different carousel layouts (see [the documentation](https://github.com/archriss/react-native-snap-carousel#layouts-and-custom-interpolations))
+![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
+![react-native-snap-carousel stack layout](https://i.imgur.com/foMIGM2.gif)
+![react-native-snap-carousel tinder layout](https://i.imgur.com/R7OpEFs.gif)
+* Add the ability to define dynamic styles based on scroll position with props `scrollInterpolator` and `slideInterpolatedStyle`. This allows implementing custom animations and layouts (see [the dedicated documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md)).
+* Rename props `customAnimationType` and `customAnimationOptions` to `activeAnimationType` and `activeAnimationOptions`
+
 ## v3.5.0
-* Add the ability to render either a `ScrollView` component or a `FlatList` one (default) ([see prop `useScrollView`](https://github.com/archriss/react-native-snap-carousel/#behavior))
-* Add support for versions of React Native < `0.43` (see [this note](https://github.com/archriss/react-native-snap-carousel/#react-native-version))
-* Add support for custom animations ([see props `customAnimationType` and `customAnimationOptions`](https://github.com/archriss/react-native-snap-carousel/#style-and-animation))
-* Add method [`triggerRenderingHack()`](https://github.com/archriss/react-native-snap-carousel/#available-methods) to work around [a random `FlatList` bug](https://github.com/facebook/react-native/issues/1831) that keeps content hidden until the carousel is scrolled
+* Add the ability to render either a `ScrollView` component or a `FlatList` one (default) ([see prop `useScrollView`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#behavior))
+* Add support for versions of React Native < `0.43` (see [this note](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#react-native-version))
+* Add support for custom animations ([see props `customAnimationType` and `customAnimationOptions`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation))
+* Add method [`triggerRenderingHack()`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#available-methods) to work around [a random `FlatList` bug](https://github.com/facebook/react-native/issues/1831) that keeps content hidden until the carousel is scrolled
 * Hack around `ScrollView`/`FlatList` image rendering issues on Android
 * Fix issue with tappable dots when loop is enabled
 
@@ -32,7 +40,7 @@
 * Make tappable `PaginationDot` snaps to the right item when loop is enabled
 
 ## v3.3.0
-* Bring in the most wanted 'infinite loop' feature :tada: (see [the 'Loop' section](https://github.com/archriss/react-native-snap-carousel#loop) for more info about the new props `loop` and `loopClonesPerSide`)
+* Bring in the most wanted 'infinite loop' feature :tada: (see [the 'Loop' section](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#loop) for more info about the new props `loop` and `loopClonesPerSide`)
 * Improve Android behavior when momentum is disabled
 * Guard against potential errors when component is unmounted
 * Add prop `lockScrollWhileSnapping` to improve behavior when momentum is disabled
@@ -69,14 +77,14 @@
 ### Breaking changes
 * Plugin is now built on top of `FlatList`, which allows for huge performance optimizations. From now on, items must be rendered using props `data` and `renderItem`.
 ### General
-* Add `ParallaxImage` component (see the specific documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/parallaximage/README.md))
+* Add `ParallaxImage` component (see the specific documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PARALLAX_IMAGE.md))
 * Add prop `activeSlideAlignment`
 * Fix issue with autoplay when setting `scrollEnabled` to `false`
 * Prevent going back to the first item when overscrolling the last one
 * Prevent callback from being called at the wrong time in some specific scenarios
 
 ## v2.4.0
-* Add `Pagination` component (see the specific documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/pagination/README.md))
+* Add `Pagination` component (see the specific documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PAGINATION.md))
 * Allow `firstItem` to be changed dynamically
 * Allow `0` value for `carouselHorizontalPadding` and `carouselVerticalPadding` (thanks [@bonbonez](https://github.com/bonbonez))
 * Keep the easing of slide's opacity animation linear
@@ -105,7 +113,7 @@
 * Implement vertical mode (prop `vertical`)
 * Make sure that current active item is properly updated when snapping
 * Prevent issues when 'sliderWidth' is smaller than viewport's width
-* Recalculate card positions on layout to handle rotation (thanks [@andrewpope](https://github.com/andrewpope)); make sure to read [this note](https://github.com/archriss/react-native-snap-carousel#handling-device-rotation)
+* Recalculate card positions on layout to handle rotation (thanks [@andrewpope](https://github.com/andrewpope)); make sure to read [this note](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md#handling-device-rotation)
 * Refresh card positions if slider and/or item's dimensions are updated (thanks [@hoangnm](https://github.com/hoangnm))
 * Add props `scrollEndDragThrottleValue` and `snapCallbackDebounceValue`
 * Expose `View`'s `onLayout` prop
