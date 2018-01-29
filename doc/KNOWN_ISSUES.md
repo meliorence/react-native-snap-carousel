@@ -2,21 +2,21 @@
 
 ## Table of contents
 
-1. [FlatList and ScrollView's limitations](#flatlist-and-scrollviews-limitations)
+1. [`FlatList` and `ScrollView`'s limitations](#flatlist-and-scrollviews-limitations)
 1. [React Native version](#react-native-version)
 1. [Android performance](#android-performance)
 1. [Unreliable callbacks](#unreliable-callbacks)
 1. [Error with Jest](#error-with-jest)
 1. [RTL support (experimental)](#rtl-support-experimental)
 
-## FlatList and ScrollView's limitations
+## `FlatList` and `ScrollView`'s limitations
 
 Note that this plugin is built on top of React Native's `FlatList` which, in turn, is based on `VirtualizedList` and `ScrollView`. Unfortunately, their implementations have flaws that affect the plugin, the most problematic ones being the following:
 - there is no `scrollEnd` event
 - `scrollTo` method doesn't accept any callback
 - Android's `scrollTo` animation is quite brutal
 - it is not possible to specify a scroll duration
-- there are performance issues with the `FlatList` component.
+- there are rendering and performance issues with the `FlatList` component.
 
 On top of that, `FlatList` has [its own set of bugs and buggy behaviors](https://github.com/facebook/react-native/issues?utf8=%E2%9C%93&q=flatlist).
 

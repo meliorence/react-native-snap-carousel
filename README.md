@@ -13,7 +13,7 @@ Swiper component for React Native featuring **previews**, **multiple layouts**, 
 
 ### :raised_hands: New feature: layouts
 
-Go [there](#layouts-and-custom-interpolations) if you want to learn more about it.
+[Do you want to find out more?](#layouts-and-custom-interpolations)
 
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
 ![react-native-snap-carousel tinder layout](https://i.imgur.com/R7OpEFs.gif)
@@ -33,15 +33,14 @@ Go [there](#layouts-and-custom-interpolations) if you want to learn more about i
 
 1. [Showcase](#showcase)
 1. [Usage](#usage)
-1. [Important note regarding Android](#important-note-regarding-android)
 1. [Props, methods and getters](#props-methods-and-getters)
+1. [Important note regarding Android](#important-note-regarding-android)
 1. [Layouts and custom interpolations](#layouts-and-custom-interpolations)
 1. [`ParallaxImage` component](#parallaximage-component)
 1. [`Pagination` component](#pagination-component)
 1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
-1. [Migration from version 2.x](#migration-from-version-2x)
 1. [Roadmap](#roadmap)
 1. [Credits](#credits)
 
@@ -98,6 +97,10 @@ export class MyCarousel extends Component {
 }
 ```
 
+## Props, methods and getters
+
+You can find the dedicated documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md).
+
 ## Important note regarding Android
 
 ![react-native-snap-carousel android](https://i.imgur.com/03iuB2Um.jpg)
@@ -106,11 +109,7 @@ Android's debug mode is a mess: timeouts regularly desynchronize and scroll even
 
 :warning: **Therefore you should always check if the issue you experience also happens in a production environment. This is, sadly, the only way to test the real performance and behavior of the carousel.**
 
-> For more information, you can read the following notes: ["Android performance"](#android-performance) and ["Unreliable callbacks"](#unreliable-callbacks).
-
-## Props, methods and getters
-
-You can find the dedicated documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md).
+> For more information, you can read the following notes: ["Android performance"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#android-performance) and ["Unreliable callbacks"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#unreliable-callbacks).
 
 ## Layouts and custom interpolations
 
@@ -118,7 +117,7 @@ You can find the dedicated documentation [here](https://github.com/archriss/reac
 
 In version `3.6.0`, we've added two new layouts on top of the original one: the first one is called 'stack' since it mimics a stack of cards, and the other one is called 'tinder' since it provides a Tinder-like animation.
 
-You can choose between the three of them using [the new prop `layout`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation) and you can modify the default card offset in the 'stack' and 'tinder' layouts with [prop `layoutCardOffset`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation)]
+You can choose between the three of them using [the new prop `layout`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation) and you can modify the default card offset in the 'stack' and 'tinder' layouts with [prop `layoutCardOffset`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation).
 
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
 ```javascript
@@ -143,7 +142,7 @@ A few things worth noting:
 
 ### Custom interpolations
 
-On top of the new layouts, we've exposed the logic we used so that users can create their own awesome layouts! If you're interested, take a deep breath and see [the dedicated documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md).
+:book: On top of the new layouts, we've exposed the logic we used so that users can create their own awesome layouts! If you're interested, take a deep breath and see [the dedicated documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md).
 
 Here are two examples of what can easily be achieved (you can explore [the source code](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js) and try it live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)):
 
