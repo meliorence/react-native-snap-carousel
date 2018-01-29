@@ -31,10 +31,7 @@ export function defaultScrollInterpolator (index, carouselProps) {
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
     const outputRange = [0, 1, 0];
 
-    return {
-        inputRange,
-        outputRange
-    };
+    return { inputRange, outputRange };
 }
 export function defaultAnimatedStyles (index, animatedValue, carouselProps) {
     let animatedOpacity = {};
@@ -123,10 +120,7 @@ export function stackScrollInterpolator (index, carouselProps) {
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
     const outputRange = range;
 
-    return {
-        inputRange,
-        outputRange
-    };
+    return { inputRange, outputRange };
 }
 export function stackAnimatedStyles (index, animatedValue, carouselProps, cardOffset) {
     const sizeRef = carouselProps.vertical ? carouselProps.itemHeight : carouselProps.itemWidth;
@@ -216,10 +210,7 @@ export function tinderScrollInterpolator (index, carouselProps) {
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
     const outputRange = range;
 
-    return {
-        inputRange,
-        outputRange
-    };
+    return { inputRange, outputRange };
 }
 export function tinderAnimatedStyles (index, animatedValue, carouselProps, cardOffset) {
     const sizeRef = carouselProps.vertical ? carouselProps.itemHeight : carouselProps.itemWidth;

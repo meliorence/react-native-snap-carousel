@@ -312,7 +312,7 @@ export default class Carousel extends Component {
 
     _shouldUseCustomAnimation () {
         const { activeAnimationOptions } = this.props;
-        return !!activeAnimationOptions;
+        return !!activeAnimationOptions && !this._shouldUseStackLayout() && !this._shouldUseTinderLayout();
     }
 
     _shouldUseShiftLayout () {
@@ -1065,7 +1065,7 @@ export default class Carousel extends Component {
         const { layoutCardOffset, slideInterpolatedStyle } = this.props;
 
         if (slideInterpolatedStyle) {
-            return slideInterpolatedStyle(index, animatedValue, this.props, this._activeItem);
+            return slideInterpolatedStyle(index, animatedValue, this.props);
         } else if (this._shouldUseTinderLayout()) {
             return tinderAnimatedStyles(index, animatedValue, this.props, layoutCardOffset);
         } else if (this._shouldUseStackLayout()) {
