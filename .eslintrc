@@ -1,37 +1,38 @@
 {
-    "parser": "babel-eslint",
-    "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "plugins": ["react"],
-        "extends": ["eslint:recommended", "plugin:react/recommended"]
-    },
-    "extends": [
+    "parser"  : "babel-eslint",
+    "extends" : [
         "standard",
         "standard-react"
-    ],
-    "env": {
-        "browser": true
+     ],
+     "plugins": [
+         "react"
+     ],
+    "env" : {
+        "browser" : true,
+        "es6": true
     },
     "globals": {
         "__DEV__": false
     },
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
     "rules": {
-        "indent": [2, 4],
         "generator-star-spacing": 0,
-        "padded-blocks": 0,
-        "react/jsx-indent": [0, 4],
-        "jsx-indent-props": [0, 4],
-        "react/jsx-curly-spacing": [0, "never"],
-        "react/jsx-boolean-value": [0, "never"],
-        "semi": [2, "always"],
-        "operator-linebreak": [2, "after"],
+        "indent": [2, 4, { "ignoredNodes": ["JSXAttribute", "JSXSpreadAttribute"], "SwitchCase": 1 }],
         "no-warning-comments": [1, {
             "terms": ["todo", "fixme", "xxx"],
             "location": "start"
-        }]
+        }],
+        "operator-linebreak": [2, "after"],
+        "padded-blocks": 0,
+        "semi": [2, "always"],
+        "react/jsx-indent-props": [2, 2],
+        "react/jsx-boolean-value": [0, "never"],
+        "react/jsx-curly-spacing": [0, "never"],
+        "react/jsx-indent": [2, 4]
     }
 }
