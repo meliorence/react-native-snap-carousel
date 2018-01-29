@@ -1,5 +1,5 @@
 # react-native-snap-carousel
-Swiper component for React Native featuring **previews**, **snapping effect**, **parallax images**, **performant handling of huge numbers of items**, and **RTL support**. Compatible with Android & iOS.
+Swiper component for React Native featuring **previews**, **multiple layouts**, **parallax images**, **performant handling of huge numbers of items**, and **RTL support**. Compatible with Android & iOS.
 
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-snap-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-snap-carousel)
@@ -31,7 +31,6 @@ Go [there](#layouts-and-custom-interpolations) if you want to learn more about i
 
 ## Table of contents
 
-1. [New feature](#new-feature)
 1. [Showcase](#showcase)
 1. [Usage](#usage)
 1. [Important note regarding Android](#important-note-regarding-android)
@@ -117,9 +116,9 @@ You can find the dedicated documentation [here](https://github.com/archriss/reac
 
 ### Built-in layouts
 
-In version `3.6.0`, we've added two new layouts on top of the default one: one called 'stack', which mimic a stack of cards, and another called 'tinder', since it has a Tinder-like animation.
+In version `3.6.0`, we've added two new layouts on top of the original one: the first one is called 'stack' since it mimics a stack of cards, and the other one is called 'tinder' since it provides a Tinder-like animation.
 
-You can choose between the three of them with [the new prop `layout`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation) and you can change the card offset in the 'stack' and 'tinder' layouts with [prop `layoutCardOffset`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation)]
+You can choose between the three of them using [the new prop `layout`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation) and you can modify the default card offset in the 'stack' and 'tinder' layouts with [prop `layoutCardOffset`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation)]
 
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
 ```javascript
@@ -139,12 +138,12 @@ You can choose between the three of them with [the new prop `layout`](https://gi
 ```
 
 A few things worth noting:
-* As you can see, the effect had to be inverted on Android. This is because of [a really annoying Android-specific bug](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#android).
-* Even though the new layouts have been creted with horizontal carousels in mind, they will also work with vertical ones \o/
+* As you can see, the effect had to be inverted on Android. This has to do with [a really annoying Android-specific bug](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#android).
+* Even though the new layouts have been created with horizontal carousels in mind, they will also work with vertical ones \o/
 
 ### Custom interpolations
 
-On top of the new layouts, we've exposed the logic we used so that users can create more awesome layouts! If you're interested, take a deep breath and see [the dedicated documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md).
+On top of the new layouts, we've exposed the logic we used so that users can create their own awesome layouts! If you're interested, take a deep breath and see [the dedicated documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md).
 
 Here are two examples of what can easily be achieved (you can explore [the source code](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js) and try it live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)):
 
@@ -174,7 +173,7 @@ You can find the following example in the [`/example` folder](https://github.com
 
 ## Tips and tricks
 
-All the useful tips and tricks have been gathered [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md) - there is a bunch of them, so this section is a must-read!
+All the useful tips and tricks have been gathered [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md) - there is a bunch of them, which makes **this section a must-read!**
 
 ## Known issues
 

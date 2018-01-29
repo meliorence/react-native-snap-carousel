@@ -1,4 +1,4 @@
-#Props, methods and getters
+# Props, methods and getters
 
 ## Table of contents
 
