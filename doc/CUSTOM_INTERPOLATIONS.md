@@ -1,5 +1,7 @@
 # Implementing custom interpolations
 
+> :warning: **This guide describes an advanced feature that is not intended for the faint-hearted**. Your sanity will be seriously challenged by the two most-feared enemies of this plugin: Android and React Native's `FlatList`. You **will** discover bugs that will drive you mad and, as a result, your aging process will accelerate drastically. Consider yourself warned and make sure to read [the caveats](#caveats) first and foremost!
+
 ## Table of contents
 
 1. [Preview](#preview)
@@ -7,11 +9,9 @@
 1. [Step-by-step example](#step-by-step-example)
 1. [Caveats](#caveats)
 
-> :warning: **This guide describes an advanced feature that is not intended for the faint-hearted**. Your sanity will be seriously challenged by the two most-feared enemies of this plugin: Android and React Native's `FlatList`. You **will** discover bugs that will drive you mad and, as a result, your aging process will accelerate drastically. Consider yourself warned and make sure to read [the caveats](#caveats) first and foremost!
-
 ## Preview
 
-Version `3.6.0` introduced a new cool feature: layouts. On top of the default one, we've implemented two other ways of stacking and animating items in the carousel. You can choose between these with [prop `layout`](https://github.com/archriss/react-native-snap-carousel/#style-and-animation). Here how each one looks like (the reason why iOS and Android are differents [will be explained later](#caveats)):
+Version `3.6.0` introduced a new cool feature: layouts. On top of the default one, we've implemented two other ways of stacking and animating items in the carousel. You can choose between these with [prop `layout`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation). Here how each one looks like (the reason why iOS and Android are differents [will be explained later](#caveats)):
 
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
 ```javascript
@@ -36,7 +36,7 @@ We are able to do all this thanks to React Native's great [Animated API](https:/
 ![react-native-snap-carousel custom layout](https://i.imgur.com/OrdLsCM.gif)
 ![react-native-snap-carousel custom layout](https://i.imgur.com/Nht4w9D.gif)
 
-We've decided to expose a way for users to provide their own interpolators, customize their carousels and create awesome animations! Note that you can find the source code of the built-in layouts [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/utils/animations.js#L5:L24) and the source code of the custom examples [here](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js). Taking a look at these is a very good way to understand how it works.
+We've decided to expose a way for users to provide their own interpolators, customize their carousels and create awesome animations! Note that you can find the source code of the built-in layouts [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/utils/animations.js) and the source code of the custom examples [here](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js). Taking a look at these is a very good way to understand how it works.
 
 ## Usage
 
@@ -78,7 +78,7 @@ This prop is where the magic happens and where you're finally able to bend item'
 
 Based on the range you declared in `scrollInterpolator`, you can now interpolate values and do whatever you want.
 
-> : bulb: Unlike what you need to do in `scrollInterpolator`, the `inputRange` you declare in `slideInterpolatedStyle` has to be in the regular order.
+> :bulb: Unlike what you need to do in `scrollInterpolator`, the `inputRange` you declare in `slideInterpolatedStyle` has to be in a regular order.
 
 Consider the following:
 
@@ -94,7 +94,7 @@ function animatedStyle = (index, animatedValue, carouselProps) => {
 }
 ```
 
-This will translate into:
+It will translate into:
 - item `-1` (the previous one) will have an opacity of `0`
 - item `0` (the active one) will have an opacity of `1`
 - item `1` (the next one) will have an opacity of `0.5`.
@@ -105,7 +105,7 @@ When you scroll, items' opacity will progressively animate from one value to the
 
 ## Step-by-step example
 
-It is recommended to take a look at [the source code of the built-in layouts](https://github.com/archriss/react-native-snap-carousel/blob/master/src/utils/animations.js#L5:L24) and at [the source code the custom examples](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js); you'll learn a lot!
+It is recommended to take a look at [the source code of the built-in layouts](https://github.com/archriss/react-native-snap-carousel/blob/master/src/utils/animations.js) and at [the source code the custom examples](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js); you'll learn a lot!
 
 For those who want to follow through a step-by-step tutorial, the following is for you.
 
@@ -250,7 +250,7 @@ export default class MyCustomCarousel extends PureComponent {
 }
 ```
 
-Here is the result, which you can try it live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example):
+Here is the result, which you can try live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example):
 
 ![react-native-snap-carousel custom layout](https://i.imgur.com/slnTbyG.gif)
 

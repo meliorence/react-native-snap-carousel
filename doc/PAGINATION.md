@@ -2,7 +2,7 @@
 
 Starting with version `2.4.0`, a customizable `<Pagination />` component has been added. This is how it looks like with its default configuration:
 
-![react-native-snap-carousel pagination](http://i.imgur.com/FLQcGGL.gif)
+![react-native-snap-carousel pagination](https://i.imgur.com/FLQcGGL.gif)
 
 ## Table of contents
 

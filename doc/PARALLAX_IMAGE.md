@@ -2,7 +2,7 @@
 
 Version `3.0.0` introduced a `<ParallaxImage />` component, an image component aware of carousel's current scroll position and therefore able to display a nice parallax effect.
 
-![react-native-snap-carousel parallax image](http://i.imgur.com/6iIb4SR.gif)
+![react-native-snap-carousel parallax image](https://i.imgur.com/6iIb4SR.gif)
 
 ## Props
 

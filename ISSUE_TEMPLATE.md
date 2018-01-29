@@ -40,7 +40,7 @@
 (Write your answer here.)
 
 <!--
-  If you haven't been able to reproduce the bug in production mode, it probably has to do with React Native's limitations (see ["Known issues"](https://github.com/archriss/react-native-snap-carousel/#known-issues)). Chances are we won't be able to do anything about it.
+  If you haven't been able to reproduce the bug in production mode, it probably has to do with React Native's limitations (see ["Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md)). Chances are we won't be able to do anything about it.
 -->
 
 ### Have you been able to reproduce the bug in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)?
