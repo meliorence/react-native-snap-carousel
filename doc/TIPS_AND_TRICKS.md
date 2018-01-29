@@ -142,7 +142,7 @@ export class MyCarousel extends Component {
 
 **If you are using the plugin without the preview effect (meaning that your slides, as well as your slider, are viewport wide), we do not recommend using this plugin.**
 
-You'll be better off with [`react-native-swiper`](https://github.com/leecade/react-native-swiper) for the simple reason that it implements the `ViewPagerAndroid` component, which provides a way better overall feeling on Android, whereas we must hack our way around [the frustrating limitations of the `ScrollView` component](#flatlist-and-scrollviews-limitations).
+You'll be better off with [`react-native-swiper`](https://github.com/leecade/react-native-swiper) for the simple reason that it implements the `ViewPagerAndroid` component, which provides a way better overall feeling on Android, whereas we must hack our way around [the frustrating limitations of the `ScrollView` component](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#flatlist-and-scrollviews-limitations).
 
 ## Handling device rotation
 
