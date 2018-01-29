@@ -7,7 +7,7 @@
 1. [Carousel's stretched height](#carousels-stretched-height)
 1. [Items' dynamic height](#items-dynamic-height)
 1. [Fullscreen slides](#fullscreen-slides)
-1. [Viewport wide slides / no preview effect](#viewport-wide-slides-no-preview-effect)
+1. [Viewport wide slides / no preview effect](#viewport-wide-slides--no-preview-effect)
 1. [Handling device rotation](#handling-device-rotation)
 1. [Native-powered animations](#native-powered-animations)
 1. [Optimizing performance](#optimizing-performance)

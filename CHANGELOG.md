@@ -1,5 +1,5 @@
 ## v3.6.0
-* Add the `layout` prop to let users choose between 3 different carousel layouts (see [the documentation](https://github.com/archriss/react-native-snap-carousel#layouts-and-custom-interpolations))
+* Add a `layout` prop to let users choose between 3 different carousel layouts (see [the documentation](https://github.com/archriss/react-native-snap-carousel#layouts-and-custom-interpolations))
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
 ![react-native-snap-carousel stack layout](https://i.imgur.com/foMIGM2.gif)
 ![react-native-snap-carousel tinder layout](https://i.imgur.com/R7OpEFs.gif)
