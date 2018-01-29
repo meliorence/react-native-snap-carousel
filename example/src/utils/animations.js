@@ -6,14 +6,11 @@ function scrollInterpolator1 (index, carouselProps) {
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
     const outputRange = range;
 
-    return {
-        inputRange,
-        outputRange
-    };
+    return { inputRange, outputRange };
 }
 function animatedStyles1 (index, animatedValue, carouselProps) {
     const sizeRef = carouselProps.vertical ? carouselProps.itemHeight : carouselProps.itemWidth;
-    const mainTranslateProp = carouselProps.vertical ? 'translateY' : 'translateX';
+    const translateProp = carouselProps.vertical ? 'translateY' : 'translateX';
 
     return {
         zIndex: carouselProps.data.length - index,
@@ -29,7 +26,7 @@ function animatedStyles1 (index, animatedValue, carouselProps) {
                 extrapolate: 'clamp'
             })
         }, {
-            [mainTranslateProp]: animatedValue.interpolate({
+            [translateProp]: animatedValue.interpolate({
                 inputRange: [-1, 0, 1, 2, 3],
                 outputRange: [
                     -sizeRef * 0.5,
@@ -50,14 +47,11 @@ function scrollInterpolator2 (index, carouselProps) {
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
     const outputRange = range;
 
-    return {
-        inputRange,
-        outputRange
-    };
+    return { inputRange, outputRange };
 }
 function animatedStyles2 (index, animatedValue, carouselProps) {
     const sizeRef = carouselProps.vertical ? carouselProps.itemHeight : carouselProps.itemWidth;
-    const mainTranslateProp = carouselProps.vertical ? 'translateY' : 'translateX';
+    const translateProp = carouselProps.vertical ? 'translateY' : 'translateX';
 
     return {
         zIndex: carouselProps.data.length - index,
@@ -77,7 +71,7 @@ function animatedStyles2 (index, animatedValue, carouselProps) {
                 outputRange: [0.96, 1, 0.85, 0.7]
             })
         }, {
-            [mainTranslateProp]: animatedValue.interpolate({
+            [translateProp]: animatedValue.interpolate({
                 inputRange: [-1, 0, 1, 2],
                 outputRange: [
                     0,
@@ -97,10 +91,7 @@ function scrollInterpolator3 (index, carouselProps) {
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
     const outputRange = range;
 
-    return {
-        inputRange,
-        outputRange
-    };
+    return { inputRange, outputRange };
 }
 function animatedStyles3 (index, animatedValue, carouselProps) {
     const sizeRef = carouselProps.vertical ? carouselProps.itemHeight : carouselProps.itemWidth;
