@@ -174,6 +174,7 @@ export default class example extends Component {
         const example5 = this.customExample(5, 'Custom animation 1', 1, this._renderItem);
         const example6 = this.customExample(6, 'Custom animation 2', 2, this._renderLightItem);
         const example7 = this.customExample(7, 'Custom animation 3', 3, this._renderDarkItem);
+        const example8 = this.customExample(8, 'Custom animation 4', 4, this._renderLightItem);
 
         return (
             <SafeAreaView style={styles.safeArea}>
@@ -196,6 +197,7 @@ export default class example extends Component {
                         { example5 }
                         { example6 }
                         { example7 }
+                        { example8 }
                     </ScrollView>
                 </View>
             </SafeAreaView>
