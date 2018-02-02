@@ -35,6 +35,7 @@ We are able to do all this thanks to React Native's great [Animated API](https:/
 ![react-native-snap-carousel custom layout](https://i.imgur.com/slnTbyG.gif)
 ![react-native-snap-carousel custom layout](https://i.imgur.com/OrdLsCM.gif)
 ![react-native-snap-carousel custom layout](https://i.imgur.com/Nht4w9D.gif)
+![react-native-snap-carousel custom layout](https://i.imgur.com/kDx3xTc.gif)
 
 We've decided to expose a way for users to provide their own interpolators, customize their carousels and create awesome animations! Note that you can find the source code of the built-in layouts [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/utils/animations.js) and the source code of the custom examples [here](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js). Taking a look at these is a very good way to understand how it works.
 
