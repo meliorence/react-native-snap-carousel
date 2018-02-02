@@ -144,10 +144,11 @@ A few things worth noting:
 
 :book: On top of the new layouts, we've exposed the logic we used so that users can create their own awesome layouts! If you're interested, take a deep breath and see [the dedicated documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md).
 
-Here are two examples of what can easily be achieved (you can explore [the source code](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js) and try it live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)):
+Here are a few examples of what can easily be achieved (you can explore [the source code](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js) and try it live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)):
 
-![react-native-snap-carousel custom layout](https://i.imgur.com/slnTbyG.gif)
 ![react-native-snap-carousel custom layout](https://i.imgur.com/OrdLsCM.gif)
+![react-native-snap-carousel custom layout](https://i.imgur.com/slnTbyG.gif)
+![react-native-snap-carousel custom layout](https://i.imgur.com/kDx3xTc.gif)
 
 ## `ParallaxImage` component
 
@@ -180,7 +181,7 @@ All the useful tips and tricks have been gathered [here](https://github.com/arch
 
 ## Roadmap
 
-- [ ] Add more examples
+- [ ] Add [more examples](https://github.com/archriss/react-native-snap-carousel/issues/257)
 - [ ] Handle different items' width/height
 - [X] Implement different layouts and allow using custom interpolations
 - [X] Implement both `FlatList` and `ScrollView` handling
