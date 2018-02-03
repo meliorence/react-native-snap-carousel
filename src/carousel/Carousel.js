@@ -55,6 +55,7 @@ export default class Carousel extends Component {
         layout: PropTypes.oneOf(['default', 'stack', 'tinder']),
         layoutCardOffset: PropTypes.number,
         lockScrollWhileSnapping: PropTypes.bool,
+        lockScrollTimeout: PropTypes.number,
         loop: PropTypes.bool,
         loopClonesPerSide: PropTypes.number,
         scrollInterpolator: PropTypes.func,
@@ -88,6 +89,7 @@ export default class Carousel extends Component {
         inactiveSlideShift: 0,
         layout: 'default',
         lockScrollWhileSnapping: false,
+        lockScrollTimeout: 1000,
         loop: false,
         loopClonesPerSide: 3,
         slideStyle: {},
@@ -655,7 +657,7 @@ export default class Carousel extends Component {
         clearTimeout(this._lockScrollTimeout);
         this._lockScrollTimeout = setTimeout(() => {
             this._releaseScroll();
-        }, 1000);
+        }, lockScrollTimeout);
         this._setScrollEnabled(false);
     }
 
