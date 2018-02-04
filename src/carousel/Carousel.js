@@ -654,6 +654,7 @@ export default class Carousel extends Component {
     }
 
     _lockScroll () {
+        const {lockScrollTimeout} = this.props;
         clearTimeout(this._lockScrollTimeout);
         this._lockScrollTimeout = setTimeout(() => {
             this._releaseScroll();
