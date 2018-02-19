@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, View, ScrollView, Text, StatusBar, SafeAreaView } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+//! This react-native-linear-gradient need to be solved - has problem with expo.
+// import LinearGradient from 'react-native-linear-gradient';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { sliderWidth, itemWidth } from './styles/SliderEntry.style';
 import SliderEntry from './components/SliderEntry';
@@ -155,16 +156,16 @@ export default class example extends Component {
         ) : false;
     }
 
-    get gradient () {
-        return (
-            <LinearGradient
-              colors={[colors.background1, colors.background2]}
-              startPoint={{ x: 1, y: 0 }}
-              endPoint={{ x: 0, y: 1 }}
-              style={styles.gradient}
-            />
-        );
-    }
+    // get gradient () {
+    //     return (
+    //         <LinearGradient
+    //           colors={[colors.background1, colors.background2]}
+    //           startPoint={{ x: 1, y: 0 }}
+    //           endPoint={{ x: 0, y: 1 }}
+    //           style={styles.gradient}
+    //         />
+    //     );
+    // }
 
     render () {
         const example1 = this.mainExample(1, 'Default layout | Loop | Autoplay | Parallax | Scale | Opacity | Pagination with tappable dots');
@@ -184,7 +185,7 @@ export default class example extends Component {
                       backgroundColor={'rgba(0, 0, 0, 0.3)'}
                       barStyle={'light-content'}
                     />
-                    { this.gradient
+                    { // "this.gradient"
                     }
                     <ScrollView
                       style={styles.scrollview}
