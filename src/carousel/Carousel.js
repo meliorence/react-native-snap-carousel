@@ -134,6 +134,8 @@ export default class Carousel extends Component {
         this._onTouchStart = this._onTouchStart.bind(this);
         this._onTouchRelease = this._onTouchRelease.bind(this);
 
+        this._getKeyExtractor = this._getKeyExtractor.bind(this);
+
         // Native driver for scroll events
         const scrollEventConfig = {
             listener: this._onScroll,
@@ -456,7 +458,7 @@ export default class Carousel extends Component {
     }
 
     _getKeyExtractor (item, index) {
-        return `flatlist-item-${index}`;
+        return this._needsScrollView() ? `scrollview-item-${index}` : `flatlist-item-${index}`;
     }
 
     _getScrollOffset (event) {
@@ -1083,6 +1085,7 @@ export default class Carousel extends Component {
             hasParallaxImages,
             itemWidth,
             itemHeight,
+            keyExtractor,
             renderItem,
             sliderHeight,
             sliderWidth,
@@ -1111,7 +1114,7 @@ export default class Carousel extends Component {
         } : undefined;
 
         const specificProps = this._needsScrollView() ? {
-            key: `scrollview-item-${index}`
+            key: keyExtractor ? keyExtractor(item, index) : this._getKeyExtractor(item, index),
         } : {};
 
         return (
