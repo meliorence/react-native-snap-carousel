@@ -1113,9 +1113,9 @@ export default class Carousel extends Component {
             itemHeight
         } : undefined;
 
-        const specificProps = {
+        const specificProps = this._needsScrollView() ? {
             key: keyExtractor ? keyExtractor(item, index) : this._getKeyExtractor(item, index),
-        };
+        } : {};
 
         return (
             <Component style={[slideStyle, animatedStyle]} pointerEvents={'box-none'} {...specificProps}>
