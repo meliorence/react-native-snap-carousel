@@ -214,7 +214,7 @@ export default class Carousel extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { interpolators } = this.state;
-        const { firstItem, itemHeight, itemWidth, sliderHeight, sliderWidth } = nextProps;
+        const { firstItem, itemHeight, itemWidth, scrollEnabled, sliderHeight, sliderWidth } = nextProps;
         const itemsLength = this._getCustomDataLength(nextProps);
 
         if (!itemsLength) {
@@ -228,10 +228,16 @@ export default class Carousel extends Component {
         const hasNewSliderHeight = sliderHeight && sliderHeight !== this.props.sliderHeight;
         const hasNewItemWidth = itemWidth && itemWidth !== this.props.itemWidth;
         const hasNewItemHeight = itemHeight && itemHeight !== this.props.itemHeight;
+        const hasNewScrollEnabled = scrollEnabled !== this.props.scrollEnabled;
 
         // Prevent issues with dynamically removed items
         if (nextActiveItem > itemsLength - 1) {
             nextActiveItem = itemsLength - 1;
+        }
+
+        // Handle changing scrollEnabled independent of user -> carousel interaction
+        if (hasNewScrollEnabled) {
+          this._setScrollEnabled(scrollEnabled);
         }
 
         if (interpolators.length !== itemsLength || hasNewSliderWidth ||
@@ -447,7 +453,7 @@ export default class Carousel extends Component {
     _setScrollEnabled (value = true) {
         const { scrollEnabled } = this.props;
 
-        if (scrollEnabled === false || !this._scrollComponent || !this._scrollComponent.setNativeProps) {
+        if (!this._scrollComponent || !this._scrollComponent.setNativeProps) {
             return;
         }
 
