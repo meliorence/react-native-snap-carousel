@@ -138,7 +138,7 @@ function scrollInterpolator (index, carouselProps) {
 
 This is where the fun begins!
 
-The first trick is **to ensure that the active item will always sit on top of the next ones**. By default, an item with a higher index will also have a higher `zIndex`. To counteract this, you can use the following:
+The first trick is **to ensure that the active item will always sit on top of the next ones**. By default, an item with a higher index will also have a higher `zIndex`. To counteract this, you can use the following. :warning: **Currently, this can lead to swipe/click events being missed!** See [this issue](https://github.com/archriss/react-native-snap-carousel/issues/262) for more info.
 
 ```javascript
 {
