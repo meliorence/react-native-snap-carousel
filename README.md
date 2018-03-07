@@ -139,6 +139,7 @@ You can choose between the three of them using [the new prop `layout`](https://g
 A few things worth noting:
 * As you can see, the effect had to be inverted on Android. This has to do with [a really annoying Android-specific bug](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#android).
 * Even though the new layouts have been created with horizontal carousels in mind, they will also work with vertical ones \o/
+* :warning: **You should NOT use `stack` or `tinder` layouts if you have a large data set to display.** In order to avoid rendering issues, the carousel will use a `ScrollView` component rather than a `FlatList` one for those layouts (see [prop `useScrollView`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#behavior)). The tradeof is that you won't benefit from any of `FlatList`'s advanced optimizations. See [this issue](https://github.com/archriss/react-native-snap-carousel/issues/262) for workarounds; or you may want to implement your own [custom interpolation](#custom-interpolations).
 
 ### Custom interpolations
 
@@ -152,7 +153,7 @@ Here are a few examples of what can easily be achieved (you can explore [the sou
 
 ## `ParallaxImage` component
 
-Version `3.0.0` introduced a `<ParallaxImage />` component, an image component aware of carousel's current scroll position and therefore able to display a nice parallax effect.
+Version `3.0.0` introduced a `<ParallaxImage />` component, an image component aware of carousel's current scroll position and therefore able to display a nice parallax effect (powered by the native driver to ensure top-notch performance).
 
 You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PARALLAX_IMAGE.md).
 
