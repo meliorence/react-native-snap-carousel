@@ -1236,7 +1236,7 @@ export default class Carousel extends Component {
         const { data, renderItem } = this.props;
 
         if (!data || !renderItem) {
-            return false;
+            return null;
         }
 
         const props = {
