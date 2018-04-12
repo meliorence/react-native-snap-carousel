@@ -64,6 +64,7 @@ export default class Carousel extends Component {
         swipeThreshold: PropTypes.number,
         useScrollView: PropTypes.bool,
         vertical: PropTypes.bool,
+        onBeforeSnapToItem: PropTypes.func,
         onSnapToItem: PropTypes.func
     };
 
@@ -116,6 +117,7 @@ export default class Carousel extends Component {
         this._mounted = false;
         this._positions = [];
         this._currentContentOffset = 0; // store ScrollView's scroll position
+        this._canFireBeforeCallback = false;
         this._canFireCallback = false;
         this._scrollOffsetRef = null;
         this._onScrollTriggered = true; // used when momentum is enabled to prevent an issue with edges items
@@ -736,7 +738,8 @@ export default class Carousel extends Component {
 
         const scrollOffset = event ? this._getScrollOffset(event) : this._currentContentOffset;
         const nextActiveItem = this._getActiveItem(scrollOffset);
-        const scrollConditions = nextActiveItem === this._itemToSnapTo &&
+        const itemReached = nextActiveItem === this._itemToSnapTo;
+        const scrollConditions =
             scrollOffset >= this._scrollOffsetRef - callbackOffsetMargin &&
             scrollOffset <= this._scrollOffsetRef + callbackOffsetMargin;
 
@@ -755,18 +758,31 @@ export default class Carousel extends Component {
                 this._activeItem = nextActiveItem;
             }
 
-            if (scrollConditions && this._canFireCallback) {
-                this._onSnap(this._getDataIndex(nextActiveItem));
-            }
-        } else if (scrollConditions && this._activeItem !== nextActiveItem) {
-            this._activeItem = nextActiveItem;
 
-            if (this._canLockScroll()) {
-                this._releaseScroll();
+            if (itemReached) {
+                if (this._canFireBeforeCallback) {
+                    this._onBeforeSnap(this._getDataIndex(nextActiveItem));
+                }
+
+                if (scrollConditions && this._canFireCallback) {
+                    this._onSnap(this._getDataIndex(nextActiveItem));
+                }
+            }
+        } else if (this._activeItem !== nextActiveItem && itemReached) {
+            if (this._canFireBeforeCallback) {
+                this._onBeforeSnap(this._getDataIndex(nextActiveItem));
             }
 
-            if (this._canFireCallback) {
-                this._onSnap(this._getDataIndex(nextActiveItem));
+            if (scrollConditions) {
+                this._activeItem = nextActiveItem;
+
+                if (this._canLockScroll()) {
+                    this._releaseScroll();
+                }
+
+                if (this._canFireCallback) {
+                    this._onSnap(this._getDataIndex(nextActiveItem));
+                }
             }
         }
 
@@ -933,7 +949,7 @@ export default class Carousel extends Component {
     }
 
     _snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true) {
-        const { enableMomentum, onSnapToItem } = this.props;
+        const { enableMomentum, onSnapToItem, onBeforeSnapToItem } = this.props;
         const itemsLength = this._getCustomDataLength();
         const wrappedRef = this._getWrappedRef();
 
@@ -955,8 +971,14 @@ export default class Carousel extends Component {
                 this._lockScroll();
             }
 
-            if (onSnapToItem && fireCallback) {
-                this._canFireCallback = true;
+            if (fireCallback) {
+                if (onBeforeSnapToItem) {
+                    this._canFireBeforeCallback = true;
+                }
+
+                if (onSnapToItem) {
+                    this._canFireCallback = true;
+                }
             }
         }
 
@@ -991,6 +1013,17 @@ export default class Carousel extends Component {
                 }, 250);
             }
         }
+    }
+
+    _onBeforeSnap (index) {
+        const { onBeforeSnapToItem } = this.props;
+
+        if (!this._carouselRef) {
+            return;
+        }
+
+        this._canFireBeforeCallback = false;
+        onBeforeSnapToItem && onBeforeSnapToItem(index);
     }
 
     _onSnap (index) {
