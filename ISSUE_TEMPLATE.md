@@ -43,6 +43,17 @@
   If you haven't been able to reproduce the bug in production mode, it probably has to do with React Native's limitations (see ["Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md)). Chances are we won't be able to do anything about it.
 -->
 
+### Have you made sure that it wasn't a [React Native bug](https://github.com/archriss/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)?
+
+(Write your answer here.)
+
+<!--
+  Steps you should take:
+  - take a look at plugin's issues that are [labelled `react-native bug`](https://github.com/archriss/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)
+  - search [React Native issues](https://github.com/facebook/react-native/issues)
+  - read the following sections of the doc again: ["Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md), ["Important note regarding Android"](https://github.com/archriss/react-native-snap-carousel#important-note-regarding-android), and ["Custom interpolations caveats"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#caveats).
+ -->
+
 ### Have you been able to reproduce the bug in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)?
 
 (Write your answer here.)
