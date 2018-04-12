@@ -1013,7 +1013,7 @@ export default class Carousel extends Component {
         clearInterval(this._autoplayInterval);
     }
 
-    snapToItem (index, animated = true) {
+    snapToItem (index, animated = true, fireCallback = true) {
         if (!index || index < 0) {
             index = 0;
         }
@@ -1024,10 +1024,10 @@ export default class Carousel extends Component {
             return;
         }
 
-        this._snapToItem(positionIndex, animated);
+        this._snapToItem(positionIndex, animated, fireCallback);
     }
 
-    snapToNext (animated = true) {
+    snapToNext (animated = true, fireCallback = true) {
         const itemsLength = this._getCustomDataLength();
 
         let newIndex = this._activeItem + 1;
@@ -1037,10 +1037,10 @@ export default class Carousel extends Component {
             }
             newIndex = 0;
         }
-        this._snapToItem(newIndex, animated);
+        this._snapToItem(newIndex, animated, fireCallback);
     }
 
-    snapToPrev (animated = true) {
+    snapToPrev (animated = true, fireCallback = true) {
         const itemsLength = this._getCustomDataLength();
 
         let newIndex = this._activeItem - 1;
@@ -1050,7 +1050,7 @@ export default class Carousel extends Component {
             }
             newIndex = itemsLength - 1;
         }
-        this._snapToItem(newIndex, animated);
+        this._snapToItem(newIndex, animated, fireCallback);
     }
 
     // https://github.com/facebook/react-native/issues/1831#issuecomment-231069668
