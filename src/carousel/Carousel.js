@@ -446,20 +446,27 @@ export default class Carousel extends Component {
         return this._enableLoop() ? index + loopClonesPerSide : index;
     }
 
+    _getWrappedRef () {
+        // https://github.com/facebook/react-native/issues/10635
+        // https://stackoverflow.com/a/48786374/8412141
+        return this._carouselRef && this._carouselRef.getNode && this._carouselRef.getNode();
+    }
+
     _getScrollEnabled () {
         return this._scrollEnabled;
     }
 
     _setScrollEnabled (value = true) {
         const { scrollEnabled } = this.props;
+        const wrappedRef = this._getWrappedRef();
 
-        if (!this._scrollComponent || !this._scrollComponent.setNativeProps) {
+        if (!wrappedRef || !wrappedRef.setNativeProps) {
             return;
         }
 
         // 'setNativeProps()' is used instead of 'setState()' because the latter
         // really takes a toll on Android behavior when momentum is disabled
-        this._scrollComponent.setNativeProps({ scrollEnabled: value });
+        wrappedRef.setNativeProps({ scrollEnabled: value });
         this._scrollEnabled = value;
     }
 
@@ -638,7 +645,7 @@ export default class Carousel extends Component {
     _hackActiveSlideAnimation (index, goTo, force = false) {
         const { data } = this.props;
 
-        if (!this._scrollComponent || !this._positions[index] || (!force && this._enableLoop())) {
+        if (!this._carouselRef || !this._positions[index] || (!force && this._enableLoop())) {
             return;
         }
 
@@ -694,9 +701,9 @@ export default class Carousel extends Component {
 
     _scrollTo (offset, animated = true) {
         const { vertical } = this.props;
+        const wrappedRef = this._getWrappedRef();
 
-        // https://github.com/facebook/react-native/issues/10635
-        if (!this._scrollComponent || (!this._needsScrollView() && !this._scrollComponent._listRef)) {
+        if (!wrappedRef) {
             return;
         }
 
@@ -712,9 +719,9 @@ export default class Carousel extends Component {
         };
 
         if (this._needsScrollView()) {
-            this._scrollComponent.scrollTo(options);
+            wrappedRef.scrollTo(options);
         } else {
-            this._scrollComponent.scrollToOffset(options);
+            wrappedRef.scrollToOffset(options);
         }
     }
 
@@ -806,7 +813,7 @@ export default class Carousel extends Component {
     _onScrollEndDrag (event) {
         const { onScrollEndDrag } = this.props;
 
-        if (this._scrollComponent) {
+        if (this._carouselRef) {
             this._onScrollEnd && this._onScrollEnd();
         }
 
@@ -819,7 +826,7 @@ export default class Carousel extends Component {
     _onMomentumScrollEnd (event) {
         const { onMomentumScrollEnd } = this.props;
 
-        if (this._scrollComponent) {
+        if (this._carouselRef) {
             this._onScrollEnd && this._onScrollEnd();
         }
 
@@ -922,8 +929,9 @@ export default class Carousel extends Component {
     _snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true) {
         const { enableMomentum, onSnapToItem } = this.props;
         const itemsLength = this._getCustomDataLength();
+        const wrappedRef = this._getWrappedRef();
 
-        if (!itemsLength || !this._scrollComponent || (!this._needsScrollView() && !this._scrollComponent._listRef)) {
+        if (!itemsLength || !wrappedRef) {
             return;
         }
 
@@ -982,7 +990,7 @@ export default class Carousel extends Component {
     _onSnap (index) {
         const { onSnapToItem } = this.props;
 
-        if (!this._scrollComponent) {
+        if (!this._carouselRef) {
             return;
         }
 
@@ -1111,7 +1119,7 @@ export default class Carousel extends Component {
 
         const parallaxProps = hasParallaxImages ? {
             scrollPosition: this._scrollPos,
-            carouselRef: this._scrollComponent,
+            carouselRef: this._carouselRef,
             vertical,
             sliderWidth,
             sliderHeight,
@@ -1215,7 +1223,7 @@ export default class Carousel extends Component {
         } : {};
 
         return {
-            ref: (c) => { if (c) { this._scrollComponent = c._component; } },
+            ref: c => this._carouselRef = c,
             data: this._getCustomData(),
             style: containerStyle,
             contentContainerStyle: contentContainerStyle,
