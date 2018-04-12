@@ -113,6 +113,7 @@ export default class Carousel extends Component {
         this._previousFirstItem = initialActiveItem;
         this._previousItemsLength = initialActiveItem;
 
+        this._mounted = false;
         this._positions = [];
         this._currentContentOffset = 0; // store ScrollView's scroll position
         this._canFireCallback = false;
@@ -179,7 +180,6 @@ export default class Carousel extends Component {
     componentDidMount () {
         const { apparitionDelay, autoplay, firstItem } = this.props;
         const _firstItem = this._getFirstItem(firstItem);
-
         const apparitionCallback = () => {
             this.setState({ hideCarousel: false });
             if (autoplay) {
@@ -187,10 +187,15 @@ export default class Carousel extends Component {
             }
         };
 
+        this._mounted = true;
         this._initPositionsAndInterpolators();
 
         // Without 'requestAnimationFrame' or a `0` timeout, images will randomly not be rendered on Android...
         requestAnimationFrame(() => {
+            if (!this._mounted) {
+                return;
+            }
+
             this._snapToItem(_firstItem, false, false, true, false);
             this._hackActiveSlideAnimation(_firstItem, 'start', true);
 
@@ -265,6 +270,7 @@ export default class Carousel extends Component {
     }
 
     componentWillUnmount () {
+        this._mounted = false;
         this.stopAutoplay();
         clearTimeout(this._apparitionTimeout);
         clearTimeout(this._hackSlideAnimationTimeout);
@@ -645,7 +651,7 @@ export default class Carousel extends Component {
     _hackActiveSlideAnimation (index, goTo, force = false) {
         const { data } = this.props;
 
-        if (!this._carouselRef || !this._positions[index] || (!force && this._enableLoop())) {
+        if (!this._mounted || !this._carouselRef || !this._positions[index] || (!force && this._enableLoop())) {
             return;
         }
 
@@ -703,7 +709,7 @@ export default class Carousel extends Component {
         const { vertical } = this.props;
         const wrappedRef = this._getWrappedRef();
 
-        if (!wrappedRef) {
+        if (!this._mounted || !wrappedRef) {
             return;
         }
 
