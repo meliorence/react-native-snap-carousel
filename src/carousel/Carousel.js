@@ -237,7 +237,7 @@ export default class Carousel extends Component {
 
         // Handle changing scrollEnabled independent of user -> carousel interaction
         if (hasNewScrollEnabled) {
-          this._setScrollEnabled(scrollEnabled);
+            this._setScrollEnabled(scrollEnabled);
         }
 
         if (interpolators.length !== itemsLength || hasNewSliderWidth ||
@@ -1119,12 +1119,13 @@ export default class Carousel extends Component {
             itemHeight
         } : undefined;
 
+        const mainDimension = vertical ? { height: itemHeight } : { width: itemWidth };
         const specificProps = this._needsScrollView() ? {
-            key: keyExtractor ? keyExtractor(item, index) : this._getKeyExtractor(item, index),
+            key: keyExtractor ? keyExtractor(item, index) : this._getKeyExtractor(item, index)
         } : {};
 
         return (
-            <Component style={[slideStyle, animatedStyle]} pointerEvents={'box-none'} {...specificProps}>
+            <Component style={[mainDimension, slideStyle, animatedStyle]} pointerEvents={'box-none'} {...specificProps}>
                 { renderItem({ item, index }, parallaxProps) }
             </Component>
         );
