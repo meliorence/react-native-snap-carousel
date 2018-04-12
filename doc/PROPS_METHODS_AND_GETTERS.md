@@ -40,7 +40,7 @@ Prop | Description | Type | Default
 `lockScrollWhileSnapping` | Prevent the user from swiping again while the carousel is snapping to a position. This prevents miscellaneous minor issues (inadvertently tapping an item while scrolling, stopping the scrolling animation if the carousel is tapped in the middle of a snap, clunky behavior on Android when short snapping quickly in opposite directions). The only drawback is that enabling the prop hinders the ability to swipe quickly between items as a little pause between swipes is needed. **Note that the prop won't have any effect if `enableMomentum` is set to `true`, since it would otherwise impede the natural and expected behavior.** | Boolean | `false`
 `shouldOptimizeUpdates` | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
 `swipeThreshold` | Delta x when swiping to trigger the snap | Number | `20`
-`useScrollView` | Whether to use a `ScrollView` component instead of the default `FlatList` one. The advantages are to avoid rendering issues that can arise with `FlatList` and to provide compatibility with React Native pre- `0.43`. The major drawback is that you won't benefit from any of `FlatList`'s advanced optimizations. **We recommend activating it only with a small set of slides and to test performance thoroughly in production mode.** | Boolean | `false`
+`useScrollView` | Whether to use a `ScrollView` component instead of the default `FlatList` one. The advantages are to avoid rendering issues that can arise with `FlatList` and to provide compatibility with React Native pre- `0.43`. The major drawbacks are that you won't benefit from any of `FlatList`'s advanced optimizations and that you won't be able to use either `VirtualizedList` or `FlatList`'s specific props. **We recommend activating it only with a small set of slides and to test performance thoroughly in production mode.** | Boolean | `false` for `default` layout, `true` for `stack` and `tinder` layouts
 `vertical` | Layout slides vertically instead of horizontally | Boolean | `false`
 
 ### Loop
@@ -82,7 +82,8 @@ Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 `onLayout(event)` | Exposed `View` callback; invoked on mount and layout changes | Function | `undefined`
 `onScroll(event)` | Exposed `ScrollView` callback; fired while scrolling | Function | `undefined`
-`onSnapToItem(slideIndex)` | Callback fired when navigating to an item | Function | `undefined`
+`onBeforeSnapToItem(slideIndex)` | Callback fired when the new active item has been determined, before snapping to it | Function | `undefined`
+`onSnapToItem(slideIndex)` | Callback fired after snapping to an item | Function | `undefined`
 
 ### Inherited props
 
@@ -126,12 +127,12 @@ onPress={() => { this.refs.carousel.snapToNext(); }}
 
 Method | Description
 ------ | ------
-`startAutoplay (instantly = false)` | Start the autoplay manually
-`stopAutoplay ()` | Stop the autoplay manually
-`snapToItem (index, animated = true)` | Snap to an item manually
-`snapToNext (animated = true)` | Snap to next item manually
-`snapToPrev (animated = true)` | Snap to previous item manually
-`triggerRenderingHack (offset)` | Call this when needed to work around [a random `FlatList` bug](https://github.com/facebook/react-native/issues/1831) that keeps content hidden until the carousel is scrolled (see [#238](https://github.com/archriss/react-native-snap-carousel/issues/238). Note that the `offset` parameter is not required and will default to either `1` or `-1` depending on the current scroll position.
+`startAutoplay (instantly = false)` | Start the autoplay programmatically
+`stopAutoplay ()` | Stop the autoplay programmatically
+`snapToItem (index, animated = true, fireCallback = true)` | Snap to an item programmatically
+`snapToNext (animated = true, fireCallback = true)` | Snap to next item programmatically
+`snapToPrev (animated = true, fireCallback = true)` | Snap to previous item programmatically
+`triggerRenderingHack (offset)` | Call this when needed to work around [a random `FlatList` bug](https://github.com/facebook/react-native/issues/1831) that keeps content hidden until the carousel is scrolled (see [#238](https://github.com/archriss/react-native-snap-carousel/issues/238)). Note that the `offset` parameter is not required and will default to either `1` or `-1` depending on the current scroll position.
 
 ## Getters
 
