@@ -1,3 +1,15 @@
+## v3.7.0
+### New features and enhancements
+* Add a new callback method: [`onBeforeSnapToItem()`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#methods)
+* Add prop `lockScrollTimeoutDuration`
+* Add the ability to enable/disable callback's execution when snaping programmatically
+* Add the ability to change `scrollEnabled` to `true` from initially `false` (thanks [@tomauty](https://github.com/tomauty))
+### Bugfixes
+* Fix random errors when accessing wrapped component's reference
+* Fix errors triggered when calling `setState()` while the component has already been unmounted
+### Other
+* Support `keyExtractor` on `ScrollView` (thanks [@hadimhd](https://github.com/hadimhd))
+
 ## v3.6.0
 * Add a `layout` prop to let users choose between 3 different carousel layouts (see [the documentation](https://github.com/archriss/react-native-snap-carousel#layouts-and-custom-interpolations))
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
