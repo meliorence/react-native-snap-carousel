@@ -32,8 +32,8 @@ Swiper component for React Native featuring **previews**, **multiple layouts**, 
 ## Table of contents
 
 1. [Showcase](#showcase)
-1. [Usage](#usage)
 1. [Props, methods and getters](#props-methods-and-getters)
+1. [Usage](#usage)
 1. [Important note regarding Android](#important-note-regarding-android)
 1. [Layouts and custom interpolations](#layouts-and-custom-interpolations)
 1. [`ParallaxImage` component](#parallaximage-component)
@@ -63,6 +63,12 @@ Swiper component for React Native featuring **previews**, **multiple layouts**, 
 
 > Please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
 > The folks at [codedaily.io](https://codedaily.io) have created a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
+
+## Props, methods and getters
+
+In order to let you to create mighty carousels and to keep up with your requests, we add new features on a regular basis.
+
+Consequently, the list of available props has become really huge and deserves a documentation of its own. **You can [find it here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md).**
 
 ## Usage
 
@@ -96,10 +102,6 @@ export class MyCarousel extends Component {
     }
 }
 ```
-
-## Props, methods and getters
-
-You can find the dedicated documentation [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md).
 
 ## Important note regarding Android
 

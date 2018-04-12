@@ -12,6 +12,7 @@
 1. [Native-powered animations](#native-powered-animations)
 1. [Optimizing performance](#optimizing-performance)
 1. [Implementing navigation](#implementing-navigation)
+1. [Implementing zooming feature](#implementing-zooming-feature)
 1. [Using a specific commit](#using-a-specific-commit)
 1. [Useful threads](#useful-threads)
 1. [Understanding styles](#understanding-styles)
@@ -257,6 +258,10 @@ export default class SliderEntry extends Component {
     }
 }
 ```
+
+## Implementing zooming feature
+
+See https://github.com/archriss/react-native-snap-carousel/issues/264#issuecomment-366473756
 
 ## Using a specific commit
 
