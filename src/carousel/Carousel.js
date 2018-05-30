@@ -49,6 +49,7 @@ export default class Carousel extends Component {
         enableSnap: PropTypes.bool,
         firstItem: PropTypes.number,
         hasParallaxImages: PropTypes.bool,
+        hideCarousel: PropTypes.bool,
         inactiveSlideOpacity: PropTypes.number,
         inactiveSlideScale: PropTypes.number,
         inactiveSlideShift: PropTypes.number,
@@ -85,6 +86,7 @@ export default class Carousel extends Component {
         enableSnap: true,
         firstItem: 0,
         hasParallaxImages: false,
+        hideCarousel: true,
         inactiveSlideOpacity: 0.7,
         inactiveSlideScale: 0.9,
         inactiveSlideShift: 0,
@@ -104,7 +106,7 @@ export default class Carousel extends Component {
         super(props);
 
         this.state = {
-            hideCarousel: true,
+            hideCarousel: props.hideCarousel,
             interpolators: []
         };
 
