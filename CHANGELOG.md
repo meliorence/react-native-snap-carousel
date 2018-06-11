@@ -1,3 +1,7 @@
+## v3.7.1
+* Fix a potential crash in release mode (thanks [@hanpanpan200](https://github.com/hanpanpan200))
+* Do not round scroll offset's number in order to prevent potential issues with scroll repositioning
+
 ## v3.7.0
 ### New features and enhancements
 * Add a new callback method: [`onBeforeSnapToItem()`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#methods)
