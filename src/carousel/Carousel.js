@@ -487,7 +487,7 @@ export default class Carousel extends Component {
     _getScrollOffset (event) {
         const { vertical } = this.props;
         return (event && event.nativeEvent && event.nativeEvent.contentOffset &&
-            Math.round(event.nativeEvent.contentOffset[vertical ? 'y' : 'x'])) || 0;
+            event.nativeEvent.contentOffset[vertical ? 'y' : 'x']) || 0;
     }
 
     _getContainerInnerMargin (opposite = false) {
@@ -760,7 +760,6 @@ export default class Carousel extends Component {
             if (this._activeItem !== nextActiveItem) {
                 this._activeItem = nextActiveItem;
             }
-
 
             if (itemReached) {
                 if (this._canFireBeforeCallback) {
