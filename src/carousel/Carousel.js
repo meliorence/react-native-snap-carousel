@@ -60,7 +60,7 @@ export default class Carousel extends Component {
         loopClonesPerSide: PropTypes.number,
         scrollInterpolator: PropTypes.func,
         slideInterpolatedStyle: PropTypes.func,
-        slideStyle: Animated.View.propTypes.style,
+        slideStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         shouldOptimizeUpdates: PropTypes.bool,
         swipeThreshold: PropTypes.number,
         useScrollView: PropTypes.bool,
