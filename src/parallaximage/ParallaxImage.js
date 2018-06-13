@@ -46,6 +46,7 @@ export default class ParallaxImage extends Component {
         };
         this._onLoad = this._onLoad.bind(this);
         this._onError = this._onError.bind(this);
+        this._measureLayout = this._measureLayout.bind(this);
     }
 
     setNativeProps (nativeProps) {
