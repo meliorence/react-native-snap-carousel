@@ -1,3 +1,6 @@
+## v3.7.2
+* Fix `ParallaxImage` not being rendered (thanks [@louiszawadzki](https://github.com/louiszawadzki))
+
 ## v3.7.1
 * Fix a potential crash in release mode (thanks [@hanpanpan200](https://github.com/hanpanpan200))
 * Do not round scroll offset's number in order to prevent potential issues with scroll repositioning
