@@ -2,34 +2,51 @@
   MAKE SURE TO READ AND FOLLOW THIS TEMPLATE CLOSELY OR YOUR ISSUE WILL BE CLOSED WITHOUT NOTICE
 -->
 
-### Is this a bug report or a feature request?
+### Is this a bug report, a feature request, or a question?
 
 (Write your answer here.)
 
 <!--
   If you answered "Bug report":
 
-    We expect that it will take you about 30 minutes to produce a high-quality bug report.
-    While this may seem like a lot, putting care into issues helps us fix them faster.
+    We expect you to produce a high-quality bug report since putting care into your report helps us fix the issue faster.
     For bug reports, it is REQUIRED to fill the rest of this template, or the issue will be closed.
 
-  If you answered "Feature request":
+  If you answered "Feature request" or "Question":
 
-    Make sure to describe as precisely as possible the feature you'd like to see implemented. When relevant, provide visual examples (screenshots, screencasts, diagrams...).
+    Make sure to describe as precisely as possible the feature you'd like to see implemented or the question you'd like to see answered.
+    When relevant, provide visual examples (screenshots, screencasts, diagrams...).
     You can ignore the next steps as long as you've made sure that your description is as clear, thorough and illustrated as possible.
 -->
 
-### Have you read [the guidelines](https://github.com/archriss/react-native-snap-carousel/blob/master/CONTRIBUTING.md) regarding bug report?
+### Have you followed the required steps before opening a bug report?
+
+(Check the step you've followed - replace the space character between the square brackets (`[]`) by an `x`.)
+
+- [ ] I have read [the guidelines regarding bug report](https://github.com/archriss/react-native-snap-carousel/blob/master/CONTRIBUTING.md).
+- [ ] I have reviewed [the documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/README.md) in its entirety.
+- [ ] I have searched for [existing issues](https://github.com/archriss/react-native-snap-carousel/issues) and made sure that the problem hasn't already been reported.
+- [ ] I am using [the latest plugin version](https://github.com/archriss/react-native-snap-carousel/releases).
+- [ ] I am following [the issue template](https://raw.githubusercontent.com/archriss/react-native-snap-carousel/master/ISSUE_TEMPLATE.md) closely in order to produce a useful bug report.
+
+<!--
+  Please DO NOT go futher if you've not followed ALL of the above steps.
+  Failing to do so will result in your issue getting closed without warning.
+-->
+
+### Have you made sure that it wasn't a [React Native bug](https://github.com/archriss/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)?
 
 (Write your answer here.)
 
-### Have you read [the documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/README.md) in its entirety?
+<!--
+  Steps you should take:
 
-(Write your answer here.)
+    1. Take a look at plugin's issues that are [labelled `react-native bug`](https://github.com/archriss/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)
 
-### Have you made sure that your issue hasn't already been reported/solved?
+    2. Search [React Native issues](https://github.com/facebook/react-native/issues)
 
-(Write your answer here.)
+    3. Read the following sections of the doc again: ["Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md), ["Important note regarding Android"](https://github.com/archriss/react-native-snap-carousel#important-note-regarding-android), and ["Custom interpolations caveats"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#caveats).
+ -->
 
 ### Is the bug specific to iOS or Android? Or can it be reproduced on both platforms?
 
@@ -41,27 +58,6 @@
 
 <!--
   If you haven't been able to reproduce the bug in production mode, it probably has to do with React Native's limitations (see ["Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md)). Chances are we won't be able to do anything about it.
--->
-
-### Have you made sure that it wasn't a [React Native bug](https://github.com/archriss/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)?
-
-(Write your answer here.)
-
-<!--
-  Steps you should take:
-  - take a look at plugin's issues that are [labelled `react-native bug`](https://github.com/archriss/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)
-  - search [React Native issues](https://github.com/facebook/react-native/issues)
-  - read the following sections of the doc again: ["Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md), ["Important note regarding Android"](https://github.com/archriss/react-native-snap-carousel#important-note-regarding-android), and ["Custom interpolations caveats"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#caveats).
- -->
-
-### Have you been able to reproduce the bug in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)?
-
-(Write your answer here.)
-
-<!--
-  If you haven't been able to reproduce the issue in the example, chances are that your code is to blame.
-  Take the time to import your code in it bit by bit until you figure out what's wrong.
-  If you're positive that it has to do with the plugin rather than with React Native or your own code, then you may continue filling out this template and post an issue.
 -->
 
 ### Environment
@@ -80,20 +76,6 @@
 -->
 
 (Write your answer here.)
-
-### Steps to Reproduce
-
-<!--
-  How would you describe your issue to someone who doesn’t know you or your project?
-  Try to write a sequence of steps that anybody can repeat to see the issue.
-  Be specific! If the bug cannot be reproduced, your issue may be closed.
--->
-
-(Write your steps here:)
-
-1.
-2.
-3.
 
 ### Expected Behavior
 
@@ -118,34 +100,30 @@
 
 ### Reproducible Demo
 
+(Paste the link to a [Snack example](https://snack.expo.io/) in which the issue can be reproduced. Please follow [the guidelines](https://stackoverflow.com/help/mcve) for providing a Minimal, Complete, and Verifiable example.)
+
 <!--
-  Please share a project that reproduces the issue.
-  There are two ways to do it:
+  This step is MANDATORY:
 
-    * Create a new app using https://snack.expo.io/ and try to reproduce the issue in it.
-      This is useful if you roughly know where the problem is, or can’t share the real code.
-
-    * Or, copy your app and remove things until you’re left with the minimal reproducible demo.
-      This is useful for finding the root cause. You may then optionally create a Snack.
-
-  This is a good guide to creating bug demos: https://stackoverflow.com/help/mcve
-  Once you’re done, copy and paste the link to the Snack or a public GitHub repository below:
+    * It shows that you value and respect the time of the people that are willing to help you; no one wishes to waste his spare time trying to recreate someone else's problem.
+    * Issues without reproducible demos have an extremely low priority and will probably be closed without notice.
+    * You might figure out the issues yourself as you work on extracting it.
 -->
 
-(Paste the link to an example project or paste the entirety of the relevant source code. Then provide instructions to reproduce the issue.)
+### Steps to Reproduce
 
 <!--
-  What happens if you skip this step?
+  How would you describe your issue to someone who doesn’t know you or your project?
+  Write a sequence of steps that anybody can repeat to see the issue.
+  Be specific! If the bug cannot be reproduced, your issue will be closed.
+-->
 
-  Someone will read your bug report, and maybe will be able to help you,
-  but it’s unlikely that it will get much attention from the team. Eventually,
-  the issue will likely get closed in favor of issues that have reproducible demos.
+(Write your steps so that anyone can reproduce the issue in the Snack demo you provided.)
 
-  Please remember that:
+1.
+2.
+3.
 
-    * Issues without reproducible demos have a very low priority.
-    * The person fixing the bug would have to do that anyway. Please be respectful of their time.
-    * You might figure out the issues yourself as you work on extracting it.
-
+<!--
   Thanks for helping us help you!
 -->
