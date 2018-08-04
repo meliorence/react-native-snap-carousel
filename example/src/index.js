@@ -68,11 +68,11 @@ export default class example extends Component {
                   autoplay={true}
                   autoplayDelay={500}
                   autoplayInterval={3000}
-                  onSnapToItem={(index) => this.setState({ slider1ActiveSlide: index }) }
+                  onSnapToItem={(index) => this.slider1Pagination.setActiveIndexDot(index) }
                 />
                 <Pagination
+                  ref={v => this.slider1Pagination = v}
                   dotsLength={ENTRIES1.length}
-                  activeDotIndex={slider1ActiveSlide}
                   containerStyle={styles.paginationContainer}
                   dotColor={'rgba(255, 255, 255, 0.92)'}
                   dotStyle={styles.paginationDot}
