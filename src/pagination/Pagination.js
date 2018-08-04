@@ -10,7 +10,6 @@ const IS_RTL = I18nManager.isRTL;
 export default class Pagination extends PureComponent {
 
     static propTypes = {
-        activeDotIndex: PropTypes.number.isRequired,
         dotsLength: PropTypes.number.isRequired,
         activeOpacity: PropTypes.number,
         carouselRef: PropTypes.object,
@@ -58,6 +57,10 @@ export default class Pagination extends PureComponent {
                 'You must specify prop `carouselRef` when setting `tappableDots` to `true`'
             );
         }
+
+        this.state = {
+            activeDotIndex: 0
+        }
     }
 
     _needsRTLAdaptations () {
@@ -66,8 +69,12 @@ export default class Pagination extends PureComponent {
     }
 
     get _activeDotIndex () {
-        const { activeDotIndex, dotsLength } = this.props;
-        return this._needsRTLAdaptations() ? dotsLength - activeDotIndex - 1 : activeDotIndex;
+        const { dotsLength } = this.props;
+        return this._needsRTLAdaptations() ? dotsLength - this.state.activeDotIndex - 1 : this.state.activeDotIndex;
+    }
+
+    setActiveIndexDot = (index) => {
+        this.setState({ activeDotIndex: index });
     }
 
     get dots () {
