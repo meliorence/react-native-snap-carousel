@@ -24,7 +24,7 @@
 (Check the step you've followed - replace the space character between the square brackets (`[]`) by an `x`.)
 
 - [ ] I have read [the guidelines regarding bug report](https://github.com/archriss/react-native-snap-carousel/blob/master/CONTRIBUTING.md).
-- [ ] I have reviewed [the documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/README.md) in its entirety.
+- [ ] I have reviewed [the documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/README.md) in its entirety, including the dedicated documentations :books:.
 - [ ] I have searched for [existing issues](https://github.com/archriss/react-native-snap-carousel/issues) and made sure that the problem hasn't already been reported.
 - [ ] I am using [the latest plugin version](https://github.com/archriss/react-native-snap-carousel/releases).
 - [ ] I am following [the issue template](https://raw.githubusercontent.com/archriss/react-native-snap-carousel/master/ISSUE_TEMPLATE.md) closely in order to produce a useful bug report.

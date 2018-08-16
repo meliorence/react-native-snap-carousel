@@ -2,6 +2,7 @@
 
 ## Table of contents
 
+1. [Optimizing performance](#optimizing-performance)
 1. [Momentum](#momentum)
 1. [Margin between slides](#margin-between-slides)
 1. [Carousel's stretched height](#carousels-stretched-height)
@@ -10,13 +11,30 @@
 1. [Viewport wide slides / no preview effect](#viewport-wide-slides--no-preview-effect)
 1. [Handling device rotation](#handling-device-rotation)
 1. [Native-powered animations](#native-powered-animations)
-1. [Optimizing performance](#optimizing-performance)
 1. [Implementing navigation](#implementing-navigation)
 1. [Implementing zooming feature](#implementing-zooming-feature)
 1. [Using a specific commit](#using-a-specific-commit)
 1. [Useful threads](#useful-threads)
 1. [Understanding styles](#understanding-styles)
 1. [Migration from version 2.x](#migration-from-version-2x)
+
+## Optimizing performance
+
+Here are a few good practices to keep in mind when dealing with the component (or any React Native list for that matter):
+
+* **Implement `shouldComponentUpdate`** (see [the `shallowCompare` addon](https://www.npmjs.com/package/react-addons-shallow-compare`)) for every carousel children (in `renderItem()`) or **make it a `PureComponent`** (some users report that `shouldComponentUpdate` is faster, but you should try both and decide for yourself).
+* Make sure the carousel **isn't a child of a `ScrollView`** (this includes `FlatList`, `VirtualizedList` and many plugins). Apparently, it would render all child components, even those currently off-screen.
+* If your data set is huge, **consider loading additional chunks of data only when the user has reached the end of the current set**. In order to do this, you'll have to play with `VirtualizedList`'s props `onEndReached` and `onEndReachedThreshold`
+* **Add [prop `removeClippedSubviews`](https://facebook.github.io/react-native/docs/scrollview.html#removeclippedsubviews)** and set it to `true` so that out-of-view items are removed from memory.
+
+Here are a few other tips given by [@pcooney10](https://github.com/pcooney10) in [this thread](https://github.com/archriss/react-native-snap-carousel/issues/247#issuecomment-360276562):
+
+- Make sure there aren't any excessive calls to `this.setState` in the component that renders the carousels and their parents.
+- Properly leverage the `initialNumToRender` and `maxToRenderPerBatch` props inherited from `FlatList`, and `windowSize` inherited from `VirtualizedList`.
+- Utilize [`InteractionManager`](https://facebook.github.io/react-native/docs/interactionmanager.html) to render the Carousels that are "below the fold".
+- Avoid using functions and object literals for props declared on components - this apparently results in "new props" during a re-render.
+
+Lastly, make sure to read [this note](https://github.com/archriss/react-native-snap-carousel#important-note-regarding-android) regarding Android and [this one](https://github.com/archriss/react-native-snap-carousel#important-note-regarding-ios) regarding iOS.
 
 ## Momentum
 
@@ -188,22 +206,6 @@ render() {
 ## Native-powered animations
 
 Slides' animations are based on scroll events and have been moved to the native thread in order to prevent the tiny lag associated with React Native's JavaScript bridge. This is really useful when displaying a `transform` and/or `opacity` animation that needs to follow carousel's scroll position closely. You can find more info in [this post from Facebook](https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html) or in [this one on Medium](https://medium.com/xebia/linking-animations-to-scroll-position-in-react-native-5c55995f5a6e).
-
-## Optimizing performance
-
-Here are a few good practices to keep in mind when dealing with the component (or any React Native list for that matter):
-
-* **Implement `shouldComponentUpdate`** (see [the `shallowCompare` addon](https://www.npmjs.com/package/react-addons-shallow-compare`)) for every carousel children (in `renderItem()`) or **make it a `PureComponent`** (some users report that `shouldComponentUpdate` is faster, but you should try both and decide for yourself).
-* Make sure the carousel **isn't a child of a `ScrollView`** (this includes `FlatList`, `VirtualizedList` and many plugins). Apparently, it would render all child components, even those currently off-screen.
-* If your data set is huge, **consider loading additional chunks of data only when the user has reached the end of the current set**. In order to do this, you'll have to play with `VirtualizedList`'s props `onEndReached` and `onEndReachedThreshold`
-* **Add [prop `removeClippedSubviews`](https://facebook.github.io/react-native/docs/scrollview.html#removeclippedsubviews)** and set it to `true` so that out-of-view items are removed from memory.
-
-Here are a few other tips given by [@pcooney10](https://github.com/pcooney10) in [this thread](https://github.com/archriss/react-native-snap-carousel/issues/247#issuecomment-360276562)):
-
-- Make sure there aren't any excessive calls to `this.setState` in the component that renders the carousels and their parents.
-- Properly leverage the `initialNumToRender` and `maxToRenderPerBatch` props inherited from `FlatList`, and `windowSize` inherited from `VirtualizedList`.
-- Utilize [`InteractionManager`](https://facebook.github.io/react-native/docs/interactionmanager.html) to render the Carousels that are "below the fold".
-- Avoid using functions and object literals for props declared on components - this apparently results in "new props" during a re-render.
 
 ## Implementing navigation
 

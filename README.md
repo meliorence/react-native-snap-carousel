@@ -25,22 +25,19 @@ Swiper component for React Native featuring **previews**, **multiple layouts**, 
 
 -----
 
-### :warning: Before submitting a new issue, make sure to read [the guidelines](https://github.com/archriss/react-native-snap-carousel/blob/master/CONTRIBUTING.md) and then to fill out the [issue template](https://github.com/archriss/react-native-snap-carousel/blob/master/ISSUE_TEMPLATE.md)!
-
------
-
 ## Table of contents
 
 1. [Showcase](#showcase)
-1. [Props, methods and getters](#props-methods-and-getters)
 1. [Usage](#usage)
-1. [Important note regarding Android](#important-note-regarding-android)
+1. [Example](#example)
+1. [Props, methods and getters](#props-methods-and-getters)
 1. [Layouts and custom interpolations](#layouts-and-custom-interpolations)
 1. [`ParallaxImage` component](#parallaximage-component)
 1. [`Pagination` component](#pagination-component)
-1. [Example](#example)
 1. [Tips and tricks](#tips-and-tricks)
 1. [Known issues](#known-issues)
+1. [Important note regarding Android](#important-note-regarding-android)
+1. [Important note regarding iOS](#important-note-regarding-ios)
 1. [Roadmap](#roadmap)
 1. [Credits](#credits)
 
@@ -63,12 +60,6 @@ Swiper component for React Native featuring **previews**, **multiple layouts**, 
 
 > Please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
 > The folks at [codedaily.io](https://codedaily.io) have created a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
-
-## Props, methods and getters
-
-In order to let you to create mighty carousels and to keep up with your requests, we add new features on a regular basis.
-
-Consequently, the list of available props has become really huge and deserves a documentation of its own. **You can [find it here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md).**
 
 ## Usage
 
@@ -103,15 +94,16 @@ export class MyCarousel extends Component {
 }
 ```
 
-## Important note regarding Android
+## Example
+You can find the following example in the [`/example` folder](https://github.com/archriss/react-native-snap-carousel/tree/master/example).
 
-![react-native-snap-carousel android](https://i.imgur.com/03iuB2Um.jpg)
+![react-native-snap-carousel](https://i.imgur.com/pZincya.gif)
 
-Android's debug mode is a mess: timeouts regularly desynchronize and scroll events are fired with some lag, which completely alters the inner logic of the carousel. **On Android, you *will* experience issues with carousel's behavior when JS Dev Mode is enabled, and you *might* have trouble with unreliable callbacks and loop mode when it isn't**. This is unfortunate, but it's rooted in various flaws of `ScrollView`/`FlatList`'s implementation and the miscellaneous workarounds we had to implement to compensate for it.
+## Props, methods and getters
 
-:warning: **Therefore you should always check if the issue you experience also happens in a production environment. This is, sadly, the only way to test the real performance and behavior of the carousel.**
+In order to let you to create mighty carousels and to keep up with your requests, we add new features on a regular basis. Consequently, the list of available props has become really huge and deserves a documentation of its own.
 
-> For more information, you can read the following notes: ["Android performance"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#android-performance) and ["Unreliable callbacks"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#unreliable-callbacks).
+### :books: [Documentation for "Props, methods and getters"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md)
 
 ## Layouts and custom interpolations
 
@@ -145,7 +137,9 @@ A few things worth noting:
 
 ### Custom interpolations
 
-:book: On top of the new layouts, we've exposed the logic we used so that users can create their own awesome layouts! If you're interested, take a deep breath and see [the dedicated documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md).
+On top of the new layouts, we've exposed the logic we used so that users can create their own awesome layouts! If you're interested, take a deep breath and dive into the dedicated documentation.
+
+### :books: [Documentation for "Custom interpolations"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md)
 
 Here are a few examples of what can easily be achieved (you can explore [the source code](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js) and try it live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)):
 
@@ -157,35 +151,50 @@ Here are a few examples of what can easily be achieved (you can explore [the sou
 
 Version `3.0.0` introduced a `<ParallaxImage />` component, an image component aware of carousel's current scroll position and therefore able to display a nice parallax effect (powered by the native driver to ensure top-notch performance).
 
-You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PARALLAX_IMAGE.md).
+### :books: [Documentation for "`ParallaxImage` component"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PARALLAX_IMAGE.md)
 
 ![react-native-snap-carousel parallax image](https://i.imgur.com/6iIb4SR.gif)
 
 ## `Pagination` component
 
-Starting with version `2.4.0`, a customizable `<Pagination />` component has been added. This is how it looks like with its default configuration:
+Starting with version `2.4.0`, a customizable `<Pagination />` component has been added. You can see below how it looks like with its default configuration.
 
-You can find the documentation for this component [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PAGINATION.md).
+### :books: [Documentation for "`Pagination` component"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PAGINATION.md)
 
 ![react-native-snap-carousel pagination](https://i.imgur.com/FLQcGGL.gif)
 
-## Example
-You can find the following example in the [`/example` folder](https://github.com/archriss/react-native-snap-carousel/tree/master/example).
-
-![react-native-snap-carousel](https://i.imgur.com/pZincya.gif)
-
 ## Tips and tricks
 
-All the useful tips and tricks have been gathered [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md) - there is a bunch of them, which makes **this section a must-read!**
+We've gathered together all the useful tips and tricks. There is a bunch of them, which makes **this section a must-read!**
+
+### :books: [Documentation for "Tips and tricks"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md)
 
 ## Known issues
 
-**Make sure to read about [the known issues](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md) before opening a new one**; you may find something useful.
+**Make sure to read about the known issues before opening a new one**; you may find something useful.
+
+### :books: [Documentation for "Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md)
+
+## Important note regarding Android
+
+![react-native-snap-carousel android](https://i.imgur.com/03iuB2Um.jpg)
+
+Android's debug mode is a mess: timeouts regularly desynchronize and scroll events are fired with some lag, which completely alters the inner logic of the carousel. **On Android, you *will* experience issues with carousel's behavior when JS Dev Mode is enabled, and you *might* have trouble with unreliable callbacks and loop mode when it isn't**. This is unfortunate, but it's rooted in various flaws of `ScrollView`/`FlatList`'s implementation and the miscellaneous workarounds we had to implement to compensate for it.
+
+:warning: **Therefore you should always check if the issue you experience also happens in a production environment. This is, sadly, the only way to test the real performance and behavior of the carousel.**
+
+> For more information, you can read the following notes: ["Android performance"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#android-performance) and ["Unreliable callbacks"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#unreliable-callbacks).
+
+## Important note regarding iOS
+
+![react-native-snap-carousel ios](https://i.imgur.com/npuiUSbh.png)
+
+:warning: When debugging with the iOS simulator, **you're only one "Cmd + T" away from toggling "Slow Animations"**. If carousel's animations seem painfully slow, make sure that you haven't enabled this setting by mistake.
 
 ## Roadmap
 
 - [ ] Add [more examples](https://github.com/archriss/react-native-snap-carousel/issues/257)
-- [ ] Handle different items' width/height
+- [ ] Base the plugin on a component less buggy than `FlatList`
 - [X] Implement different layouts and allow using custom interpolations
 - [X] Implement both `FlatList` and `ScrollView` handling
 - [X] Add the ability to provide custom items animation
