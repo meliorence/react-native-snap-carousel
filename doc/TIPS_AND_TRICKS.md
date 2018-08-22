@@ -95,7 +95,7 @@ const styles = Stylesheet.create({
 
 ## Carousel's stretched height
 
-Since `<Carousel />` is, ultimately, based on `<ScrollView />`, it inherits [its default styles](https://github.com/facebook/react-native/blob/master/Libraries/Components/ScrollView/ScrollView.js#L864) and particularly `{ flexGrow: 1 }`. This means that, by default, **the carousel container will stretch to fill up all available space**.
+Since `<Carousel />` is, ultimately, based on `<ScrollView />`, it inherits [its default styles](https://github.com/facebook/react-native/blob/9c1ea45d38a6ec731894443debe8879fa3876ab7/Libraries/Components/ScrollView/ScrollView.js#L879-L881) and particularly `{ flexGrow: 1 }`. This means that, by default, **the carousel container will stretch to fill up all available space**.
 
 If this is not what you're after, you can prevent this behavior by passing `{ flexGrow: 0 }` to prop `containerCustomStyle`.
 
