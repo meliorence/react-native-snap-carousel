@@ -314,7 +314,7 @@ export default class Carousel extends Component {
 
     _enableLoop () {
         const { data, enableSnap, loop } = this.props;
-        return enableSnap && loop && data.length && data.length > 1;
+        return enableSnap && loop && data && data.length && data.length > 1;
     }
 
     _shouldAnimateSlides (props = this.props) {
@@ -348,9 +348,9 @@ export default class Carousel extends Component {
 
     _getCustomData (props = this.props) {
         const { data, loopClonesPerSide } = props;
-        const dataLength = data.length;
+        const dataLength = data && data.length;
 
-        if (!data || !dataLength) {
+        if (!dataLength) {
             return [];
         }
 
@@ -563,7 +563,7 @@ export default class Carousel extends Component {
             };
 
             if (!this._shouldAnimateSlides(props)) {
-                animatedValue = 1;
+                animatedValue = new Animated.Value(1);
             } else if (this._shouldUseCustomAnimation()) {
                 animatedValue = new Animated.Value(_index === this._activeItem ? 1 : 0);
             } else {
