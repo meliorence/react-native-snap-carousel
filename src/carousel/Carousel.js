@@ -474,6 +474,7 @@ export default class Carousel extends Component {
             return;
         }
 
+        value = value && scrollEnabled
         // 'setNativeProps()' is used instead of 'setState()' because the latter
         // really takes a toll on Android behavior when momentum is disabled
         wrappedRef.setNativeProps({ scrollEnabled: value });
