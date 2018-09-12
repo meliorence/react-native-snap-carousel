@@ -1076,10 +1076,10 @@ export default class Carousel extends Component {
         this._snapToItem(positionIndex, animated, fireCallback);
     }
 
-    snapToNext (animated = true, fireCallback = true) {
+    snapToNext (animated = true, fireCallback = true, step = 1) {
         const itemsLength = this._getCustomDataLength();
 
-        let newIndex = this._activeItem + 1;
+        let newIndex = this._activeItem + step;
         if (newIndex > itemsLength - 1) {
             if (!this._enableLoop()) {
                 return;
@@ -1089,10 +1089,10 @@ export default class Carousel extends Component {
         this._snapToItem(newIndex, animated, fireCallback);
     }
 
-    snapToPrev (animated = true, fireCallback = true) {
+    snapToPrev (animated = true, fireCallback = true, step = 1) {
         const itemsLength = this._getCustomDataLength();
 
-        let newIndex = this._activeItem - 1;
+        let newIndex = this._activeItem - step;
         if (newIndex < 0) {
             if (!this._enableLoop()) {
                 return;
@@ -1172,10 +1172,19 @@ export default class Carousel extends Component {
         const specificProps = this._needsScrollView() ? {
             key: keyExtractor ? keyExtractor(item, index) : this._getKeyExtractor(item, index)
         } : {};
+        const animatedBottom = {
+            opacity: animatedValue.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1]
+            })
+        };
 
         return (
             <Component style={[mainDimension, slideStyle, animatedStyle]} pointerEvents={'box-none'} {...specificProps}>
-                { renderItem({ item, index }, parallaxProps) }
+                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                    { renderItem({ item, index }, parallaxProps) }
+                </View>
+                <Component style={[{width: "100%", height: 2, backgroundColor: "gray" }, animatedBottom]}/>
             </Component>
         );
     }
