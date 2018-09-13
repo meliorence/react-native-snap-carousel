@@ -1,3 +1,6 @@
+## v3.7.4
+* Fix issue with `scrollEnabled` introduced in version `3.7.3` (thanks [@JakeRawr](https://github.com/JakeRawr))
+
 ## v3.7.3
 * Fix faulty animated value and make sure to always check for `data` before checking for `data.length`
 * Fix `scrollEnabled` override when it was initially set to `false` (thanks [@JakeRawr](https://github.com/JakeRawr))
