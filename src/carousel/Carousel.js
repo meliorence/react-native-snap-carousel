@@ -953,7 +953,7 @@ export default class Carousel extends Component {
         }
     }
 
-    _snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true) {
+    _snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true, forceCallback = false) {
         const { enableMomentum, onSnapToItem, onBeforeSnapToItem } = this.props;
         const itemsLength = this._getCustomDataLength();
         const wrappedRef = this._getWrappedRef();
@@ -968,7 +968,8 @@ export default class Carousel extends Component {
             index = itemsLength - 1;
         }
 
-        if (index !== this._previousActiveItem) {
+        // If forceCallback is set, we need to also set _canFireCallback and _canFireBeforeCallback
+        if (index !== this._previousActiveItem || forceCallback) {
             this._previousActiveItem = index;
 
             // Placed here to allow overscrolling for edges items
@@ -1065,18 +1066,18 @@ export default class Carousel extends Component {
         clearInterval(this._autoplayInterval);
     }
 
-    snapToItem (index, animated = true, fireCallback = true) {
+    snapToItem (index, animated = true, fireCallback = true, forceCallback = false) {
         if (!index || index < 0) {
             index = 0;
         }
 
         const positionIndex = this._getPositionIndex(index);
 
-        if (positionIndex === this._activeItem) {
+        if (positionIndex === this._activeItem && !forceCallback) {
             return;
         }
 
-        this._snapToItem(positionIndex, animated, fireCallback);
+        this._snapToItem(positionIndex, animated, fireCallback, undefined, undefined, forceCallback);
     }
 
     snapToNext (animated = true, fireCallback = true) {
