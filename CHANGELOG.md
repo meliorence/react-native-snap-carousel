@@ -1,3 +1,6 @@
+## v3.7.5
+* Fix issue with `scrollEnabled` introduced in version `3.7.3`... again! (thanks [@ifsnow](https://github.com/ifsnow))
+
 ## v3.7.4
 * Fix issue with `scrollEnabled` introduced in version `3.7.3` (thanks [@JakeRawr](https://github.com/JakeRawr))
 
