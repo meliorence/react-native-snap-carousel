@@ -59,7 +59,7 @@ const sliderWidth = Dimensions.get('window').width;
 const itemWidth = slideWidth + horizontalMargin * 2;
 const itemHeight = 200;
 
-const styles = Stylesheet.create({
+const styles = StyleSheet.create({
     slide: {
         width: itemWidth,
         height: itemHeight,
@@ -71,7 +71,7 @@ const styles = Stylesheet.create({
         flex: 1
         // other styles for the inner container
     }
-};
+});
 ```
 ```javascript
     _renderItem ({item, index}) {
