@@ -266,7 +266,7 @@ export default class Carousel extends Component {
             }
 
             if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
-                this._snapToItem(nextActiveItem, false, false, false, false);
+                this._snapToItem(nextActiveItem, false, false, false, false, false);
             }
         } else if (nextFirstItem !== this._previousFirstItem && nextFirstItem !== this._activeItem) {
             this._activeItem = nextFirstItem;
@@ -951,7 +951,7 @@ export default class Carousel extends Component {
         }
     }
 
-    _snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true) {
+    _snapToItem (index, animated = true, fireCallback = true, initial = false, lockScroll = true, enableWorkaround = true) {
         const { enableMomentum, onSnapToItem, onBeforeSnapToItem } = this.props;
         const itemsLength = this._getCustomDataLength();
         const wrappedRef = this._getWrappedRef();
@@ -1001,6 +1001,7 @@ export default class Carousel extends Component {
                 this._ignoreNextMomentum = true;
             }
 
+            if (!enableWorkaround) return;
             // When momentum is enabled and the user is overscrolling or swiping very quickly,
             // 'onScroll' is not going to be triggered for edge items. Then callback won't be
             // fired and loop won't work since the scrollview is not going to be repositioned.
