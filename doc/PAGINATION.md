@@ -54,39 +54,62 @@ export default class MyCarousel extends Component {
         return <MySlideComponent data={item} />
     }
 
-    get pagination () {
-        const { entries, activeSlide } = this.state;
-        return (
-            <Pagination
-              dotsLength={entries.length}
-              activeDotIndex={activeSlide}
-              containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
-              dotStyle={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 5,
-                  marginHorizontal: 8,
-                  backgroundColor: 'rgba(255, 255, 255, 0.92)'
-              }}
-              inactiveDotStyle={{
-                  // Define styles for inactive dots here
-              }}
-              inactiveDotOpacity={0.4}
-              inactiveDotScale={0.6}
-            />
-        );
-    }
-
     render () {
         return (
             <View>
                 <Carousel
                   data={this.state.entries}
                   renderItem={this._renderItem}
-                  onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+                  onSnapToItem={(index) => this._pagination.setState({ activeIndex: index })}
+                  ref={(ref) =>         
+                    this._carousel = ref;
+                    this.setState({ carouselDidMount: true });
+                  }
                 />
-                { this.pagination }
+                {this.state.carouselDidMount &&
+                    <Paginator
+                        entries={this.state.entries}
+                        activeIndex={0}
+                        carouselRef={this._carousel}
+                        ref={(ref) => this._pagination = ref}
+                    />
+                }
             </View>
         );
     }
+    
+class Paginator extends Component {
+    constructor(props) {
+        super(props);
+        this.state = props;
+    }
+    
+    static getDerivedStateFromProps(newProps, prevState) {
+        return newProps;
+    }
+
+    render() {
+        const { entries, activeIndex, carouselRef } = this.state;
+        return (
+            <Pagination
+                dotsLength={entries.length}
+                activeDotIndex={activeIndex}
+                dotStyle={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    marginHorizontal: 8,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                }}
+                inactiveDotStyle={{
+                    // Define styles for inactive dots here
+                }}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+                carouselRef={carouselRef}
+                tappableDots
+            />
+        );
+    }
+}
 ```
