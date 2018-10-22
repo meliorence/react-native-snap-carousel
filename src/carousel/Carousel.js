@@ -112,7 +112,7 @@ export default class Carousel extends Component {
 
         // The following values are not stored in the state because 'setState()' is asynchronous
         // and this results in an absolutely crappy behavior on Android while swiping (see #156)
-        const initialActiveItem = this._getFirstItem(props.firstItem);
+        const initialActiveItem = this._getFirstItem(props.firstItem, props);
         this._activeItem = initialActiveItem;
         this._previousActiveItem = initialActiveItem;
         this._previousFirstItem = initialActiveItem;
@@ -161,6 +161,8 @@ export default class Carousel extends Component {
         // This bool aims at fixing an iOS bug due to scrollTo that triggers onMomentumScrollEnd.
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
         this._ignoreNextMomentum = false;
+
+        this._didReceiveProps = false;
 
         // Warnings
         if (!ViewPropTypes) {
@@ -233,8 +235,8 @@ export default class Carousel extends Component {
         }
 
         const nextFirstItem = this._getFirstItem(firstItem, nextProps);
-        let nextActiveItem = this._activeItem || this._activeItem === 0 ? this._activeItem : nextFirstItem;
-
+        let nextActiveItem = (this._activeItem || this._activeItem === 0) && this._didReceiveProps ? this._activeItem : nextFirstItem;
+        if (!this._didReceiveProps) this._canFireCallback = true;
         const hasNewSliderWidth = sliderWidth && sliderWidth !== this.props.sliderWidth;
         const hasNewSliderHeight = sliderHeight && sliderHeight !== this.props.sliderHeight;
         const hasNewItemWidth = itemWidth && itemWidth !== this.props.itemWidth;
@@ -265,7 +267,7 @@ export default class Carousel extends Component {
                 this._hackActiveSlideAnimation(nextActiveItem, null, true);
             }
 
-            if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
+            if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight || !this._didReceiveProps) {
                 this._snapToItem(nextActiveItem, false, false, false, false);
             }
         } else if (nextFirstItem !== this._previousFirstItem && nextFirstItem !== this._activeItem) {
@@ -273,6 +275,8 @@ export default class Carousel extends Component {
             this._previousFirstItem = nextFirstItem;
             this._snapToItem(nextFirstItem, true, true, false, false);
         }
+
+        this._didReceiveProps = true;
     }
 
     componentWillUnmount () {
@@ -395,7 +399,6 @@ export default class Carousel extends Component {
 
     _getCustomIndex (index, props = this.props) {
         const itemsLength = this._getCustomDataLength(props);
-
         if (!itemsLength || (!index && index !== 0)) {
             return 0;
         }
@@ -447,15 +450,16 @@ export default class Carousel extends Component {
         return loop ? index + loopClonesPerSide : index;
     }
 
-    _getFirstItem (index, props = this.props) {
+    _getFirstItem(index, props = this.props) {
+        const _index = this._getCustomIndex(index, props);
         const { loopClonesPerSide } = props;
         const itemsLength = this._getCustomDataLength(props);
 
-        if (!itemsLength || index > itemsLength - 1 || index < 0) {
+        if (!itemsLength || _index > itemsLength - 1 || _index < 0) {
             return 0;
         }
-
-        return this._enableLoop() ? index + loopClonesPerSide : index;
+        
+        return this._enableLoop() ? _index + loopClonesPerSide : _index;
     }
 
     _getWrappedRef () {
@@ -754,7 +758,7 @@ export default class Carousel extends Component {
         if (this._activeItem !== nextActiveItem && this._shouldUseCustomAnimation()) {
             this._playCustomSlideAnimation(this._activeItem, nextActiveItem);
         }
-
+        
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
 
@@ -775,7 +779,7 @@ export default class Carousel extends Component {
             if (this._canFireBeforeCallback) {
                 this._onBeforeSnap(this._getDataIndex(nextActiveItem));
             }
-
+            
             if (scrollConditions) {
                 this._activeItem = nextActiveItem;
 
@@ -786,6 +790,7 @@ export default class Carousel extends Component {
                 if (this._canFireCallback) {
                     this._onSnap(this._getDataIndex(nextActiveItem));
                 }
+
             }
         }
 
@@ -959,7 +964,7 @@ export default class Carousel extends Component {
         if (!itemsLength || !wrappedRef) {
             return;
         }
-
+        
         if (!index || index < 0) {
             index = 0;
         } else if (itemsLength > 0 && index >= itemsLength) {
@@ -1026,18 +1031,18 @@ export default class Carousel extends Component {
         }
 
         this._canFireBeforeCallback = false;
-        onBeforeSnapToItem && onBeforeSnapToItem(index);
+        onBeforeSnapToItem && onBeforeSnapToItem(this._getCustomIndex(index));
     }
 
     _onSnap (index) {
         const { onSnapToItem } = this.props;
-
+        
         if (!this._carouselRef) {
             return;
         }
-
+        
         this._canFireCallback = false;
-        onSnapToItem && onSnapToItem(index);
+        onSnapToItem && onSnapToItem(this._getCustomIndex(index));
     }
 
     startAutoplay () {
@@ -1068,7 +1073,7 @@ export default class Carousel extends Component {
             index = 0;
         }
 
-        const positionIndex = this._getPositionIndex(index);
+        const positionIndex = this._getPositionIndex(this._getCustomIndex(index));
 
         if (positionIndex === this._activeItem) {
             return;
@@ -1217,7 +1222,7 @@ export default class Carousel extends Component {
             pinchGestureEnabled: false,
             scrollsToTop: false,
             removeClippedSubviews: true,
-            inverted: this._needsRTLAdaptations(),
+            //inverted: this._needsRTLAdaptations(),
             // renderToHardwareTextureAndroid: true,
             ...specificProps
         };
@@ -1285,7 +1290,7 @@ export default class Carousel extends Component {
 
     render () {
         const { data, renderItem } = this.props;
-
+        
         if (!data || !renderItem) {
             return false;
         }
