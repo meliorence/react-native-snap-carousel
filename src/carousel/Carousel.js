@@ -143,6 +143,9 @@ export default class Carousel extends Component {
 
         this._getKeyExtractor = this._getKeyExtractor.bind(this);
 
+        this.snapToNext = this._needsRTLAdaptations() ? this._snapToPrev.bind(this) : this._snapToNext.bind(this);
+        this.snapToPrev = this._needsRTLAdaptations() ? this._snapToNext.bind(this) : this._snapToPrev.bind(this);
+
         // Native driver for scroll events
         const scrollEventConfig = {
             listener: this._onScroll,
@@ -291,8 +294,9 @@ export default class Carousel extends Component {
         clearTimeout(this._lockScrollTimeout);
     }
 
-    get realIndex () {
-        return this._activeItem;
+    get realIndex() {
+        const { data } = this.props;
+        return this._getCustomIndex(this._activeItem) % data.length;
     }
 
     get currentIndex () {
@@ -635,7 +639,7 @@ export default class Carousel extends Component {
         const _nextIndex = this._getCustomIndex(next);
         const _nextDataIndex = this._getDataIndex(_nextIndex);
         let animations = [];
-
+        
         // Keep animations in sync when looping
         if (this._enableLoop()) {
             for (let i = 0; i < itemsLength; i++) {
@@ -758,7 +762,7 @@ export default class Carousel extends Component {
         if (this._activeItem !== nextActiveItem && this._shouldUseCustomAnimation()) {
             this._playCustomSlideAnimation(this._activeItem, nextActiveItem);
         }
-        
+        console.log(nextActiveItem, itemReached, scrollConditions, 'sscroll')
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
 
@@ -1024,25 +1028,25 @@ export default class Carousel extends Component {
     }
 
     _onBeforeSnap (index) {
-        const { onBeforeSnapToItem } = this.props;
+        const { onBeforeSnapToItem, data } = this.props;
 
         if (!this._carouselRef) {
             return;
         }
 
         this._canFireBeforeCallback = false;
-        onBeforeSnapToItem && onBeforeSnapToItem(this._getCustomIndex(index));
+        onBeforeSnapToItem && onBeforeSnapToItem(this._getCustomIndex(index) % data.length);
     }
 
     _onSnap (index) {
-        const { onSnapToItem } = this.props;
+        const { onSnapToItem, data } = this.props;
         
         if (!this._carouselRef) {
             return;
         }
         
         this._canFireCallback = false;
-        onSnapToItem && onSnapToItem(this._getCustomIndex(index));
+        onSnapToItem && onSnapToItem(this._getCustomIndex(index) % data.length);
     }
 
     startAutoplay () {
@@ -1082,8 +1086,8 @@ export default class Carousel extends Component {
         this._snapToItem(positionIndex, animated, fireCallback);
     }
 
-    snapToNext (animated = true, fireCallback = true) {
-        const itemsLength = this._getCustomDataLength();
+    _snapToNext(animated = true, fireCallback = true) {
+        const itemsLength = this.props.data.length; //  this._getCustomDataLength();
 
         let newIndex = this._activeItem + 1;
         if (newIndex > itemsLength - 1) {
@@ -1095,18 +1099,52 @@ export default class Carousel extends Component {
         this._snapToItem(newIndex, animated, fireCallback);
     }
 
-    snapToPrev (animated = true, fireCallback = true) {
-        const itemsLength = this._getCustomDataLength();
+    _snapToPrev(animated = true, fireCallback = true) {
+        const itemsLength = this.props.data.length; //  this._getCustomDataLength();
 
         let newIndex = this._activeItem - 1;
+        console.log(newIndex, 'rarr')
         if (newIndex < 0) {
             if (!this._enableLoop()) {
                 return;
             }
             newIndex = itemsLength - 1;
         }
+        console.log(newIndex, 'rarr')
         this._snapToItem(newIndex, animated, fireCallback);
     }
+    /*
+    snapToNext (animated = true, fireCallback = true) {
+        const itemsLength = this._getCustomDataLength();
+        const delta = this._needsRTLAdaptations() ? -1 : 1;
+        const condition = this._needsRTLAdaptations() ? newIndex < this._getCustomIndex(itemsLength - 1) : newIndex > itemsLength - 1;
+
+        let newIndex = this._activeItem + delta;
+        console.log(this._activeItem, newIndex)
+        if (condition) {
+            if (!this._enableLoop()) {
+                return;
+            }
+            newIndex = this._getCustomIndex(0);
+        }
+        this._snapToItem(newIndex, animated, fireCallback);
+    }
+
+    snapToPrev (animated = true, fireCallback = true) {
+        const itemsLength = this._getCustomDataLength();
+        const delta = this._needsRTLAdaptations() ? -1 : 1;
+        const condition = this._needsRTLAdaptations() ? newIndex > this._getCustomIndex(0) : newIndex < 0;
+
+        let newIndex = this._activeItem - delta;
+        if (condition) {
+            if (!this._enableLoop()) {
+                return;
+            }
+            newIndex = this._getCustomIndex(itemsLength - 1);
+        }
+        this._snapToItem(newIndex, animated, fireCallback);
+    }
+    */
 
     // https://github.com/facebook/react-native/issues/1831#issuecomment-231069668
     triggerRenderingHack (offset) {
