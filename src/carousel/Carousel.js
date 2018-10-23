@@ -762,7 +762,7 @@ export default class Carousel extends Component {
         if (this._activeItem !== nextActiveItem && this._shouldUseCustomAnimation()) {
             this._playCustomSlideAnimation(this._activeItem, nextActiveItem);
         }
-        console.log(nextActiveItem, itemReached, scrollConditions, 'sscroll')
+        
         if (enableMomentum) {
             clearTimeout(this._snapNoMomentumTimeout);
 
@@ -1103,48 +1103,16 @@ export default class Carousel extends Component {
         const itemsLength = this.props.data.length; //  this._getCustomDataLength();
 
         let newIndex = this._activeItem - 1;
-        console.log(newIndex, 'rarr')
+        
         if (newIndex < 0) {
             if (!this._enableLoop()) {
                 return;
             }
             newIndex = itemsLength - 1;
         }
-        console.log(newIndex, 'rarr')
+        
         this._snapToItem(newIndex, animated, fireCallback);
     }
-    /*
-    snapToNext (animated = true, fireCallback = true) {
-        const itemsLength = this._getCustomDataLength();
-        const delta = this._needsRTLAdaptations() ? -1 : 1;
-        const condition = this._needsRTLAdaptations() ? newIndex < this._getCustomIndex(itemsLength - 1) : newIndex > itemsLength - 1;
-
-        let newIndex = this._activeItem + delta;
-        console.log(this._activeItem, newIndex)
-        if (condition) {
-            if (!this._enableLoop()) {
-                return;
-            }
-            newIndex = this._getCustomIndex(0);
-        }
-        this._snapToItem(newIndex, animated, fireCallback);
-    }
-
-    snapToPrev (animated = true, fireCallback = true) {
-        const itemsLength = this._getCustomDataLength();
-        const delta = this._needsRTLAdaptations() ? -1 : 1;
-        const condition = this._needsRTLAdaptations() ? newIndex > this._getCustomIndex(0) : newIndex < 0;
-
-        let newIndex = this._activeItem - delta;
-        if (condition) {
-            if (!this._enableLoop()) {
-                return;
-            }
-            newIndex = this._getCustomIndex(itemsLength - 1);
-        }
-        this._snapToItem(newIndex, animated, fireCallback);
-    }
-    */
 
     // https://github.com/facebook/react-native/issues/1831#issuecomment-231069668
     triggerRenderingHack (offset) {
