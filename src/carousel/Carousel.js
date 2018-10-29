@@ -254,16 +254,18 @@ export default class Carousel extends Component {
         if (interpolators.length !== itemsLength || hasNewSliderWidth ||
             hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
             this._activeItem = nextActiveItem;
-            this._previousItemsLength = itemsLength;
 
             this._initPositionsAndInterpolators(nextProps);
 
             // Handle scroll issue when dynamically removing items (see #133)
             // This also fixes first item's active state on Android
             // Because 'initialScrollIndex' apparently doesn't trigger scroll
-            if (this._previousItemsLength > itemsLength) {
+            if (this._previousItemsLength !== itemsLength) {
+                //  update nextActiveItem to reflect change of index
                 this._hackActiveSlideAnimation(nextActiveItem, null, true);
             }
+            
+            this._previousItemsLength = itemsLength;
 
             if (hasNewSliderWidth || hasNewSliderHeight || hasNewItemWidth || hasNewItemHeight) {
                 this._snapToItem(nextActiveItem, false, false, false, false);
