@@ -300,7 +300,7 @@ export default class Carousel extends Component {
     }
 
     get currentIndex () {
-        return this._getDataIndex(this._activeItem);
+        return this._getCustomIndex(this._getDataIndex(this._activeItem)) % data.length;
     }
 
     get currentScrollPosition () {
