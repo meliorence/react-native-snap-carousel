@@ -72,6 +72,16 @@ import Carousel from 'react-native-snap-carousel';
 
 export class MyCarousel extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            entries: [
+                { title: "one"},
+                { title: "two"},
+                { title: "three"}
+            ]
+        }
+    }
     _renderItem ({item, index}) {
         return (
             <View style={styles.slide}>
