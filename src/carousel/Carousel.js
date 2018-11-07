@@ -310,8 +310,8 @@ export default class Carousel extends Component {
     }
 
     _canLockScroll () {
-        const { enableMomentum, lockScrollWhileSnapping } = this.props;
-        return !enableMomentum && lockScrollWhileSnapping;
+        const { scrollEnabled, enableMomentum, lockScrollWhileSnapping } = this.props;
+        return scrollEnabled && !enableMomentum && lockScrollWhileSnapping;
     }
 
     _enableLoop () {
@@ -468,19 +468,17 @@ export default class Carousel extends Component {
         return this._scrollEnabled;
     }
 
-    _setScrollEnabled (value = true) {
-        const { scrollEnabled } = this.props;
+    _setScrollEnabled (scrollEnabled = true) {
         const wrappedRef = this._getWrappedRef();
 
         if (!wrappedRef || !wrappedRef.setNativeProps) {
             return;
         }
 
-        value = value && scrollEnabled
         // 'setNativeProps()' is used instead of 'setState()' because the latter
         // really takes a toll on Android behavior when momentum is disabled
-        wrappedRef.setNativeProps({ scrollEnabled: value });
-        this._scrollEnabled = value;
+        wrappedRef.setNativeProps({ scrollEnabled });
+        this._scrollEnabled = scrollEnabled;
     }
 
     _getKeyExtractor (item, index) {
