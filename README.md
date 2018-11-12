@@ -216,3 +216,5 @@ Android's debug mode is a mess: timeouts regularly desynchronize and scroll even
 
 Written by [Benoît Delmaire](https://fr.linkedin.com/in/benoitdelmaire) ([bd-arc](https://github.com/bd-arc)) and [Maxime Bertonnier](https://fr.linkedin.com/in/maxime-bertonnier-744351aa) ([Exilz](https://github.com/Exilz)) at
 [Archriss](http://www.archriss.com/).
+
+Happy Carouseling ;)
