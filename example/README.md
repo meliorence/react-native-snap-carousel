@@ -16,5 +16,9 @@ react-native run-ios # or 'react-native run-android'
 ```
 
 If you want to play with the example, note that the relevant source code is located in the `/example/src` folder.
+Have fun!
 
+## Example in Expo
+You can also enjoy the examples in Snack online:
+https://snack.expo.io/@omrihaim/react-native-snap-carousel
 Have fun!
