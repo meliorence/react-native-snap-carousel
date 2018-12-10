@@ -126,7 +126,7 @@ export default class Carousel extends Component {
         this._scrollOffsetRef = null;
         this._onScrollTriggered = true; // used when momentum is enabled to prevent an issue with edges items
         this._lastScrollDate = 0; // used to work around a FlatList bug
-        this._scrollEnabled = props.scrollEnabled === false ? false : true;
+        this._scrollEnabled = props.scrollEnabled !== false;
 
         this._initPositionsAndInterpolators = this._initPositionsAndInterpolators.bind(this);
         this._renderItem = this._renderItem.bind(this);
