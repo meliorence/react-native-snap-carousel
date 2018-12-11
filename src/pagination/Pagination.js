@@ -143,7 +143,7 @@ export default class Pagination extends PureComponent {
             <View
               pointerEvents={'box-none'}
               style={style}
-              accessible
+              accessible={!!accessibilityLabel}
               accessibilityLabel={accessibilityLabel}
             >
                 { this.dots }
