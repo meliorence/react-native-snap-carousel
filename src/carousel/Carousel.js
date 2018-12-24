@@ -271,7 +271,7 @@ export default class Carousel extends Component {
         } else if (nextFirstItem !== this._previousFirstItem && nextFirstItem !== this._activeItem) {
             this._activeItem = nextFirstItem;
             this._previousFirstItem = nextFirstItem;
-            this._snapToItem(nextFirstItem, true, true, false, false);
+            this._snapToItem(nextFirstItem, false, true, false, false);
         }
     }
 
