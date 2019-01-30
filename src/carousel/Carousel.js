@@ -810,9 +810,13 @@ export default class Carousel extends Component {
     }
 
     _onTouchStart () {
+        const { onTouchStart } = this.props
         // `onTouchStart` is fired even when `scrollEnabled` is set to `false`
         if (this._getScrollEnabled() !== false && this._autoplaying) {
             this.stopAutoplay();
+        }
+        if (onTouchStart) {
+            onTouchStart()
         }
     }
 
