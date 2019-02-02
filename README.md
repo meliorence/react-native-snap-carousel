@@ -97,6 +97,8 @@ export class MyCarousel extends Component {
 ## Example
 You can find the following example in the [`/example` folder](https://github.com/archriss/react-native-snap-carousel/tree/master/example).
 
+You can see and change the example app via [Appitr IDE](https://ide.appitr.com/ide/132-worthy-night) online.
+
 ![react-native-snap-carousel](https://i.imgur.com/pZincya.gif)
 
 ## Props, methods and getters
