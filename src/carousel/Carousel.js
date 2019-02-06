@@ -79,7 +79,7 @@ export default class Carousel extends Component {
         autoplay: false,
         autoplayDelay: 5000,
         autoplayInterval: 3000,
-        callbackOffsetMargin: 5,
+        callbackOffsetMargin: 40,
         containerCustomStyle: {},
         contentContainerCustomStyle: {},
         enableMomentum: false,
