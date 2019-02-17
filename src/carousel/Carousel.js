@@ -1245,14 +1245,14 @@ export default class Carousel extends Component {
                 { width: sliderWidth, flexDirection: this._needsRTLAdaptations() ? 'row-reverse' : 'row' }
         ];
         const contentContainerStyle = [
-            contentContainerCustomStyle || {},
             vertical ? {
                 paddingTop: this._getContainerInnerMargin(),
                 paddingBottom: this._getContainerInnerMargin(true)
             } : {
                 paddingLeft: this._getContainerInnerMargin(),
                 paddingRight: this._getContainerInnerMargin(true)
-            }
+            },
+            contentContainerCustomStyle || {}
         ];
 
         const specificProps = !this._needsScrollView() ? {
