@@ -299,7 +299,8 @@ export default class Carousel extends Component {
         return this._getCustomIndex(this._activeItem) % data.length;
     }
 
-    get currentIndex () {
+    get currentIndex() {
+        const { data } = this.props;
         return this._getCustomIndex(this._getDataIndex(this._activeItem)) % data.length;
     }
 
