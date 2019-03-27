@@ -16,6 +16,7 @@ const IS_IOS = Platform.OS === 'ios';
 
 // Native driver for scroll events
 // See: https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html
+const AnimatedFlatList = FlatList ? Animated.createAnimatedComponent(FlatList) : null;
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
 // React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
@@ -63,7 +64,6 @@ export default class Carousel extends Component {
         slideStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         shouldOptimizeUpdates: PropTypes.bool,
         swipeThreshold: PropTypes.number,
-        renderScrollComponent: PropTypes.func,
         useScrollView: PropTypes.bool,
         vertical: PropTypes.bool,
         onBeforeSnapToItem: PropTypes.func,
@@ -98,8 +98,7 @@ export default class Carousel extends Component {
         slideStyle: {},
         shouldOptimizeUpdates: true,
         swipeThreshold: 20,
-        renderScrollComponent: AnimatedScrollView,
-        useScrollView: !FlatList,
+        useScrollView: !AnimatedFlatList,
         vertical: false
     }
 
@@ -302,7 +301,7 @@ export default class Carousel extends Component {
 
     _needsScrollView () {
         const { useScrollView } = this.props;
-        return useScrollView || !FlatList || this._shouldUseStackLayout() || this._shouldUseTinderLayout();
+        return useScrollView || !AnimatedFlatList || this._shouldUseStackLayout() || this._shouldUseTinderLayout();
     }
 
     _needsRTLAdaptations () {
@@ -1285,7 +1284,7 @@ export default class Carousel extends Component {
     }
 
     render () {
-        const { data, renderItem, renderScrollComponent = ScrollComponent } = this.props;
+        const { data, renderItem } = this.props;
 
         if (!data || !renderItem) {
             return false;
@@ -1298,15 +1297,15 @@ export default class Carousel extends Component {
         };
 
         return this._needsScrollView() ? (
-            <ScrollComponent {...props}>
+            <AnimatedScrollView {...props}>
                 {
                     this._getCustomData().map((item, index) => {
                         return this._renderItem({ item, index });
                     })
                 }
-            </ScrollComponent>
+            </AnimatedScrollView>
         ) : (
-            <FlatList {...props} />
+            <AnimatedFlatList {...props} />
         );
     }
 }
