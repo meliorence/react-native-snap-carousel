@@ -505,7 +505,7 @@ export default class Carousel extends Component {
         }
     }
 
-    _getViewportOffet () {
+    _getViewportOffset () {
         const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical, activeSlideAlignment } = this.props;
 
         if (activeSlideAlignment === 'start') {
@@ -520,7 +520,7 @@ export default class Carousel extends Component {
     }
 
     _getCenter (offset) {
-        return offset + this._getViewportOffet() - this._getContainerInnerMargin();
+        return offset + this._getViewportOffset() - this._getContainerInnerMargin();
     }
 
     _getActiveItem (offset) {
