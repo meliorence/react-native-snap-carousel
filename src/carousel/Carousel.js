@@ -568,7 +568,7 @@ export default class Carousel extends Component {
         const { data, itemWidth, itemHeight, scrollInterpolator, vertical } = props;
         const sizeRef = vertical ? itemHeight : itemWidth;
 
-        if (!data.length) {
+        if (!data || !data.length) {
             return;
         }
 
