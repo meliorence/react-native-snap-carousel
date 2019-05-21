@@ -21,13 +21,13 @@
 
 ### Have you followed the required steps before opening a bug report?
 
-(Check the step you've followed - replace the space character between the square brackets (`[]`) by an `x`.)
+(Check the step you've followed - put an `x` character between the square brackets (`[]`).)
 
-- [ ] I have read [the guidelines regarding bug report](https://github.com/archriss/react-native-snap-carousel/blob/master/CONTRIBUTING.md).
-- [ ] I have reviewed [the documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/README.md) in its entirety, including the dedicated documentations :books:.
-- [ ] I have searched for [existing issues](https://github.com/archriss/react-native-snap-carousel/issues) and made sure that the problem hasn't already been reported.
-- [ ] I am using [the latest plugin version](https://github.com/archriss/react-native-snap-carousel/releases).
-- [ ] I am following [the issue template](https://raw.githubusercontent.com/archriss/react-native-snap-carousel/master/ISSUE_TEMPLATE.md) closely in order to produce a useful bug report.
+- [] I have read [the guidelines regarding bug report](https://github.com/archriss/react-native-snap-carousel/blob/master/CONTRIBUTING.md).
+- [] I have reviewed [the documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/README.md) in its entirety, including the dedicated documentations :books:.
+- [] I have searched for [existing issues](https://github.com/archriss/react-native-snap-carousel/issues) and made sure that the problem hasn't already been reported.
+- [] I am using [the latest plugin version](https://github.com/archriss/react-native-snap-carousel/releases).
+- [] I am following [the issue template](https://raw.githubusercontent.com/archriss/react-native-snap-carousel/master/ISSUE_TEMPLATE.md) closely in order to produce a useful bug report.
 
 <!--
   Please DO NOT go futher if you've not followed ALL of the above steps.
