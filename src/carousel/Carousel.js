@@ -143,20 +143,7 @@ export default class Carousel extends Component {
 
         this._getKeyExtractor = this._getKeyExtractor.bind(this);
 
-        // Native driver for scroll events
-        const scrollEventConfig = {
-            listener: this._onScroll,
-            useNativeDriver: true
-        };
-        this._scrollPos = new Animated.Value(0);
-        this._onScrollHandler = props.vertical ?
-            Animated.event(
-                [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }],
-                scrollEventConfig
-            ) : Animated.event(
-                [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }],
-                scrollEventConfig
-            );
+        this._setScrollHandler(props);
 
         // This bool aims at fixing an iOS bug due to scrollTo that triggers onMomentumScrollEnd.
         // onMomentumScrollEnd fires this._snapScroll, thus creating an infinite loop.
@@ -273,6 +260,10 @@ export default class Carousel extends Component {
             this._previousFirstItem = nextFirstItem;
             this._snapToItem(nextFirstItem, true, true, false, false);
         }
+
+        if (nextProps.onScroll !== this.props.onScroll) {
+          this._setScrollHandler(nextProps);
+        }
     }
 
     componentWillUnmount () {
@@ -297,6 +288,36 @@ export default class Carousel extends Component {
 
     get currentScrollPosition () {
         return this._currentContentOffset;
+    }
+
+    _setScrollHandler(props) {
+      // Native driver for scroll events
+      const scrollEventConfig = {
+        listener: this._onScroll,
+        useNativeDriver: true,
+      };
+      this._scrollPos = new Animated.Value(0);
+      const argMapping = props.vertical
+        ? [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }]
+        : [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }];
+
+      if (props.onScroll && Array.isArray(props.onScroll._argMapping)) {
+        // Because of a react-native issue https://github.com/facebook/react-native/issues/13294
+        argMapping.pop();
+        const [ argMap ] = props.onScroll._argMapping;
+        if (argMap && argMap.nativeEvent && argMap.nativeEvent.contentOffset) {
+          // Shares the same animated value passed in props
+          this._scrollPos =
+            argMap.nativeEvent.contentOffset.x ||
+            argMap.nativeEvent.contentOffset.y ||
+            this._scrollPos;
+        }
+        argMapping.push(...props.onScroll._argMapping);
+      }
+      this._onScrollHandler = Animated.event(
+        argMapping,
+        scrollEventConfig
+      );
     }
 
     _needsScrollView () {
@@ -794,7 +815,7 @@ export default class Carousel extends Component {
             this._repositionScroll(nextActiveItem);
         }
 
-        if (onScroll && event) {
+        if (typeof onScroll === "function" && event) {
             onScroll(event);
         }
     }
