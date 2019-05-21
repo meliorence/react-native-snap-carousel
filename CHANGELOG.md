@@ -1,3 +1,14 @@
+## v3.8.0
+
+* Set [`removeClippedSubviews`](https://facebook.github.io/react-native/docs/scrollview#removeclippedsubviews) to `false` by default for 'tinder' and 'stack' layouts, or when `useScrollView` is set to `true`. This aims at preventing a bunch of rendering issues.
+* Make sure that autoplay is properly restarted after a `touchStart` event
+* Allow serialized animated event as `onScroll`. See [#439](https://github.com/archriss/react-native-snap-carousel/pull/439) for more info (thanks [@Jberivera](https://github.com/Jberivera))
+* Allow using a custom scroll component. See [#498](https://github.com/archriss/react-native-snap-carousel/pull/498) for more info (thanks [@martinezguillaume](https://github.com/martinezguillaume))
+* Prevent loop animation from being played when reaching the end of the dataset. See [#443](https://github.com/archriss/react-native-snap-carousel/pull/443) for more info (thanks [@suhanmoon](https://github.com/suhanmoon))
+* Fire the `onTouchStart` prop. See [#464](https://github.com/archriss/react-native-snap-carousel/pull/464) for more info (thanks [@sangle7](https://github.com/sangle7))
+* Add accessibilityLabel to `Pagination`. See [#438](https://github.com/archriss/react-native-snap-carousel/pull/438) for more info (thanks [@thymikee](https://github.com/thymikee))
+* Allow `contentContainerCustomStyle` to override default paddings. See [#482](https://github.com/archriss/react-native-snap-carousel/pull/482) for more info (thanks [@yamov](https://github.com/yamov))
+
 ## v3.7.5
 * Fix issue with `scrollEnabled` introduced in version `3.7.3`... again! (thanks [@ifsnow](https://github.com/ifsnow))
 
