@@ -41,7 +41,7 @@ Prop | Description | Type | Default
 `lockScrollWhileSnapping` | Prevent the user from swiping again while the carousel is snapping to a position. This prevents miscellaneous minor issues (inadvertently tapping an item while scrolling, stopping the scrolling animation if the carousel is tapped in the middle of a snap, clunky behavior on Android when short snapping quickly in opposite directions). The only drawback is that enabling the prop hinders the ability to swipe quickly between items as a little pause between swipes is needed. **Note that the prop won't have any effect if `enableMomentum` is set to `true`, since it would otherwise impede the natural and expected behavior.** | Boolean | `false`
 `shouldOptimizeUpdates` | Whether to implement a `shouldComponentUpdate` strategy to minimize updates | Boolean | `true`
 `swipeThreshold` | Delta x when swiping to trigger the snap | Number | `20`
-`useScrollView` | Whether to use a `ScrollView` component instead of the default `FlatList` one. The advantages are to avoid rendering issues that can arise with `FlatList` and to provide compatibility with React Native pre- `0.43`. The major drawbacks are that you won't benefit from any of `FlatList`'s advanced optimizations and that you won't be able to use either `VirtualizedList` or `FlatList`'s specific props. **We recommend activating it only with a small set of slides and to test performance thoroughly in production mode.** | Boolean | `false` for `default` layout, `true` for `stack` and `tinder` layouts
+`useScrollView` | Whether to use a `ScrollView` component instead of the default `FlatList` one. The advantages are to avoid rendering issues that can arise with `FlatList` and to provide compatibility with React Native pre- `0.43`. The major drawbacks are that you won't benefit from any of `FlatList`'s advanced optimizations and that you won't be able to use either `VirtualizedList` or `FlatList`'s specific props. **We recommend activating it only with a small set of slides and to test performance thoroughly in production mode.** Since version `3.7.6`, this prop also accepts a custom scroll component (see #498 for more info). | Boolean | `false` for `default` layout, `true` for `stack` and `tinder` layouts
 `vertical` | Layout slides vertically instead of horizontally | Boolean | `false`
 
 ### Loop
@@ -56,7 +56,7 @@ Prop | Description | Type | Default
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 `autoplay` | Trigger autoplay on mount. If you enable autoplay, we recommend you to set `enableMomentum` to `false` (default) and `lockScrollWhileSnapping` to `true`; this will enhance user experience a bit. | Boolean | `false`
-`autoplayDelay` | Delay before enabling autoplay on startup & after releasing the touch | Number | `5000`
+`autoplayDelay` | Delay before enabling autoplay on startup & after releasing the touch | Number | `1000`
 `autoplayInterval` | Delay in ms until navigating to the next item | Number |  `3000`
 
 ### Style and animation
