@@ -77,7 +77,7 @@ export default class Carousel extends Component {
         activeSlideOffset: 20,
         apparitionDelay: 0,
         autoplay: false,
-        autoplayDelay: 5000,
+        autoplayDelay: 1000,
         autoplayInterval: 3000,
         callbackOffsetMargin: 5,
         containerCustomStyle: {},
@@ -139,6 +139,7 @@ export default class Carousel extends Component {
         this._onScrollEndDrag = !props.enableMomentum ? this._onScrollEndDrag.bind(this) : undefined;
         this._onMomentumScrollEnd = props.enableMomentum ? this._onMomentumScrollEnd.bind(this) : undefined;
         this._onTouchStart = this._onTouchStart.bind(this);
+        this._onTouchEnd = this._onTouchEnd.bind(this);
         this._onTouchRelease = this._onTouchRelease.bind(this);
 
         this._getKeyExtractor = this._getKeyExtractor.bind(this);
@@ -832,12 +833,27 @@ export default class Carousel extends Component {
 
     _onTouchStart () {
         const { onTouchStart } = this.props
+
         // `onTouchStart` is fired even when `scrollEnabled` is set to `false`
         if (this._getScrollEnabled() !== false && this._autoplaying) {
             this.stopAutoplay();
         }
+
         if (onTouchStart) {
             onTouchStart()
+        }
+    }
+
+    _onTouchEnd () {
+        const { onTouchEnd } = this.props
+
+        if (this._getScrollEnabled() !== false && autoplay && !this._autoplaying) {
+            // This event is buggy on Android, so a fallback is provided in _onScrollEnd()
+            this.startAutoplay();
+        }
+
+        if (onTouchEnd) {
+            onTouchEnd()
         }
     }
 
@@ -886,7 +902,7 @@ export default class Carousel extends Component {
     }
 
     _onScrollEnd (event) {
-        const { autoplay, enableSnap } = this.props;
+        const { autoplay, autoplayDelay, enableSnap } = this.props;
 
         if (this._ignoreNextMomentum) {
             // iOS fix
@@ -901,15 +917,13 @@ export default class Carousel extends Component {
             this._snapScroll(this._scrollEndOffset - this._scrollStartOffset);
         }
 
-        if (autoplay) {
-            // Restart autoplay after a little while
-            // This could be done when releasing touch
-            // but the event is buggy on Android...
-            // https://github.com/facebook/react-native/issues/9439
+        // The touchEnd event is buggy on Android, so this will serve as a fallback whenever needed
+        // https://github.com/facebook/react-native/issues/9439
+        if (autoplay && !this._autoplaying) {
             clearTimeout(this._enableAutoplayTimeout);
             this._enableAutoplayTimeout = setTimeout(() => {
                 this.startAutoplay();
-            }, 300);
+            }, autoplayDelay + 50);
         }
     }
 
@@ -1303,6 +1317,7 @@ export default class Carousel extends Component {
             onResponderRelease: this._onTouchRelease,
             onStartShouldSetResponderCapture: this._onStartShouldSetResponderCapture,
             onTouchStart: this._onTouchStart,
+            onTouchEnd: this._onScrollEnd,
             onLayout: this._onLayout,
             ...specificProps
         };
