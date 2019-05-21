@@ -526,7 +526,7 @@ export default class Carousel extends Component {
         }
     }
 
-    _getViewportOffet () {
+    _getViewportOffset () {
         const { sliderWidth, sliderHeight, itemWidth, itemHeight, vertical, activeSlideAlignment } = this.props;
 
         if (activeSlideAlignment === 'start') {
@@ -541,7 +541,7 @@ export default class Carousel extends Component {
     }
 
     _getCenter (offset) {
-        return offset + this._getViewportOffet() - this._getContainerInnerMargin();
+        return offset + this._getViewportOffset() - this._getContainerInnerMargin();
     }
 
     _getActiveItem (offset) {
@@ -622,7 +622,7 @@ export default class Carousel extends Component {
         const animatedValue = interpolators && interpolators[index];
 
         if (!animatedValue && animatedValue !== 0) {
-            return false;
+            return null;
         }
 
         const animationCommonOptions = {
@@ -1177,7 +1177,7 @@ export default class Carousel extends Component {
         const animatedValue = interpolators && interpolators[index];
 
         if (!animatedValue && animatedValue !== 0) {
-            return false;
+            return null;
         }
 
         const animate = this._shouldAnimateSlides();
@@ -1241,7 +1241,7 @@ export default class Carousel extends Component {
             directionalLockEnabled: true,
             pinchGestureEnabled: false,
             scrollsToTop: false,
-            removeClippedSubviews: true,
+            removeClippedSubviews: !this._needsScrollView(),
             inverted: this._needsRTLAdaptations(),
             // renderToHardwareTextureAndroid: true,
             ...specificProps
@@ -1312,7 +1312,7 @@ export default class Carousel extends Component {
         const { data, renderItem, useScrollView } = this.props;
 
         if (!data || !renderItem) {
-            return false;
+            return null;
         }
 
         const props = {
