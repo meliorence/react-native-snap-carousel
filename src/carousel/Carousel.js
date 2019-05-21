@@ -64,7 +64,7 @@ export default class Carousel extends Component {
         slideStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         shouldOptimizeUpdates: PropTypes.bool,
         swipeThreshold: PropTypes.number,
-        useScrollView: PropTypes.bool,
+        useScrollView: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
         vertical: PropTypes.bool,
         onBeforeSnapToItem: PropTypes.func,
         onSnapToItem: PropTypes.func
@@ -1305,7 +1305,7 @@ export default class Carousel extends Component {
     }
 
     render () {
-        const { data, renderItem } = this.props;
+        const { data, renderItem, useScrollView } = this.props;
 
         if (!data || !renderItem) {
             return false;
@@ -1317,14 +1317,16 @@ export default class Carousel extends Component {
             ...this._getComponentStaticProps()
         };
 
+        const ScrollViewComponent = typeof useScrollView === 'function' ? useScrollView : AnimatedScrollView
+
         return this._needsScrollView() ? (
-            <AnimatedScrollView {...props}>
+            <ScrollViewComponent {...props}>
                 {
                     this._getCustomData().map((item, index) => {
                         return this._renderItem({ item, index });
                     })
                 }
-            </AnimatedScrollView>
+            </ScrollViewComponent>
         ) : (
             <AnimatedFlatList {...props} />
         );
