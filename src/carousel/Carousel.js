@@ -1298,8 +1298,6 @@ export default class Carousel extends Component {
             // extraData: this.state,
             renderItem: this._renderItem,
             numColumns: 1,
-            getItemLayout: undefined, // see #193
-            initialScrollIndex: undefined, // see #193
             keyExtractor: keyExtractor || this._getKeyExtractor
         } : {};
 
