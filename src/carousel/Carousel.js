@@ -211,23 +211,23 @@ export default class Carousel extends Component {
         }
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentDidUpdate (prevProps) {
         const { interpolators } = this.state;
-        const { firstItem, itemHeight, itemWidth, scrollEnabled, sliderHeight, sliderWidth } = nextProps;
-        const itemsLength = this._getCustomDataLength(nextProps);
+        const { firstItem, itemHeight, itemWidth, scrollEnabled, sliderHeight, sliderWidth } = this.props;
+        const itemsLength = this._getCustomDataLength(this.props);
 
         if (!itemsLength) {
             return;
         }
 
-        const nextFirstItem = this._getFirstItem(firstItem, nextProps);
+        const nextFirstItem = this._getFirstItem(firstItem, this.props);
         let nextActiveItem = this._activeItem || this._activeItem === 0 ? this._activeItem : nextFirstItem;
 
-        const hasNewSliderWidth = sliderWidth && sliderWidth !== this.props.sliderWidth;
-        const hasNewSliderHeight = sliderHeight && sliderHeight !== this.props.sliderHeight;
-        const hasNewItemWidth = itemWidth && itemWidth !== this.props.itemWidth;
-        const hasNewItemHeight = itemHeight && itemHeight !== this.props.itemHeight;
-        const hasNewScrollEnabled = scrollEnabled !== this.props.scrollEnabled;
+        const hasNewSliderWidth = sliderWidth && sliderWidth !== prevProps.sliderWidth;
+        const hasNewSliderHeight = sliderHeight && sliderHeight !== prevProps.sliderHeight;
+        const hasNewItemWidth = itemWidth && itemWidth !== prevProps.itemWidth;
+        const hasNewItemHeight = itemHeight && itemHeight !== prevProps.itemHeight;
+        const hasNewScrollEnabled = scrollEnabled !== prevProps.scrollEnabled;
 
         // Prevent issues with dynamically removed items
         if (nextActiveItem > itemsLength - 1) {
@@ -244,7 +244,7 @@ export default class Carousel extends Component {
             this._activeItem = nextActiveItem;
             this._previousItemsLength = itemsLength;
 
-            this._initPositionsAndInterpolators(nextProps);
+            this._initPositionsAndInterpolators(this.props);
 
             // Handle scroll issue when dynamically removing items (see #133)
             // This also fixes first item's active state on Android
@@ -262,8 +262,8 @@ export default class Carousel extends Component {
             this._snapToItem(nextFirstItem, false, true, false, false);
         }
 
-        if (nextProps.onScroll !== this.props.onScroll) {
-          this._setScrollHandler(nextProps);
+        if (this.props.onScroll !== prevProps.onScroll) {
+          this._setScrollHandler(this.props);
         }
     }
 
