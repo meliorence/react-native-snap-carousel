@@ -1,3 +1,9 @@
+## v3.8.1
+
+* Migrate from deprecated `componentWillReceiveProps` to `componentDidUpdate` (thanks [@kiarashws](https://github.com/kiarashws))
+* Use `console.error` instead of `console.warn` for critical warnings (thanks [@bardiarastin](https://github.com/bardiarastin))
+* Update parallax doc (thanks [@bardiarastin](https://github.com/bardiarastin))
+
 ## v3.8.0
 
 * Set [`removeClippedSubviews`](https://facebook.github.io/react-native/docs/scrollview#removeclippedsubviews) to `false` by default for 'tinder' and 'stack' layouts, or when `useScrollView` is set to `true`. This aims at preventing a bunch of rendering issues.
