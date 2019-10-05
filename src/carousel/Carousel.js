@@ -836,7 +836,7 @@ export default class Carousel extends Component {
 
         // `onTouchStart` is fired even when `scrollEnabled` is set to `false`
         if (this._getScrollEnabled() !== false && this._autoplaying) {
-            this.stopAutoplay();
+            this.pauseAutoPlay();
         }
 
         if (onTouchStart) {
@@ -847,7 +847,7 @@ export default class Carousel extends Component {
     _onTouchEnd () {
         const { onTouchEnd } = this.props
 
-        if (this._getScrollEnabled() !== false && autoplay && !this._autoplaying) {
+        if (this._getScrollEnabled() !== false && this._autoplay && !this._autoplaying) {
             // This event is buggy on Android, so a fallback is provided in _onScrollEnd()
             this.startAutoplay();
         }
@@ -902,7 +902,7 @@ export default class Carousel extends Component {
     }
 
     _onScrollEnd (event) {
-        const { autoplay, autoplayDelay, enableSnap } = this.props;
+        const { autoplayDelay, enableSnap } = this.props;
 
         if (this._ignoreNextMomentum) {
             // iOS fix
@@ -919,7 +919,7 @@ export default class Carousel extends Component {
 
         // The touchEnd event is buggy on Android, so this will serve as a fallback whenever needed
         // https://github.com/facebook/react-native/issues/9439
-        if (autoplay && !this._autoplaying) {
+        if (this._autoplay && !this._autoplaying) {
             clearTimeout(this._enableAutoplayTimeout);
             this._enableAutoplayTimeout = setTimeout(() => {
                 this.startAutoplay();
@@ -1081,6 +1081,7 @@ export default class Carousel extends Component {
 
     startAutoplay () {
         const { autoplayInterval, autoplayDelay } = this.props;
+        this._autoplay = true;
 
         if (this._autoplaying) {
             return;
@@ -1097,9 +1098,14 @@ export default class Carousel extends Component {
         }, autoplayDelay);
     }
 
-    stopAutoplay () {
+    pauseAutoPlay () {
         this._autoplaying = false;
-        clearInterval(this._autoplayInterval);
+        clearInterval(this._autoplayInterval);        
+    }
+
+    stopAutoplay () {
+        this._autoplay = false;
+        this.pauseAutoPlay();
     }
 
     snapToItem (index, animated = true, fireCallback = true) {
