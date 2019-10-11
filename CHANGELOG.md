@@ -1,3 +1,8 @@
+## v3.8.2
+
+* Fix autoplay stop after user interaction (thanks [@HelloCore](https://github.com/HelloCore))
+* Allow using a custom animated image component with `ParallaxImage` (thanks [@DanielMarkiel](https://github.com/DanielMarkiel))
+
 ## v3.8.1
 
 * Migrate from deprecated `componentWillReceiveProps` to `componentDidUpdate` (thanks [@kiarashws](https://github.com/kiarashws))
