@@ -24,7 +24,11 @@ export default class ParallaxImage extends Component {
         fadeDuration: PropTypes.number,
         parallaxFactor: PropTypes.number,
         showSpinner: PropTypes.bool,
-        spinnerColor: PropTypes.string
+        spinnerColor: PropTypes.string,
+        AnimatedImageComponent: PropTypes.oneOfType([
+            PropTypes.func,
+            PropTypes.object
+        ])
     };
 
     static defaultProps = {
@@ -32,7 +36,8 @@ export default class ParallaxImage extends Component {
         fadeDuration: 500,
         parallaxFactor: 0.3,
         showSpinner: true,
-        spinnerColor: 'rgba(0, 0, 0, 0.4)'
+        spinnerColor: 'rgba(0, 0, 0, 0.4)',
+        AnimatedImageComponent: Animated.Image
     }
 
     constructor (props) {
@@ -146,6 +151,7 @@ export default class ParallaxImage extends Component {
             sliderHeight,
             parallaxFactor,
             style,
+            AnimatedImageComponent,
             ...other
         } = this.props;
 
@@ -174,7 +180,7 @@ export default class ParallaxImage extends Component {
         };
 
         return (
-            <Animated.Image
+            <AnimatedImageComponent
               {...other}
               style={[styles.image, style, requiredStyles, dynamicStyles]}
               onLoad={this._onLoad}
