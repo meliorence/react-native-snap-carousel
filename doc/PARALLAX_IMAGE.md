@@ -14,6 +14,7 @@ Prop | Description | Type | Default
 `parallaxFactor` | Speed of the parallax effect. Be aware that the bigger the value, the more image will appear "zoomed in". | Number | `0.3`
 `showSpinner` | Whether to display a spinner while image is loading or not | Boolean | `true`
 `spinnerColor` | Color of the spinner | String | 'rgba(0, 0, 0, 0.4)'
+`AnimatedImageComponent` | Custom animated image component | Function Object | `Animated.Image`
 
 All [`<Image />` props](https://facebook.github.io/react-native/docs/image.html#props) are also inherited, **particularly `source` which is required**.
 
