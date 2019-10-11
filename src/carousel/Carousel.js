@@ -204,11 +204,7 @@ export default class Carousel extends Component {
     }
 
     shouldComponentUpdate (nextProps, nextState) {
-        if (this.props.shouldOptimizeUpdates === false) {
-            return true;
-        } else {
-            return shallowCompare(this, nextProps, nextState);
-        }
+        return !this.props.shouldOptimizeUpdates || shallowCompare(this, nextProps, nextState);
     }
 
     componentDidUpdate (prevProps) {
