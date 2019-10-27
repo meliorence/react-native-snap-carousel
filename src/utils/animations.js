@@ -142,11 +142,13 @@ export function stackAnimatedStyles (index, animatedValue, carouselProps, cardOf
             centeredPosition + edgeAlignment + offset;
     };
 
+    const opacityOutputRange = carouselProps.inactiveSlideOpacity === 1 ? [1, 1, 1, 0] : [1, 0.75, 0.5, 0];
+
     return IS_ANDROID ? {
         // elevation: carouselProps.data.length - index, // fix zIndex bug visually, but not from a logic point of view
         opacity: animatedValue.interpolate({
             inputRange: [-3, -2, -1, 0],
-            outputRange: [0, 0.5, 0.75, 1],
+            outputRange: opacityOutputRange.reverse(),
             extrapolate: 'clamp'
         }),
         transform: [{
@@ -172,7 +174,7 @@ export function stackAnimatedStyles (index, animatedValue, carouselProps, cardOf
         zIndex: carouselProps.data.length - index,
         opacity: animatedValue.interpolate({
             inputRange: [0, 1, 2, 3],
-            outputRange: [1, 0.75, 0.5, 0],
+            outputRange: opacityOutputRange,
             extrapolate: 'clamp'
         }),
         transform: [{
