@@ -6,6 +6,7 @@
 1. [React Native version](#react-native-version)
 1. [Android performance](#android-performance)
 1. [Unreliable callbacks](#unreliable-callbacks)
+1. [Unreliable first item](#unreliable-first-item)
 1. [Error with Jest](#error-with-jest)
 1. [RTL support (experimental)](#rtl-support-experimental)
 
@@ -52,6 +53,12 @@ Version 2.3.0 tackled these issues with all sorts of flags and hacks. But you co
 Callback handling has been completely revamped in version 3.2.0, in a less hacky and more reliable way. There is one issue though: callbacks now rely on scroll events. Usually, this is not a problem since the plugin features a native-powered scroll. **But there has been [a regression in React Native 0.46.x](https://github.com/facebook/react-native/issues/15769), that has been fixed in version 0.48.2.**
 
 If you're using an in-between version, you're in for some trouble since events won't be fired frequently enough (particularly on Android). **We've added a prop `callbackOffsetMargin` to help with this situation.**
+
+## Unreliable first item
+
+By design, **the `FlatList` component only renders a small chunk if items initially**.
+
+This means **you may need to rely on inherited props [`getItemLayout`](https://facebook.github.io/react-native/docs/flatlist#getitemlayout) & [`initialScrollIndex`](https://facebook.github.io/react-native/docs/flatlist#initialscrollindex) to get the `firstItem` prop to work properly** (usable from version `3.8.3` on).
 
 ## Error with Jest
 
