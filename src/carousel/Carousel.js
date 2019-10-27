@@ -1036,7 +1036,7 @@ export default class Carousel extends Component {
 
         if (enableMomentum) {
             // iOS fix, check the note in the constructor
-            if (IS_IOS && !initial) {
+            if (!initial) {
                 this._ignoreNextMomentum = true;
             }
 
