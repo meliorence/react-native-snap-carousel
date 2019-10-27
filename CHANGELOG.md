@@ -1,3 +1,12 @@
+## v3.8.3
+
+* Seems like it's time to remove the `getItemLayout` & `initialScrollIndex` override to properly display the first item when its index is a huge number (thanks [@rontalx](https://github.com/rontalx))
+  * :warning: Make sure to read how these props work together ([link#1](https://facebook.github.io/react-native/docs/flatlist#getitemlayout) & [link #2](https://facebook.github.io/react-native/docs/flatlist#initialscrollindex)), and to understand [why they were disabled in the first place](https://github.com/facebook/react-native/issues/15734#issuecomment-330616697)!
+* Fix `snapToItem` not working when `enableMomentum` is set to `true` on Android (thanks [@daaashleywch](https://github.com/daaashleywch))
+* Add basic TypeScript support (thanks [@facuacostag](https://github.com/facuacostag))
+* Stack layout's peaking items will remain opaque if `inactiveSlideOpacity` is set to `1`
+
+
 ## v3.8.2
 
 * Fix autoplay stop after user interaction (thanks [@HelloCore](https://github.com/HelloCore))
