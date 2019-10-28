@@ -139,7 +139,7 @@ export default class PaginationDot extends PureComponent {
               style={dotContainerStyle}
               activeOpacity={tappable ? activeOpacity : 1}
               onPress={onPress}
-              delayPressInDot={delayPressInDot}
+              delayPressIn={delayPressInDot}
             >
                 <Animated.View style={dotStyle} />
             </TouchableOpacity>
