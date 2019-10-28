@@ -54,7 +54,7 @@ declare module 'react-native-snap-carousel' {
     useScrollView?: (() => void) | boolean;
     vertical?: boolean;
     onBeforeSnapToItem?: () => void;
-    onSnapToItem?: () => void;
+    onSnapToItem?: (slideIndex: number) => void;
   }
 
   export interface ParallaxImageProps {
