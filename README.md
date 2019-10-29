@@ -67,6 +67,12 @@ Swiper component for React Native featuring **previews**, **multiple layouts**, 
 $ npm install --save react-native-snap-carousel
 ```
 
+If you're using Typescript you should also install type definitions:
+```bash
+$ npm install --save @types/react-native-snap-carousel
+```
+
+
 ```javascript
 import Carousel from 'react-native-snap-carousel';
 
