@@ -1,3 +1,8 @@
+## v3.8.4
+
+* Remove TypeScript definitions since they were causing issues (thanks [@radko93](https://github.com/radko93))
+  * If you're using Typescript you should install the type definitions this way: `npm install --save @types/react-native-snap-carousel`
+
 ## v3.8.3
 
 * Seems like it's time to remove the `getItemLayout` & `initialScrollIndex` override to properly display the first item when its index is a huge number (thanks [@rontalx](https://github.com/rontalx))
