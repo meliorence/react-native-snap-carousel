@@ -566,7 +566,7 @@ export default class Carousel extends Component {
     }
 
     _initPositionsAndInterpolators (props = this.props) {
-				const { data, itemWidth, itemHeight, scrollInterpolator, vertical, activeSlideAlignment, loop, sliderWidth, lastItemOffsetWidth } = props;
+	    const { data, itemWidth, itemHeight, scrollInterpolator, vertical, activeSlideAlignment, loop, sliderWidth, lastItemOffsetWidth } = props;
         const sizeRef = vertical ? itemHeight : itemWidth;
 
         if (!data || !data.length) {
