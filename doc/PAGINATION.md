@@ -31,6 +31,10 @@ Prop | Description | Type | Default
 `renderDots` | Function that gives you complete control over pagination's rendering. It will receive three parameters : `(activeIndex, total, context)`. This can be especially useful in order to replace dots with numbers. **:warning: You will need to provide your own logic to handle taps. See [this comment](https://github.com/archriss/react-native-snap-carousel/issues/273#issuecomment-368295203) for more info.** | Function | `undefined`
 `tappableDots` | Make default dots tappable, e.g. your carousel will slide to the corresponding item. Note that `carouselRef` must be specified for this to work. | Boolean | `false`
 `vertical` | Whether to layout dots vertically or horizontally | Boolean | `false`
+`animatedDuration` | Length of dot animation (milliseconds) | Number | `250`
+`animatedFriction` | Controls "bounciness"/overshoot on dot animation | Number | `4`
+`animatedTension` | Controls speed dot animation | Number | `50`
+`delayPressInDot` | Delay in ms, from the start of the touch, before onPressIn is called on dot | Number | `0`
 
 ## Note on dots' colors
 If your active and inactive dots aren't of the same color, you have a choice to make:
