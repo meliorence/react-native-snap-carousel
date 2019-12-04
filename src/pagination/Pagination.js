@@ -27,14 +27,22 @@ export default class Pagination extends PureComponent {
         renderDots: PropTypes.func,
         tappableDots: PropTypes.bool,
         vertical: PropTypes.bool,
-        accessibilityLabel: PropTypes.string
+        accessibilityLabel: PropTypes.string,
+        animatedDuration: PropTypes.number,
+        animatedFriction: PropTypes.number,
+        animatedTension: PropTypes.number,
+        delayPressInDot: PropTypes.number,
     };
 
     static defaultProps = {
         inactiveDotOpacity: 0.5,
         inactiveDotScale: 0.5,
         tappableDots: false,
-        vertical: false
+        vertical: false,
+        animatedDuration: 250,
+        animatedFriction: 4,
+        animatedTension: 50,
+        delayPressInDot: 0,
     }
 
     constructor (props) {
@@ -86,7 +94,11 @@ export default class Pagination extends PureComponent {
             inactiveDotScale,
             inactiveDotStyle,
             renderDots,
-            tappableDots
+            tappableDots,
+            animatedDuration,
+            animatedFriction,
+            animatedTension,
+            delayPressInDot,
         } = this.props;
 
         if (renderDots) {
@@ -104,6 +116,10 @@ export default class Pagination extends PureComponent {
           inactiveOpacity={inactiveDotOpacity}
           inactiveScale={inactiveDotScale}
           inactiveStyle={inactiveDotStyle}
+          animatedDuration={animatedDuration}
+          animatedFriction={animatedFriction}
+          animatedTension={animatedTension}
+          delayPressInDot={delayPressInDot}
         />;
 
         let dots = [];
