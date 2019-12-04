@@ -16,9 +16,9 @@ Hey there,
 
 Creating and maintaining this plugin has been a fun ride that started in 2016. We thank you all for your appreciation and for making the most out of it! You've motivated us to spend countless hours improving the plugin, and made us happy to give back to the Open Source community.
 
-Put simply, we love this project. However we currently aren't able to give it the love it deserves and the care it requires. If you have enough time and knowledge, and want to become a maintainer, please let us know.
+Put simply, we love this project. However we currently aren't able to give it the love it deserves and the care it requires. **If you have enough time and knowledge, and want to become a maintainer, please let us know**.
 
-### 💡 **[Just head here if you're interested](https://github.com/archriss/react-native-snap-carousel/issues/632).**
+### 💡 **[Just head there if you're interested](https://github.com/archriss/react-native-snap-carousel/issues/632).**
 
 We're not abandoning the ship, but we need more people to help us keep it alive and well!
 
