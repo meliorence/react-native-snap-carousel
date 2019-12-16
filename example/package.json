@@ -1,24 +1,28 @@
 {
-	"name": "example",
-	"version": "0.52.0",
-	"private": true,
-	"scripts": {
-		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
-	},
-	"dependencies": {
-		"react": "16.2.0",
-		"react-native": "0.52.x",
-		"react-native-linear-gradient": "2.4.0",
-		"react-native-snap-carousel": "file:../"
-	},
-	"devDependencies": {
-		"babel-preset-react-native": "4.0.0",
-		"babel-jest": "22.1.0",
-		"jest": "22.1.4",
-		"react-test-renderer": "16.2.0"
-	},
-	"jest": {
-		"preset": "react-native"
-	}
+  "name": "example",
+  "version": "0.61.5",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "16.9.0",
+    "react-native": "0.61.5",
+    "react-native-linear-gradient": "2.5.6",
+    "react-native-snap-carousel": "file:../"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.56.0",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
 }

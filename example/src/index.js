@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Platform, View, ScrollView, Text, StatusBar, SafeAreaView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { sliderWidth, itemWidth } from 'example/src/styles/SliderEntry.style';
-import SliderEntry from 'example/src/components/SliderEntry';
-import styles, { colors } from 'example/src/styles/index.style';
-import { ENTRIES1, ENTRIES2 } from 'example/src/static/entries';
-import { scrollInterpolators, animatedStyles } from 'example/src/utils/animations';
+import { sliderWidth, itemWidth } from './styles/SliderEntry.style';
+import SliderEntry from './components/SliderEntry';
+import styles, { colors } from './styles/index.style';
+import { ENTRIES1, ENTRIES2 } from './static/entries';
+import { scrollInterpolators, animatedStyles } from './utils/animations';
 
 const IS_ANDROID = Platform.OS === 'android';
 const SLIDER_1_FIRST_ITEM = 1;
