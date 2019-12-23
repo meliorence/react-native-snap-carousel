@@ -877,10 +877,17 @@ export default class Carousel extends Component {
 
     // Used when `enableMomentum` is DISABLED
     _onScrollEndDrag (event) {
-        const { onScrollEndDrag } = this.props;
+        const { onScrollEndDrag, enableSnap } = this.props;
 
         if (this._carouselRef) {
             this._onScrollEnd && this._onScrollEnd();
+
+            /**
+             * When scroll in a right position after calling this._onScrollEnd() and slide is changed,
+             * We will not receive *required onScroll events.
+             * So we can call it now, to make sure sync is completed.
+             */
+            if(enableSnap) this._onScroll(event)
         }
 
         if (onScrollEndDrag) {
