@@ -58,7 +58,7 @@ export default class MyCarousel extends Component {
         return <MySlideComponent data={item} />
     }
 
-    get pagination () {
+    function pagination () {
         const { entries, activeSlide } = this.state;
         return (
             <Pagination
