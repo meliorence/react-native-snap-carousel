@@ -1272,6 +1272,7 @@ export default class Carousel extends Component {
             scrollsToTop: false,
             removeClippedSubviews: !this._needsScrollView(),
             inverted: this._needsRTLAdaptations(),
+            disableVirtualization: this._needsRTLAdaptations(), // until issue will be fixed in react-native: https://github.com/facebook/react-native/issues/19150
             // renderToHardwareTextureAndroid: true,
             ...specificProps
         };
