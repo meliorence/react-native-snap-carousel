@@ -1193,7 +1193,8 @@ export default class Carousel extends Component {
             sliderHeight,
             sliderWidth,
             slideStyle,
-            vertical
+            vertical,
+            slideComponent
         } = this.props;
 
         const animatedValue = interpolators && interpolators[index];
@@ -1203,7 +1204,7 @@ export default class Carousel extends Component {
         }
 
         const animate = this._shouldAnimateSlides();
-        const Component = animate ? Animated.View : View;
+        const Component = slideComponent ? (animate ? Animated.createAnimatedComponent(slideComponent) : slideComponent) : (animate ? Animated.View : View);
         const animatedStyle = animate ? this._getSlideInterpolatedStyle(index, animatedValue) : {};
 
         const parallaxProps = hasParallaxImages ? {
