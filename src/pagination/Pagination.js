@@ -61,7 +61,7 @@ export default class Pagination extends PureComponent {
                 'You need to specify both `dotElement` and `inactiveDotElement`'
             );
         }
-        if (props.tappableDots && !props.carouselRef) {
+        if (props.tappableDots && props.carouselRef === undefined) {
             console.warn(
                 'react-native-snap-carousel | Pagination: ' +
                 'You must specify prop `carouselRef` when setting `tappableDots` to `true`'
@@ -122,19 +122,17 @@ export default class Pagination extends PureComponent {
           delayPressInDot={delayPressInDot}
         />;
 
-        let dots = [];
-
-        for (let i = 0; i < dotsLength; i++) {
+        const dots = [...Array(dotsLength).keys()].map(i => {
             const isActive = i === this._activeDotIndex;
-            dots.push(React.cloneElement(
+            return React.cloneElement(
                 (isActive ? dotElement : inactiveDotElement) || DefaultDot,
                 {
                     key: `pagination-dot-${i}`,
-                    active: i === this._activeDotIndex,
+                    active: isActive,
                     index: i
                 }
-            ));
-        }
+            );
+        });
 
         return dots;
     }
