@@ -129,10 +129,10 @@ export default class PaginationDot extends PureComponent {
             animatedColor
         ];
 
-        const onPress = tappable && carouselRef ? () => {
+        const onPress = tappable ? () => {
             try {
                 const currentRef = carouselRef.current; 
-                currentRef && currentRef._snapToItem(currentRef._getPositionIndex(index));
+                currentRef._snapToItem(currentRef._getPositionIndex(index));
             } catch (error) {
                 console.warn(
                     'react-native-snap-carousel | Pagination: ' +
