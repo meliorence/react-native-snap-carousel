@@ -5,21 +5,6 @@ import styles from './Pagination.style';
 
 export default class PaginationDot extends PureComponent {
 
-    static propTypes = {
-        inactiveOpacity: PropTypes.number.isRequired,
-        inactiveScale: PropTypes.number.isRequired,
-        active: PropTypes.bool,
-        activeOpacity: PropTypes.number,
-        carouselRef: PropTypes.object,
-        color: PropTypes.string,
-        containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        inactiveColor: PropTypes.string,
-        inactiveStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        index: PropTypes.number,
-        style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        tappable: PropTypes.bool
-    };
-
     constructor (props) {
         super(props);
         this.state = {
@@ -145,4 +130,21 @@ export default class PaginationDot extends PureComponent {
             </TouchableOpacity>
         );
     }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+    PaginationDot.propTypes = {
+        inactiveOpacity: PropTypes.number.isRequired,
+        inactiveScale: PropTypes.number.isRequired,
+        active: PropTypes.bool,
+        activeOpacity: PropTypes.number,
+        carouselRef: PropTypes.object,
+        color: PropTypes.string,
+        containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        inactiveColor: PropTypes.string,
+        inactiveStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        index: PropTypes.number,
+        style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        tappable: PropTypes.bool
+    };
 }
