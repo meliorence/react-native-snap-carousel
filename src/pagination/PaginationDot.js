@@ -3,7 +3,7 @@ import { View, Animated, Easing, TouchableOpacity, ViewPropTypes } from 'react-n
 import PropTypes from 'prop-types';
 import styles from './Pagination.style';
 
-export default class PaginationDot extends PureComponent {
+class PaginationDot extends PureComponent {
 
     constructor (props) {
         super(props);
@@ -148,3 +148,5 @@ if (process.env.NODE_ENV !== 'production') {
         tappable: PropTypes.bool
     };
 }
+
+export default PaginationDot

@@ -25,7 +25,7 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 // otherwise it is undefined at init, which messes with custom indexes
 const IS_RTL = I18nManager.isRTL;
 
-export default class Carousel extends Component {
+class Carousel extends Component {
     static defaultProps = {
         activeAnimationType: 'timing',
         activeAnimationOptions: null,
@@ -1358,3 +1358,5 @@ if (process.env.NODE_ENV !== 'production') {
         onSnapToItem: PropTypes.func
     };
 }
+
+export default Carousel

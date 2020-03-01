@@ -5,7 +5,7 @@ import { View, ViewPropTypes, Image, Animated, Easing, ActivityIndicator, findNo
 import PropTypes from 'prop-types';
 import styles from './ParallaxImage.style';
 
-export default class ParallaxImage extends Component {
+class ParallaxImage extends Component {
 
     static defaultProps = {
         containerStyle: {},
@@ -222,3 +222,5 @@ if (process.env.NODE_ENV !== 'production') {
         ])
     };
 }
+
+export default ParallaxImage

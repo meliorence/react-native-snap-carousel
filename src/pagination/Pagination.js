@@ -7,7 +7,7 @@ import styles from './Pagination.style';
 const IS_IOS = Platform.OS === 'ios';
 const IS_RTL = I18nManager.isRTL;
 
-export default class Pagination extends PureComponent {
+class Pagination extends PureComponent {
 
     static defaultProps = {
         inactiveDotOpacity: 0.5,
@@ -169,3 +169,5 @@ if (process.env.NODE_ENV !== 'production') {
         delayPressInDot: PropTypes.number,
     }
 }
+
+export default Pagination
