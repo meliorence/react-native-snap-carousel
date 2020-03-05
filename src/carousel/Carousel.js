@@ -910,6 +910,10 @@ export default class Carousel extends Component {
             return;
         }
 
+        // Check if it is just tap event (not swipe)
+        if (this._currentContentOffset === this._scrollEndOffset) {
+            return;
+        }
         this._scrollEndOffset = this._currentContentOffset;
         this._scrollEndActive = this._getActiveItem(this._scrollEndOffset);
 
@@ -1033,6 +1037,9 @@ export default class Carousel extends Component {
         }
 
         this._scrollTo(this._scrollOffsetRef, animated);
+
+        // Store scroll end position to differentiating between a tap and a swipe event
+        this._scrollEndOffset = this._currentContentOffset;
 
         if (enableMomentum) {
             // iOS fix, check the note in the constructor
