@@ -1,5 +1,4 @@
 # react-native-snap-carousel
-Swiper component for React Native featuring **previews**, **multiple layouts**, **parallax images**, **performant handling of huge numbers of items**, and **RTL support**. Compatible with Android & iOS.
 
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-snap-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-snap-carousel)
@@ -11,17 +10,17 @@ Swiper component for React Native featuring **previews**, **multiple layouts**, 
 
 -----
 
-### :raised_hands: New feature: layouts
+## :handshake: Maintainers wanted
 
-[Do you want to find out more?](#layouts-and-custom-interpolations)
+Hey there,
 
-![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
-![react-native-snap-carousel tinder layout](https://i.imgur.com/R7OpEFs.gif)
-![react-native-snap-carousel stack layout](https://i.imgur.com/foMIGM2.gif)
+Creating and maintaining this plugin has been a fun ride that started in 2016. We thank you all for your appreciation and for making the most out of it! You've motivated us to spend countless hours improving the plugin, and made us happy to give back to the Open Source community.
 
------
+Put simply, we love this project. However we currently aren't able to give it the love it deserves and the care it requires. **If you have enough time and knowledge, and want to become a maintainer, please let us know**.
 
-### :sparkles: Do you want an even better plugin? [Vote for React Native's feature requests](https://github.com/archriss/react-native-snap-carousel/issues/203) to let the Facebook team know what they need to improve!
+### 💡 **[Just head there if you're interested](https://github.com/archriss/react-native-snap-carousel/issues/632).**
+
+We're not abandoning the ship, but we need more people to help us keep it alive and well!
 
 -----
 
@@ -42,6 +41,14 @@ Swiper component for React Native featuring **previews**, **multiple layouts**, 
 1. [Credits](#credits)
 
 ## Showcase
+
+### :raised_hands: New feature: layouts
+
+[Do you want to find out more?](#layouts-and-custom-interpolations)
+
+![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
+![react-native-snap-carousel tinder layout](https://i.imgur.com/R7OpEFs.gif)
+![react-native-snap-carousel stack layout](https://i.imgur.com/foMIGM2.gif)
 
 ### Archriss' "Ville d'Aix-en-Provence" app
 
@@ -78,7 +85,7 @@ import Carousel from 'react-native-snap-carousel';
 
 export class MyCarousel extends Component {
 
-    _renderItem ({item, index}) {
+    _renderItem = ({item, index}) => {
         return (
             <View style={styles.slide}>
                 <Text style={styles.title}>{ item.title }</Text>
