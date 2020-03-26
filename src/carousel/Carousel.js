@@ -1227,7 +1227,6 @@ export default class Carousel extends Component {
         const specificProps = this._needsScrollView() ? {
             key: keyExtractor ? keyExtractor(item, index) : this._getKeyExtractor(item, index)
         } : {};
-        console.log(animatedStyle.transform[0].scale._config.inputRange, animatedStyle.transform[0].scale._config.outputRange);
         return (
             <Component style={[mainDimension, slideStyle, animatedStyle]} pointerEvents={'box-none'} {...specificProps}>
                 { renderItem({ item, index }, parallaxProps) }
