@@ -483,7 +483,7 @@ export default class Carousel extends Component {
     _getWrappedRef () {
         // https://github.com/facebook/react-native/issues/10635
         // https://stackoverflow.com/a/48786374/8412141
-        return this._carouselRef && this._carouselRef.getNode && this._carouselRef.getNode();
+        return this._carouselRef;
     }
 
     _getScrollEnabled () {
