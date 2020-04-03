@@ -50,23 +50,16 @@ We're not abandoning the ship, but we need more people to help us keep it alive 
 ![react-native-snap-carousel tinder layout](https://i.imgur.com/R7OpEFs.gif)
 ![react-native-snap-carousel stack layout](https://i.imgur.com/foMIGM2.gif)
 
-### Archriss' "Ville d'Aix-en-Provence" app
+### Real-world examples
 
-**This app is available on [Android](https://play.google.com/store/apps/details?id=fr.archriss.aixmobile.app) and [iOS](https://itunes.apple.com/fr/app/ville-daix-en-provence/id494548366?mt=8).** It uses **version 3.2.0** of the plugin, with `FlatList`'s implementation and [parallax images](#parallaximage-component).
+These are live apps we've created that make heavy use of the plugin. Don't be shy, share yours if you've done something awesome with it!
 
 ![react-native-snap-carousel archriss aix](https://i.imgur.com/pPm0csc.gif)
 ![react-native-snap-carousel archriss aix](https://i.imgur.com/UFsPlz2.gif)
 
-### Archriss' showcase app
-
-**You can try the app live on [Android](https://play.google.com/store/apps/details?id=fr.archriss.demo.app) and [iOS](https://itunes.apple.com/lu/app/archriss-presentation-mobile/id1180954376?mt=8).** It currently uses **version 1.4.0** of the plugin. Be aware that sliders' layouts will break on RTL devices since support was added in version 2.1.0 (see [#38](https://github.com/archriss/react-native-snap-carousel/issues/38)).
-
 ![react-native-snap-carousel](https://i.imgur.com/Fope3uj.gif)
 ![react-native-snap-carousel](https://i.imgur.com/WNOBYfl.gif)
 ![react-native-snap-carousel](https://i.imgur.com/sK5DKaG.gif)
-
-> Please note that **we do not plan on Open-Sourcing the code of our showcase app**. Still, we've put together [an example](#example) for you to play with, and you can find some insight about our map implementation [in this comment](https://github.com/archriss/react-native-snap-carousel/issues/11#issuecomment-265147385).
-> The folks at [codedaily.io](https://codedaily.io) have created a great tutorial about implementing a similar feature. [Go check it out!](https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native)
 
 ## Usage
 
@@ -108,7 +101,13 @@ export class MyCarousel extends Component {
 ```
 
 ## Example
-You can find the following example in the [`/example` folder](https://github.com/archriss/react-native-snap-carousel/tree/master/example).
+
+Here are simple examples that can be edited in real time in your browser:
+
+- https://snack.expo.io/@vitkor/carousel-simple-example
+- https://snack.expo.io/@bd-arc/react-native-snap-carousel-%7C-example-with-custom-interpolations
+
+You can also find a more in-depth (read "complex") one in the [`/example` folder](https://github.com/archriss/react-native-snap-carousel/tree/master/example).
 
 ![react-native-snap-carousel](https://i.imgur.com/pZincya.gif)
 
