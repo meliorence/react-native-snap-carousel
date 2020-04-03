@@ -910,6 +910,10 @@ export default class Carousel extends Component {
             return;
         }
 
+        if (this._currentContentOffset === this._scrollEndOffset) {
+            return;
+        }
+
         this._scrollEndOffset = this._currentContentOffset;
         this._scrollEndActive = this._getActiveItem(this._scrollEndOffset);
 
@@ -1033,6 +1037,8 @@ export default class Carousel extends Component {
         }
 
         this._scrollTo(this._scrollOffsetRef, animated);
+
+        this._scrollEndOffset = this._currentContentOffset;
 
         if (enableMomentum) {
             // iOS fix, check the note in the constructor
