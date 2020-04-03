@@ -131,7 +131,7 @@ export default class PaginationDot extends PureComponent {
 
         const onPress = tappable ? () => {
             try {
-                const currentRef = carouselRef.current; 
+                const currentRef = carouselRef.current || carouselRef;
                 currentRef._snapToItem(currentRef._getPositionIndex(index));
             } catch (error) {
                 console.warn(
