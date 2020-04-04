@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { I18nManager, Platform, View, ViewPropTypes } from 'react-native';
+import { I18nManager, Platform, View } from 'react-native';
 import PropTypes from 'prop-types';
 import PaginationDot from './PaginationDot';
 import styles from './Pagination.style';
@@ -14,16 +14,16 @@ export default class Pagination extends PureComponent {
         dotsLength: PropTypes.number.isRequired,
         activeOpacity: PropTypes.number,
         carouselRef: PropTypes.object,
-        containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        containerStyle: View.propTypes.style,
         dotColor: PropTypes.string,
-        dotContainerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        dotContainerStyle: View.propTypes.style,
         dotElement: PropTypes.element,
-        dotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        dotStyle: View.propTypes.style,
         inactiveDotColor: PropTypes.string,
         inactiveDotElement: PropTypes.element,
         inactiveDotOpacity: PropTypes.number,
         inactiveDotScale: PropTypes.number,
-        inactiveDotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        inactiveDotStyle: View.propTypes.style,
         renderDots: PropTypes.func,
         tappableDots: PropTypes.bool,
         vertical: PropTypes.bool,
@@ -31,7 +31,7 @@ export default class Pagination extends PureComponent {
         animatedDuration: PropTypes.number,
         animatedFriction: PropTypes.number,
         animatedTension: PropTypes.number,
-        delayPressInDot: PropTypes.number,
+        delayPressInDot: PropTypes.number
     };
 
     static defaultProps = {
@@ -42,7 +42,7 @@ export default class Pagination extends PureComponent {
         animatedDuration: 250,
         animatedFriction: 4,
         animatedTension: 50,
-        delayPressInDot: 0,
+        delayPressInDot: 0
     }
 
     constructor (props) {
@@ -98,7 +98,7 @@ export default class Pagination extends PureComponent {
             animatedDuration,
             animatedFriction,
             animatedTension,
-            delayPressInDot,
+            delayPressInDot
         } = this.props;
 
         if (renderDots) {
