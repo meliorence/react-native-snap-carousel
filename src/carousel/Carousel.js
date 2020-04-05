@@ -252,6 +252,7 @@ export default class Carousel extends Component {
         clearTimeout(this._enableAutoplayTimeout);
         clearTimeout(this._autoplayTimeout);
         clearTimeout(this._snapNoMomentumTimeout);
+        clearTimeout(this._androidRepositioningTimeout);
     }
 
     get realIndex () {
@@ -337,6 +338,16 @@ export default class Carousel extends Component {
 
     _shouldUseTinderLayout () {
         return this.props.layout === 'tinder';
+    }
+
+    _shouldRepositionScroll (index) {
+        const { data, enableSnap, loopClonesPerSide } = this.props;
+        const dataLength = data && data.length;
+        if (!enableSnap || !dataLength || !this._enableLoop() ||
+            (index >= loopClonesPerSide && index < dataLength + loopClonesPerSide)) {
+            return false;
+        }
+        return true;
     }
 
     _roundNumber (num, decimals = 1) {
@@ -657,12 +668,11 @@ export default class Carousel extends Component {
         }, 50); // works randomly when set to '0'
     }
 
-    _repositionScroll (index) {
-        const { data, enableSnap, loopClonesPerSide } = this.props;
+    _repositionScroll (index, animated = false) {
+        const { data, loopClonesPerSide } = this.props;
         const dataLength = data && data.length;
 
-        if (!enableSnap || !dataLength || !this._enableLoop() ||
-            (index >= loopClonesPerSide && index < dataLength + loopClonesPerSide)) {
+        if (typeof index === 'undefined' || !this._shouldRepositionScroll(index)) {
             return;
         }
 
@@ -674,7 +684,7 @@ export default class Carousel extends Component {
             repositionTo = index + dataLength;
         }
 
-        this._snapToItem(repositionTo, false, false);
+        this._snapToItem(repositionTo, animated, false);
     }
 
     _scrollTo (offset, animated = true) {
@@ -748,14 +758,16 @@ export default class Carousel extends Component {
         const nextActiveItem = this._getActiveItem(scrollOffset);
         const hasSnapped = this._isMultiple(scrollOffset, itemWidth);
 
+        // WARNING: everything in this condition will probably need to be called on _snapToItem as well because:
+        // 1. `onMomentumScrollEnd` won't be called if the scroll isn't animated
+        // 2. `onMomentumScrollEnd` won't be called at all on Android when scrolling programmatically
         if (nextActiveItem !== this._activeItem) {
             this._activeItem = nextActiveItem;
+            onSnapToItem && onSnapToItem(this._getDataIndex(nextActiveItem));
 
             if (hasSnapped) {
                 this._repositionScroll(nextActiveItem);
             }
-
-            onSnapToItem && onSnapToItem(this._getDataIndex(nextActiveItem));
         }
 
         onMomentumScrollEnd && onMomentumScrollEnd(event);
@@ -804,16 +816,33 @@ export default class Carousel extends Component {
             return;
         }
 
-        const toOffset = this._positions[index] && this._positions[index].start;
-        toOffset && this._scrollTo(toOffset, animated);
+        const offset = this._positions[index] && this._positions[index].start;
 
-        // `onMomentumScrollEnd` won't be called if the scroll isn't animated
+        if (!offset) {
+            return;
+        }
+
+        this._scrollTo(offset, animated);
+
+        // On both platforms, `onMomentumScrollEnd` won't be triggered if the scroll isn't animated
         // so we need to trigger the callback manually
-        // Also, it won't be called on Android when calling `scrollTo, even when the scroll is animated...
-        // This means we need to call it right away -> The timing will be off for manual triggering
-        // TODO: find a solution that doesn't rely on v3.x hacks
-        if (fireCallback && (!animated || IS_ANDROID)) {
-            onSnapToItem && onSnapToItem(this._getDataIndex(index));
+        // On Android `onMomentumScrollEnd` won't be triggered when scrolling programmatically
+        // Therefore everything critical needs to be manually called here as well, even though the timing might be off
+        const requiresManualTrigger = !animated || IS_ANDROID;
+        if (requiresManualTrigger) {
+            this._activeItem = index;
+
+            if (fireCallback) {
+                onSnapToItem && onSnapToItem(this._getDataIndex(index));
+            }
+
+            // Repositioning on Android
+            if (IS_ANDROID && this._shouldRepositionScroll(index)) {
+                this._androidRepositioningTimeout = setTimeout(() => {
+                    // Without animation, the behavior is completely buggy...
+                    this._repositionScroll(index, true);
+                }, 400); // Approximate scroll duration on Android
+            }
         }
     }
 
@@ -867,9 +896,6 @@ export default class Carousel extends Component {
 
         let newIndex = this._activeItem + 1;
         if (newIndex > itemsLength - 1) {
-            if (!this._enableLoop()) {
-                return;
-            }
             newIndex = 0;
         }
         this._snapToItem(newIndex, animated, fireCallback);
@@ -880,9 +906,6 @@ export default class Carousel extends Component {
 
         let newIndex = this._activeItem - 1;
         if (newIndex < 0) {
-            if (!this._enableLoop()) {
-                return;
-            }
             newIndex = itemsLength - 1;
         }
         this._snapToItem(newIndex, animated, fireCallback);
@@ -955,6 +978,7 @@ export default class Carousel extends Component {
     }
 
     _getComponentOverridableProps () {
+        const { hideCarousel } = this.state;
         const {
             itemWidth, itemHeight, loopClonesPerSide,
             sliderWidth, sliderHeight, vertical
@@ -962,8 +986,8 @@ export default class Carousel extends Component {
         const visibleItems = Math.ceil(vertical ? sliderHeight / itemHeight : sliderWidth / itemWidth) + 1;
         const initialNumPerSide = this._enableLoop() ? loopClonesPerSide : 2;
         const initialNumToRender = visibleItems + (initialNumPerSide * 2);
-        const maxToRenderPerBatch = initialNumToRender + 2;
-        const windowSize = 1 + (maxToRenderPerBatch * 2);
+        const maxToRenderPerBatch = initialNumToRender + (initialNumPerSide * 2);
+        const windowSize = maxToRenderPerBatch;
 
         const specificProps = !this._needsScrollView() ? {
             initialNumToRender,
@@ -981,6 +1005,7 @@ export default class Carousel extends Component {
             inverted: this._needsRTLAdaptations(),
             overScrollMode: 'never',
             pinchGestureEnabled: false,
+            pointerEvents: hideCarousel ? 'none' : 'auto',
             // removeClippedSubviews: !this._needsScrollView(),
             // renderToHardwareTextureAndroid: true,
             scrollsToTop: false,
@@ -1052,7 +1077,6 @@ export default class Carousel extends Component {
             contentContainerStyle: contentContainerStyle,
             data: this._getCustomData(),
             horizontal: !vertical,
-            pointerEvents: hideCarousel ? 'none' : 'auto',
             scrollEventThrottle: 1,
             style: containerStyle,
             onLayout: this._onLayout,
