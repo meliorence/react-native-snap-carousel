@@ -123,22 +123,8 @@ export default class Carousel extends Component {
         // WARNING: call this AFTER binding _onScroll
         this._setScrollHandler(props);
 
-        // Warnings
-        if (!ViewPropTypes) {
-            console.warn('react-native-snap-carousel: It is recommended to use at least version 0.44 of React Native with the plugin');
-        }
-        if (!props.vertical && (!props.sliderWidth || !props.itemWidth)) {
-            console.error('react-native-snap-carousel: You need to specify both `sliderWidth` and `itemWidth` for horizontal carousels');
-        }
-        if (props.vertical && (!props.sliderHeight || !props.itemHeight)) {
-            console.error('react-native-snap-carousel: You need to specify both `sliderHeight` and `itemHeight` for vertical carousels');
-        }
-        if (props.apparitionDelay && IS_ANDROID && !props.useScrollView) {
-            console.warn('react-native-snap-carousel: Using `apparitionDelay` on Android is not recommended since it can lead to rendering issues');
-        }
-        if (props.onScrollViewScroll) {
-            console.error('react-native-snap-carousel: Prop `onScrollViewScroll` has been removed. Use `onScroll` instead');
-        }
+        // Display warnings
+        this._displayWarnings(props);
     }
 
     componentDidMount () {
@@ -295,6 +281,21 @@ export default class Carousel extends Component {
             argMapping,
             scrollEventConfig
         );
+    }
+
+    _displayWarnings (props = this.props) {
+        if (!props.vertical && (!props.sliderWidth || !props.itemWidth)) {
+            console.error('react-native-snap-carousel: You need to specify both `sliderWidth` and `itemWidth` for horizontal carousels');
+        }
+        if (props.vertical && (!props.sliderHeight || !props.itemHeight)) {
+            console.error('react-native-snap-carousel: You need to specify both `sliderHeight` and `itemHeight` for vertical carousels');
+        }
+        if (props.apparitionDelay && IS_ANDROID && !props.useScrollView) {
+            console.warn('react-native-snap-carousel: Using `apparitionDelay` on Android is not recommended since it can lead to rendering issues');
+        }
+        if (props.onScrollViewScroll) {
+            console.error('react-native-snap-carousel: Prop `onScrollViewScroll` has been removed. Use `onScroll` instead');
+        }
     }
 
     _needsScrollView () {
