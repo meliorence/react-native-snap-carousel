@@ -49,7 +49,7 @@ Prop | Description | Type | Default
 
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
-`loop` | Enable infinite loop mode. Note that it won't work if `enableSnap` has been set to `false`. | Boolean | `false`
+`loop` | Enable infinite loop mode. **:warning: It won't work if `enableSnap` has been set to `false`.** | Boolean | `false`
 `loopClonesPerSide` | Number of clones to append to each side of the original items. **When swiping very quickly**, the user will eventually need to pause for a quick second before the scroll is repositioned (this occurs when the end of the set is reached). By increasing this number, the user will be able to scroll more slides before having to stop; but you'll also load more items in memory. This is a trade-off between optimal user experience and performance. | Number | `3`
 
 ### Autoplay
