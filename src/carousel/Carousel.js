@@ -50,7 +50,6 @@ export default class Carousel extends Component {
         layoutCardOffset: PropTypes.number,
         loop: PropTypes.bool,
         loopClonesPerSide: PropTypes.number,
-        preserveActiveSlideAlignment: PropTypes.bool,
         scrollEnabled: PropTypes.bool,
         scrollInterpolator: PropTypes.func,
         slideInterpolatedStyle: PropTypes.func,
@@ -82,7 +81,6 @@ export default class Carousel extends Component {
         layout: 'default',
         loop: false,
         loopClonesPerSide: 3,
-        preserveActiveSlideAlignment: true,
         scrollEnabled: true,
         slideStyle: {},
         shouldOptimizeUpdates: true,
@@ -330,7 +328,7 @@ export default class Carousel extends Component {
 
         removedProps.forEach((removedProp) => {
             if (props[removedProp]) {
-                console.warn(`${pluginName}: Prop ${removedProp} has been removed in version 4 of the plugin. `);
+                console.warn(`${pluginName}: Prop ${removedProp} has been removed in version 4 of the plugin`);
             }
         });
     }
@@ -1053,8 +1051,8 @@ export default class Carousel extends Component {
     _getComponentStaticProps () {
         const { hideCarousel } = this.state;
         const {
-            activeSlideAlignment, CellRendererComponent, containerCustomStyle, contentContainerCustomStyle,
-            firstItem, getItemLayout, keyExtractor, preserveActiveSlideAlignment,
+            activeSlideAlignment, CellRendererComponent, containerCustomStyle,
+            contentContainerCustomStyle, firstItem, getItemLayout, keyExtractor,
             sliderWidth, sliderHeight, style, useExperimentalSnap, vertical
         } = this.props;
 
@@ -1079,7 +1077,7 @@ export default class Carousel extends Component {
 
         const contentContainerStyle = [
             contentContainerCustomStyle || {},
-            preserveActiveSlideAlignment && !useExperimentalSnap ? innerMarginStyle : {}
+            !useExperimentalSnap ? innerMarginStyle : {}
         ];
 
         // WARNING: `snapToAlignment` won't work as intended because of the following:
