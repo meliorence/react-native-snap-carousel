@@ -1093,7 +1093,7 @@ export default class Carousel extends Component {
         // - Last items won't be set as active (no `onSnapToItem` callback)
         // Recommended only with large slides and `activeSlideAlignment` set to `start` for the time being
         const snapProps = useExperimentalSnap ? {
-            disableIntervalMomentum: true,
+            // disableIntervalMomentum: true, // Slide ± one item at a time
             snapToAlignment: activeSlideAlignment,
             snapToInterval: this._getItemMainDimension()
         } : {
