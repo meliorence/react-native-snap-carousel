@@ -20,6 +20,8 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 // otherwise it is undefined at init, which messes with custom indexes
 const IS_RTL = I18nManager.isRTL;
 
+const RN_PACKAGE = require('../../../react-native/package.json');
+
 export default class Carousel extends Component {
 
     static propTypes = {
@@ -96,6 +98,8 @@ export default class Carousel extends Component {
             hideCarousel: !!props.apparitionDelay,
             interpolators: []
         };
+
+        this._RNVersionCode = this._getRNVersionCode();
 
         // The following values are not stored in the state because 'setState()' is asynchronous
         // and this results in an absolutely crappy behavior on Android while swiping (see #156)
@@ -283,19 +287,52 @@ export default class Carousel extends Component {
         );
     }
 
+    // This will return a future-proof version code number compatible with semantic versioning
+    // Examples: 0.59.3 -> 5903 / 0.61.4 -> 6104 / 0.62.12 -> 6212 / 1.0.2 -> 10002
+    _getRNVersionCode () {
+        const version = RN_PACKAGE && RN_PACKAGE.version;
+        if (!version) {
+            return null;
+        }
+        const versionSplit = version.split('.');
+        if (!versionSplit || !versionSplit.length) {
+            return null;
+        }
+        return versionSplit[0] * 10000 +
+            (typeof versionSplit[1] !== 'undefined' ? versionSplit[1] * 100 : 0) +
+            (typeof versionSplit[2] !== 'undefined' ? versionSplit[2] * 1 : 0);
+    }
+
     _displayWarnings (props = this.props) {
+        const pluginName = 'react-native-snap-carousel';
+        const removedProps = [
+            'activeAnimationType',
+            'activeAnimationOptions',
+            'enableMomentum',
+            'lockScrollTimeoutDuration',
+            'lockScrollWhileSnapping',
+            'onBeforeSnapToItem',
+            'swipeThreshold'
+        ];
+
+        if (this._RNVersionCode && this._RNVersionCode < 5800) {
+            console.error(
+                `${pluginName}: Version 4+ of the plugin is based on React Native props that were introduced in version 0.58. ` +
+                'Please downgrade to version 3.x or update your version of React Native.'
+            );
+        }
         if (!props.vertical && (!props.sliderWidth || !props.itemWidth)) {
-            console.error('react-native-snap-carousel: You need to specify both `sliderWidth` and `itemWidth` for horizontal carousels');
+            console.error(`${pluginName}: You need to specify both 'sliderWidth' and 'itemWidth' for horizontal carousels`);
         }
         if (props.vertical && (!props.sliderHeight || !props.itemHeight)) {
-            console.error('react-native-snap-carousel: You need to specify both `sliderHeight` and `itemHeight` for vertical carousels');
+            console.error(`${pluginName}: You need to specify both 'sliderHeight' and 'itemHeight' for vertical carousels`);
         }
-        if (props.apparitionDelay && IS_ANDROID && !props.useScrollView) {
-            console.warn('react-native-snap-carousel: Using `apparitionDelay` on Android is not recommended since it can lead to rendering issues');
-        }
-        if (props.onScrollViewScroll) {
-            console.error('react-native-snap-carousel: Prop `onScrollViewScroll` has been removed. Use `onScroll` instead');
-        }
+
+        removedProps.forEach((removedProp) => {
+            if (props[removedProp]) {
+                console.warn(`${pluginName}: Prop ${removedProp} has been removed in version 4 of the plugin. `);
+            }
+        });
     }
 
     _needsScrollView () {
