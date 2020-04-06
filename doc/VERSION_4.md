@@ -1,6 +1,6 @@
 # A shiny new version is on its way!
 
-![react-native-snap-carousel mind blown](https://i.imgur.com/hPFlKCx.gif)
+![react-native-snap-carousel mind blown](https://i.imgur.com/gdaKtSm.gif)
 
 ## 💡 Why?
 

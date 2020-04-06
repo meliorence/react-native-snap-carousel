@@ -9,19 +9,13 @@
 [![Issue Stats](https://img.shields.io/issuestats/i/github/archriss/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](http://github.com/archriss/react-native-snap-carousel/issues)
 
 -----
+-----
 
-## :handshake: Maintainers wanted
+## ✨ Some great news for you, fellow plugin user!
 
-Hey there,
+### 💡 **[Head over there now](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/VERSION_4.md)** to learn more about all the goodness that's coming your way.
 
-Creating and maintaining this plugin has been a fun ride that started in 2016. We thank you all for your appreciation and for making the most out of it! You've motivated us to spend countless hours improving the plugin, and made us happy to give back to the Open Source community.
-
-Put simply, we love this project. However we currently aren't able to give it the love it deserves and the care it requires. **If you have enough time and knowledge, and want to become a maintainer, please let us know**.
-
-### 💡 **[Just head there if you're interested](https://github.com/archriss/react-native-snap-carousel/issues/632).**
-
-We're not abandoning the ship, but we need more people to help us keep it alive and well!
-
+-----
 -----
 
 ## Table of contents
@@ -60,6 +54,22 @@ These are live apps we've created that make heavy use of the plugin. Don't be sh
 ![react-native-snap-carousel](https://i.imgur.com/Fope3uj.gif)
 ![react-native-snap-carousel](https://i.imgur.com/WNOBYfl.gif)
 ![react-native-snap-carousel](https://i.imgur.com/sK5DKaG.gif)
+
+---
+
+## :handshake: Maintainers wanted
+
+Hey there,
+
+Creating and maintaining this plugin has been a fun ride that started in 2016. We thank you all for your appreciation and for making the most out of it! You've motivated us to spend countless hours improving the plugin, and made us happy to give back to the Open Source community.
+
+Put simply, we love this project. However we currently aren't able to give it the love it deserves and the care it requires. **If you have enough time and knowledge, and want to become a maintainer, please let us know**.
+
+### 💡 **[Just head there if you're interested](https://github.com/archriss/react-native-snap-carousel/issues/632).**
+
+We're not abandoning the ship, but we need more people to help us keep it alive and well!
+
+---
 
 ## Usage
 
