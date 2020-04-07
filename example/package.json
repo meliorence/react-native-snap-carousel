@@ -12,6 +12,8 @@
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-linear-gradient": "2.5.6",
+    "react-native-gesture-handler": "^1.5.2",
+    "react-native-reanimated": "^1.4.0",
     "react-native-snap-carousel": "file:../"
   },
   "devDependencies": {

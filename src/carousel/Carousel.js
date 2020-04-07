@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Animated, Easing, FlatList, I18nManager, Platform, ScrollView, View, ViewPropTypes } from 'react-native';
+import { I18nManager, Platform, View, ViewPropTypes } from 'react-native';
+import Animated, { Easing } from 'react-native-reanimated';
+import { ScrollView, FlatList } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 import {

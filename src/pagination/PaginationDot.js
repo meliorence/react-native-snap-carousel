@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { View, Animated, Easing, TouchableOpacity, ViewPropTypes } from 'react-native';
+import { View, TouchableOpacity, ViewPropTypes } from 'react-native';
+import Animated, { Easing } from 'react-native-reanimated';
 import PropTypes from 'prop-types';
 import styles from './Pagination.style';
 
@@ -43,7 +44,7 @@ export default class PaginationDot extends PureComponent {
 
     _animate (toValue = 0) {
         const { animColor, animOpacity, animTransform } = this.state;
-        const { animatedDuration, animatedFriction, animatedTension } = this.props
+        const { animatedDuration, animatedFriction, animatedTension } = this.props;
 
         const commonProperties = {
             toValue,
