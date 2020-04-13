@@ -79,7 +79,7 @@ $ npm install --save react-native-snap-carousel
 
 If you're using Typescript you should also install type definitions:
 ```bash
-$ npm install --save @types/react-native-snap-carousel
+$ npm install --save-dev @types/react-native-snap-carousel
 ```
 
 
