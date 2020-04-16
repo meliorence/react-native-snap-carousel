@@ -16,7 +16,7 @@ export default class ParallaxImage extends Component {
         sliderHeight: PropTypes.number, // passed from <Carousel />
         sliderWidth: PropTypes.number, // passed from <Carousel />
         vertical: PropTypes.bool, // passed from <Carousel />
-        containerStyle: View.propTypes.style,
+        containerStyle: PropTypes.object,
         dimensions: PropTypes.shape({
             width: PropTypes.number,
             height: PropTypes.number
