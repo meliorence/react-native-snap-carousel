@@ -870,7 +870,7 @@ export default class Carousel extends Component {
 
         const offset = this._getItemScrollOffset(index);
 
-        if (!offset) {
+        if (offset === undefined) {
             return;
         }
 
