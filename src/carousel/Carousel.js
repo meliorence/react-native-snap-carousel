@@ -7,6 +7,11 @@ import {
     shiftAnimatedStyles, stackAnimatedStyles, tinderAnimatedStyles
 } from '../utils/animations';
 
+// Metro doesn't support dynamic imports - i.e. require() done in the component itself
+// But at the same time the following import will fail on Snack...
+// TODO: find a way to get React Native's version without having to assume the file path
+// import RN_PACKAGE from '../../../react-native/package.json';
+
 const IS_ANDROID = Platform.OS === 'android';
 
 // Native driver for scroll events
@@ -19,8 +24,6 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 // NOTE: the following variable is not declared in the constructor
 // otherwise it is undefined at init, which messes with custom indexes
 const IS_RTL = I18nManager.isRTL;
-
-const RN_PACKAGE = require('../../../react-native/package.json');
 
 export default class Carousel extends Component {
 
@@ -97,7 +100,7 @@ export default class Carousel extends Component {
             interpolators: []
         };
 
-        this._RNVersionCode = this._getRNVersionCode();
+        // this._RNVersionCode = this._getRNVersionCode();
 
         // The following values are not stored in the state because 'setState()' is asynchronous
         // and this results in an absolutely crappy behavior on Android while swiping (see #156)
@@ -287,19 +290,19 @@ export default class Carousel extends Component {
 
     // This will return a future-proof version code number compatible with semantic versioning
     // Examples: 0.59.3 -> 5903 / 0.61.4 -> 6104 / 0.62.12 -> 6212 / 1.0.2 -> 10002
-    _getRNVersionCode () {
-        const version = RN_PACKAGE && RN_PACKAGE.version;
-        if (!version) {
-            return null;
-        }
-        const versionSplit = version.split('.');
-        if (!versionSplit || !versionSplit.length) {
-            return null;
-        }
-        return versionSplit[0] * 10000 +
-            (typeof versionSplit[1] !== 'undefined' ? versionSplit[1] * 100 : 0) +
-            (typeof versionSplit[2] !== 'undefined' ? versionSplit[2] * 1 : 0);
-    }
+    // _getRNVersionCode () {
+    //     const version = RN_PACKAGE && RN_PACKAGE.version;
+    //     if (!version) {
+    //         return null;
+    //     }
+    //     const versionSplit = version.split('.');
+    //     if (!versionSplit || !versionSplit.length) {
+    //         return null;
+    //     }
+    //     return versionSplit[0] * 10000 +
+    //         (typeof versionSplit[1] !== 'undefined' ? versionSplit[1] * 100 : 0) +
+    //         (typeof versionSplit[2] !== 'undefined' ? versionSplit[2] * 1 : 0);
+    // }
 
     _displayWarnings (props = this.props) {
         const pluginName = 'react-native-snap-carousel';
@@ -313,12 +316,12 @@ export default class Carousel extends Component {
             'swipeThreshold'
         ];
 
-        if (this._RNVersionCode && this._RNVersionCode < 5800) {
-            console.error(
-                `${pluginName}: Version 4+ of the plugin is based on React Native props that were introduced in version 0.58. ` +
-                'Please downgrade to version 3.x or update your version of React Native.'
-            );
-        }
+        // if (this._RNVersionCode && this._RNVersionCode < 5800) {
+        //     console.error(
+        //         `${pluginName}: Version 4+ of the plugin is based on React Native props that were introduced in version 0.58. ` +
+        //         'Please downgrade to version 3.x or update your version of React Native.'
+        //     );
+        // }
         if (!props.vertical && (!props.sliderWidth || !props.itemWidth)) {
             console.error(`${pluginName}: You need to specify both 'sliderWidth' and 'itemWidth' for horizontal carousels`);
         }
