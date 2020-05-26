@@ -10,9 +10,13 @@ export default class PaginationDot extends PureComponent {
         inactiveScale: PropTypes.number.isRequired,
         active: PropTypes.bool,
         activeOpacity: PropTypes.number,
+        animatedDuration: PropTypes.number,
+        animatedFriction: PropTypes.number,
+        animatedTension: PropTypes.number,
         carouselRef: PropTypes.object,
         color: PropTypes.string,
         containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        delayPressInDot: PropTypes.number,
         inactiveColor: PropTypes.string,
         inactiveStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         index: PropTypes.number,
@@ -43,11 +47,10 @@ export default class PaginationDot extends PureComponent {
 
     _animate (toValue = 0) {
         const { animColor, animOpacity, animTransform } = this.state;
-        const { animatedDuration, animatedFriction, animatedTension } = this.props
+        const { animatedDuration, animatedFriction, animatedTension } = this.props;
 
         const commonProperties = {
             toValue,
-            duration: animatedDuration,
             isInteraction: false,
             useNativeDriver: !this._shouldAnimateColor
         };
@@ -55,6 +58,7 @@ export default class PaginationDot extends PureComponent {
         let animations = [
             Animated.timing(animOpacity, {
                 easing: Easing.linear,
+                duration: animatedDuration,
                 ...commonProperties
             }),
             Animated.spring(animTransform, {
