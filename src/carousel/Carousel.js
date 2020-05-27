@@ -481,6 +481,10 @@ export default class Carousel extends Component {
     }
 
     _getWrappedRef () {
+        if (this._carouselRef && (
+             (this._needsScrollView() && this._carouselRef.scrollTo) ||
+             (!this._needsScrollView() && this._carouselRef.scrollToOffset)
+        )) {
         // https://github.com/facebook/react-native/issues/10635
         // https://stackoverflow.com/a/48786374/8412141
         return this._carouselRef && this._carouselRef.getNode && this._carouselRef.getNode();
