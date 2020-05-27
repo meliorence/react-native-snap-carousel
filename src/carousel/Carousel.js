@@ -272,7 +272,7 @@ export default class Carousel extends Component {
         if (props.onScroll && Array.isArray(props.onScroll._argMapping)) {
             // Because of a react-native issue https://github.com/facebook/react-native/issues/13294
             argMapping.pop();
-            const [ argMap ] = props.onScroll._argMapping;
+            const [argMap] = props.onScroll._argMapping;
             if (argMap && argMap.nativeEvent && argMap.nativeEvent.contentOffset) {
                 // Shares the same animated value passed in props
                 this._scrollPos =
@@ -663,7 +663,7 @@ export default class Carousel extends Component {
             return;
         }
 
-        let interpolators = [];
+        const interpolators = [];
         this._positions = [];
 
         this._getCustomData(props).forEach((itemData, index) => {
