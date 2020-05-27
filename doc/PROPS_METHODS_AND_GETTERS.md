@@ -68,7 +68,7 @@ Prop | Description | Type | Default
 `activeAnimationType` | Custom [animation type](https://facebook.github.io/react-native/docs/animated.html#configuring-animations): either `'decay`, `'spring'` or `'timing'`. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around). | String | `'timing'`
 `activeSlideAlignment` | Determine active slide's alignment relative to the carousel. Possible values are: `'start'`, `'center'` and `'end'`. **It is not recommended to use this prop in conjunction with the `layout` one.** | String | `'center'`
 `containerCustomStyle` | Optional styles for Scrollview's global wrapper | View Style Object | `{}`
-`contentContainerCustomStyle` | Optional styles for Scrollview's items container | View Style Object | `{}`
+`contentContainerCustomStyle` | Optional styles for Scrollview's items container. **:warning: Tread softly as this can mess with the carousel's inner logic!** | View Style Object | `{}`
 `inactiveSlideOpacity` | Value of the opacity effect applied to inactive slides | Number | `0.7`
 `inactiveSlideScale` | Value of the 'scale' transform applied to inactive slides | Number | `0.9`
 `inactiveSlideShift` | Value of the 'translate' transform applied to inactive slides (see [#204](https://github.com/archriss/react-native-snap-carousel/issues/204) or [the "custom interpolations" doc](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md) for an example usage). This prop will have no effect with layouts others than the default one. | Number | `0`
