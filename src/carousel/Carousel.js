@@ -1086,8 +1086,8 @@ export default class Carousel extends Component {
         };
 
         const contentContainerStyle = [
-            contentContainerCustomStyle || {},
-            !useExperimentalSnap ? innerMarginStyle : {}
+            !useExperimentalSnap ? innerMarginStyle : {},
+            contentContainerCustomStyle || {}
         ];
 
         // WARNING: `snapToAlignment` won't work as intended because of the following:
