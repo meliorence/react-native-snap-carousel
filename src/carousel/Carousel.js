@@ -519,6 +519,7 @@ export default class Carousel extends Component {
     }
 
     _getWrappedRef () {
+        // Starting with RN 0.62, we should no longer call `getNode()` on the ref of an Animated component
         if (this._carouselRef && (
             (this._needsScrollView() && this._carouselRef.scrollTo) ||
             (!this._needsScrollView() && this._carouselRef.scrollToOffset)
