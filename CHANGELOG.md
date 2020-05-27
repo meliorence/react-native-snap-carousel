@@ -1,3 +1,7 @@
+## v3.9.1
+
+* Fix for `getNode()` deprecation warning with RN `0.62+` (thanks [@r0b0t3d](https://github.com/r0b0t3d))
+
 ## v3.9.0
 
 * Fix for incorrect snapToItem (thanks [@Romick2005](https://github.com/Romick2005) & [@sergeyzhukov](https://github.com/sergeyzhukov))
