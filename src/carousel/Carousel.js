@@ -519,7 +519,11 @@ export default class Carousel extends Component {
     }
 
     _getWrappedRef () {
-        if (this._carouselRef && this._carouselRef.setNativeProps) {
+        // Starting with RN 0.62, we should no longer call `getNode()` on the ref of an Animated component
+        if (this._carouselRef && (
+            (this._needsScrollView() && this._carouselRef.scrollTo) ||
+            (!this._needsScrollView() && this._carouselRef.scrollToOffset)
+        )) {
             return this._carouselRef;
         }
         // https://github.com/facebook/react-native/issues/10635
