@@ -566,16 +566,9 @@ export default class Carousel extends Component {
         };
     }
 
-    // This will allow us to have a proper zIndex even with a FlatList
-    // https://github.com/facebook/react-native/issues/18616#issuecomment-389444165
     _getCellRendererComponent ({ children, index, style, ...props }) {
-        const cellStyle = [
-            style,
-            { zIndex: this._getCustomDataLength() - index }
-        ];
-
         return (
-            <View style={cellStyle} index={index} {...props}>
+            <View style={style} index={index} {...props}>
                 {children}
             </View>
         );
