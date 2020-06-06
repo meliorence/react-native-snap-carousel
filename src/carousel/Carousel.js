@@ -67,7 +67,8 @@ export default class Carousel extends Component {
         useScrollView: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
         vertical: PropTypes.bool,
         onBeforeSnapToItem: PropTypes.func,
-        onSnapToItem: PropTypes.func
+        onSnapToItem: PropTypes.func,
+        useNativeDriver: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -99,7 +100,8 @@ export default class Carousel extends Component {
         shouldOptimizeUpdates: true,
         swipeThreshold: 20,
         useScrollView: !AnimatedFlatList,
-        vertical: false
+        vertical: false,
+        useNativeDriver: true,
     }
 
     constructor (props) {
@@ -295,7 +297,7 @@ export default class Carousel extends Component {
       // Native driver for scroll events
       const scrollEventConfig = {
         listener: this._onScroll,
-        useNativeDriver: true,
+        useNativeDriver: props.useNativeDriver,
       };
       this._scrollPos = new Animated.Value(0);
       const argMapping = props.vertical
