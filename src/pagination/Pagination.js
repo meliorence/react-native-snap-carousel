@@ -28,6 +28,7 @@ export default class Pagination extends PureComponent {
         tappableDots: PropTypes.bool,
         vertical: PropTypes.bool,
         accessibilityLabel: PropTypes.string,
+        onAccessibilityTap: PropTypes.string,
         animatedDuration: PropTypes.number,
         animatedFriction: PropTypes.number,
         animatedTension: PropTypes.number,
@@ -138,7 +139,7 @@ export default class Pagination extends PureComponent {
     }
 
     render () {
-        const { dotsLength, containerStyle, vertical, accessibilityLabel } = this.props;
+        const { dotsLength, containerStyle, vertical, accessibilityLabel, onAccessibilityTap } = this.props;
 
         if (!dotsLength || dotsLength < 2) {
             return false;
@@ -159,6 +160,7 @@ export default class Pagination extends PureComponent {
               style={style}
               accessible={!!accessibilityLabel}
               accessibilityLabel={accessibilityLabel}
+              onAccessibilityTap={onAccessibilityTap}
             >
                 { this.dots }
             </View>
