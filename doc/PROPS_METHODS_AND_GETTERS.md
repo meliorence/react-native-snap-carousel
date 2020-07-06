@@ -59,6 +59,7 @@ Prop | Description | Type | Default
 `autoplay` | Trigger autoplay on mount. If you enable autoplay, we recommend you to set `enableMomentum` to `false` (default) and `lockScrollWhileSnapping` to `true`; this will enhance user experience a bit. | Boolean | `false`
 `autoplayDelay` | Delay before enabling autoplay on startup & after releasing the touch | Number | `1000`
 `autoplayInterval` | Delay in ms until navigating to the next item | Number |  `3000`
+`autoplayReverse` | When `true`, items will be shown in reverse order (invokes `snapToPrev` instead of `snapToNext`) | Boolean |  `false`
 
 ### Style and animation
 
