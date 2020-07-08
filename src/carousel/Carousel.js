@@ -42,6 +42,7 @@ export default class Carousel extends Component {
         autoplay: PropTypes.bool,
         autoplayDelay: PropTypes.number,
         autoplayInterval: PropTypes.number,
+        autoplayReverse: PropTypes.bool,
         callbackOffsetMargin: PropTypes.number,
         containerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         contentContainerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
@@ -79,6 +80,7 @@ export default class Carousel extends Component {
         autoplay: false,
         autoplayDelay: 1000,
         autoplayInterval: 3000,
+        autoplayReverse: false,
         callbackOffsetMargin: 5,
         containerCustomStyle: {},
         contentContainerCustomStyle: {},
@@ -1092,7 +1094,7 @@ export default class Carousel extends Component {
     }
 
     startAutoplay () {
-        const { autoplayInterval, autoplayDelay } = this.props;
+        const { autoplayInterval, autoplayDelay, autoplayReverse } = this.props;
         this._autoplay = true;
 
         if (this._autoplaying) {
@@ -1104,7 +1106,9 @@ export default class Carousel extends Component {
             this._autoplaying = true;
             this._autoplayInterval = setInterval(() => {
                 if (this._autoplaying) {
-                    this.snapToNext();
+                    autoplayReverse ?
+                        this.snapToPrev() :
+                        this.snapToNext();
                 }
             }, autoplayInterval);
         }, autoplayDelay);
