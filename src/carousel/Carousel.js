@@ -571,7 +571,7 @@ export default class Carousel extends Component {
     _getCellRendererComponent ({ children, index, style, ...props }) {
         const cellStyle = [
             style,
-            { zIndex: this._getCustomDataLength() - index }
+            !IS_ANDROID ? { zIndex: this._getCustomDataLength() - index } : {}
         ];
 
         return (
