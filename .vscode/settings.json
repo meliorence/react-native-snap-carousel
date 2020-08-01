@@ -1,3 +1,6 @@
 {
-    "eslint.enable": true
+    "eslint.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    }
 }
