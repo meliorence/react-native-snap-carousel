@@ -4,9 +4,9 @@ import ParallaxImage from './parallaximage/ParallaxImage';
 import { getInputRangeFromIndexes } from './utils/animations';
 
 export {
-  Carousel as default,
-  Carousel,
-  Pagination,
-  ParallaxImage,
-  getInputRangeFromIndexes,
+    Carousel as default,
+    Carousel,
+    Pagination,
+    ParallaxImage,
+    getInputRangeFromIndexes
 };
