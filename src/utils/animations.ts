@@ -13,10 +13,10 @@ const IS_ANDROID = Platform.OS === 'android';
 //     index * sizeRef, // active
 //     (index + 1) * sizeRef // active - 1
 // ]
-export function getInputRangeFromIndexes (
+export function getInputRangeFromIndexes<TData> (
     range: number[],
     index: number,
-    carouselProps: CarouselProps<any>
+    carouselProps: CarouselProps<TData>
 ) {
     const sizeRef = carouselProps.vertical ?
         carouselProps.itemHeight :
@@ -33,9 +33,9 @@ export function getInputRangeFromIndexes (
 // Default behavior
 // Scale and/or opacity effect
 // Based on props 'inactiveSlideOpacity' and 'inactiveSlideScale'
-export function defaultScrollInterpolator (
+export function defaultScrollInterpolator<TData> (
     index: number,
-    carouselProps: CarouselProps<any>
+    carouselProps: CarouselProps<TData>
 ) {
     const range = [1, 0, -1];
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
@@ -43,10 +43,10 @@ export function defaultScrollInterpolator (
 
     return { inputRange, outputRange };
 }
-export function defaultAnimatedStyles (
+export function defaultAnimatedStyles<TData> (
     _index: number,
     animatedValue: Animated.AnimatedInterpolation,
-    carouselProps: CarouselProps<any>
+    carouselProps: CarouselProps<TData>
 ) {
     let animatedOpacity = {};
     let animatedScale = {};
@@ -82,10 +82,10 @@ export function defaultAnimatedStyles (
 // Shift animation
 // Same as the default one, but the active slide is also shifted up or down
 // Based on prop 'inactiveSlideShift'
-export function shiftAnimatedStyles (
+export function shiftAnimatedStyles<TData> (
     _index: number,
     animatedValue: Animated.AnimatedInterpolation,
-    carouselProps: CarouselProps<any>
+    carouselProps: CarouselProps<TData>
 ) {
     let animatedOpacity = {};
     let animatedScale = {};
@@ -130,9 +130,9 @@ export function shiftAnimatedStyles (
 // WARNING: The effect had to be visually inverted on Android because this OS doesn't honor the `zIndex`property
 // This means that the item with the higher zIndex (and therefore the tap receiver) remains the one AFTER the currently active item
 // The `elevation` property compensates for that only visually, which is not good enough
-export function stackScrollInterpolator (
+export function stackScrollInterpolator<TData> (
     index: number,
-    carouselProps: CarouselProps<any>
+    carouselProps: CarouselProps<TData>
 ) {
     const range = IS_ANDROID ? [1, 0, -1, -2, -3] : [3, 2, 1, 0, -1];
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
@@ -140,10 +140,10 @@ export function stackScrollInterpolator (
 
     return { inputRange, outputRange };
 }
-export function stackAnimatedStyles (
+export function stackAnimatedStyles<TData> (
     index: number,
     animatedValue: Animated.AnimatedInterpolation,
-    carouselProps: CarouselProps<any>,
+    carouselProps: CarouselProps<TData>,
     cardOffset: number
 ) {
     const sizeRef = carouselProps.vertical ?
@@ -238,9 +238,9 @@ export function stackAnimatedStyles (
 // WARNING: The effect had to be visually inverted on Android because this OS doesn't honor the `zIndex`property
 // This means that the item with the higher zIndex (and therefore the tap receiver) remains the one AFTER the currently active item
 // The `elevation` property compensates for that only visually, which is not good enough
-export function tinderScrollInterpolator (
+export function tinderScrollInterpolator<TData> (
     index: number,
-    carouselProps: CarouselProps<any>
+    carouselProps: CarouselProps<TData>
 ) {
     const range = IS_ANDROID ? [1, 0, -1, -2, -3] : [3, 2, 1, 0, -1];
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
@@ -248,10 +248,10 @@ export function tinderScrollInterpolator (
 
     return { inputRange, outputRange };
 }
-export function tinderAnimatedStyles (
+export function tinderAnimatedStyles<TData> (
     index: number,
     animatedValue: Animated.AnimatedInterpolation,
-    carouselProps: CarouselProps<any>,
+    carouselProps: CarouselProps<TData>,
     cardOffset: number
 ) {
     const sizeRef = carouselProps.vertical ?
