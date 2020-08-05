@@ -1,18 +1,29 @@
 import type {
-  StyleProp,
-  ViewStyle,
-  Animated,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  FlatListProps,
+    StyleProp,
+    ViewStyle,
+    Animated,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+    FlatListProps,
+    ScrollView,
+    FlatList
 } from 'react-native';
+import type { ReactNode } from 'react';
 
 type CarouselBaseProps<TData> = {
   data: TData[];
   renderItem: (
     baseData: { index: number; dataIndex: number; item: TData },
-    parallaxData?: any
-  ) => any;
+    parallaxData?: {
+      scrollPosition: Animated.Value | undefined,
+      carouselRef: ScrollView | FlatList<TData> | null,
+      vertical?: boolean,
+      sliderWidth?: number,
+      sliderHeight?: number,
+      itemWidth?: number,
+      itemHeight?: number
+  }
+  ) => ReactNode;
   activeSlideAlignment: 'center' | 'end' | 'start';
   activeSlideOffset: number;
   apparitionDelay: number;
@@ -33,19 +44,19 @@ type CarouselBaseProps<TData> = {
   loop: boolean;
   loopClonesPerSide: number;
   scrollEnabled: boolean;
-  // TODO: check real type later
-  scrollInterpolator: (index: number, props: CarouselBaseProps<TData>) => any;
-  // TODO: check real type later
+  scrollInterpolator: (index: number, props: CarouselBaseProps<TData>) => {
+    inputRange: number[];
+    outputRange: number[];
+  };
   slideInterpolatedStyle: (
     index: number,
-    animatedValue: Animated.Value,
+    animatedValue: Animated.AnimatedInterpolation,
     props: CarouselBaseProps<TData>
-  ) => any;
-  slideStyle?: StyleProp<ViewStyle>;
+  ) => StyleProp<ViewStyle>;
+  slideStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   shouldOptimizeUpdates: boolean;
   useExperimentalSnap: boolean;
-  // TODO: check real type later
-  useScrollView: boolean | React.ComponentType<any>;
+  useScrollView: boolean | React.ComponentType<unknown>;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onScrollIndexChanged?: (index: number) => void;
   onSnapToItem?: (index: number) => void;
@@ -85,5 +96,5 @@ export type CarouselProps<TData> = CarouselBaseProps<TData> &
 
 export type CarouselState = {
   hideCarousel: boolean;
-  interpolators: any[];
+  interpolators: (Animated.Value | Animated.AnimatedInterpolation)[];
 };
