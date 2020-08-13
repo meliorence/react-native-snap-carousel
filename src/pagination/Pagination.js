@@ -142,7 +142,7 @@ export default class Pagination extends PureComponent {
     render () {
         const { dotsLength, containerStyle, vertical, accessibilityLabel,renderSingleDot } = this.props;
 
-        if (!dotsLength || dotsLength < (renderSingleDot?1:2)) {
+        if (!dotsLength || dotsLength < (renderSingleDot ? 1 : 2)) {
             return false;
         }
 
