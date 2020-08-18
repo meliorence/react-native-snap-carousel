@@ -17,8 +17,8 @@ import {
 import styles from './ParallaxImage.style';
 import type Carousel from 'src/carousel/Carousel';
 
-type ParallaxImageProps = {
-  carouselRef: Carousel<unknown> | null; // passed from <Carousel />
+type ParallaxImageProps<TData> = {
+  carouselRef: Carousel<TData> | null; // passed from <Carousel />
   itemHeight: number; // passed from <Carousel />
   itemWidth: number; // passed from <Carousel />
   scrollPosition: Animated.Value; // passed from <Carousel />
@@ -37,16 +37,23 @@ type ParallaxImageProps = {
   AnimatedImageComponent: typeof Animated.Image;
 } & ImageProps;
 
+export enum ParallaxImageStatus {
+    'LOADING' = 1,
+    'LOADED' = 2,
+    'TRANSITION_FINISHED' = 3,
+    'ERROR' = 4
+}
+
 type ParallaxImageState = {
   offset: number;
   width: number;
   height: number;
-  status: 1 | 2 | 3 | 4;
+  status: ParallaxImageStatus;
   animOpacity: Animated.Value;
 };
 
-export default class ParallaxImage extends Component<
-  ParallaxImageProps,
+export default class ParallaxImage<TData> extends Component<
+  ParallaxImageProps<TData>,
   ParallaxImageState
 > {
   static defaultProps = {
@@ -61,13 +68,13 @@ export default class ParallaxImage extends Component<
   _container?: View | null;
   _mounted?: boolean;
 
-  constructor (props: ParallaxImageProps) {
+  constructor (props: ParallaxImageProps<TData>) {
       super(props);
       this.state = {
           offset: 0,
           width: 0,
           height: 0,
-          status: 1, // 1 -> loading; 2 -> loaded // 3 -> transition finished; 4 -> error
+          status: ParallaxImageStatus.LOADING,
           animOpacity: new Animated.Value(0)
       };
       this._onLoad = this._onLoad.bind(this);
@@ -140,7 +147,7 @@ export default class ParallaxImage extends Component<
           return;
       }
 
-      this.setState({ status: 2 });
+      this.setState({ status: ParallaxImageStatus.LOADED });
 
       if (onLoad) {
           onLoad(event);
@@ -153,7 +160,7 @@ export default class ParallaxImage extends Component<
           isInteraction: false,
           useNativeDriver: true
       }).start(() => {
-          this.setState({ status: 3 });
+          this.setState({ status: ParallaxImageStatus.TRANSITION_FINISHED });
       });
   }
 
@@ -161,7 +168,7 @@ export default class ParallaxImage extends Component<
   _onError (event: NativeSyntheticEvent<ImageErrorEventData>) {
       const { onError } = this.props;
 
-      this.setState({ status: 4 });
+      this.setState({ status: ParallaxImageStatus.ERROR });
 
       if (onError) {
           onError(event);
@@ -218,7 +225,7 @@ export default class ParallaxImage extends Component<
             {...other}
             style={[styles.image, style, requiredStyles, dynamicStyles]}
             onLoad={this._onLoad}
-            onError={status !== 3 ? this._onError : undefined} // prevent infinite-loop bug
+            onError={status !== ParallaxImageStatus.TRANSITION_FINISHED ? this._onError : undefined} // prevent infinite-loop bug
           />
       );
   }
@@ -227,7 +234,7 @@ export default class ParallaxImage extends Component<
       const { status } = this.state;
       const { showSpinner, spinnerColor } = this.props;
 
-      return status === 1 && showSpinner ? (
+      return status === ParallaxImageStatus.LOADING && showSpinner ? (
           <View style={styles.loaderContainer}>
               <ActivityIndicator
                 size='small'

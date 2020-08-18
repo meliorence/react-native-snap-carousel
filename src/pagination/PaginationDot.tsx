@@ -9,7 +9,7 @@ import {
 import styles from './Pagination.style';
 import type Carousel from 'src/carousel/Carousel';
 
-type PaginationDotProps = {
+type PaginationDotProps<TData> = {
   inactiveOpacity: number;
   inactiveScale: number;
   active?: boolean;
@@ -17,7 +17,7 @@ type PaginationDotProps = {
   animatedDuration?: number;
   animatedFriction?: number;
   animatedTension?: number;
-  carouselRef?: Carousel<unknown> | RefObject<Carousel<unknown>> | null;
+  carouselRef?: Carousel<TData> | RefObject<Carousel<TData>> | null;
   color?: string;
   containerStyle?: StyleProp<ViewStyle>;
   delayPressInDot?: number;
@@ -34,11 +34,11 @@ type PaginationDotState = {
   animTransform: Animated.Value;
 };
 
-export default class PaginationDot extends PureComponent<
-  PaginationDotProps,
+export default class PaginationDot<TData> extends PureComponent<
+  PaginationDotProps<TData>,
   PaginationDotState
 > {
-    constructor (props: PaginationDotProps) {
+    constructor (props: PaginationDotProps<TData>) {
         super(props);
         this.state = {
             animColor: new Animated.Value(0),
@@ -53,7 +53,7 @@ export default class PaginationDot extends PureComponent<
         }
     }
 
-    componentDidUpdate (prevProps: PaginationDotProps) {
+    componentDidUpdate (prevProps: PaginationDotProps<TData>) {
         if (prevProps.active !== this.props.active) {
             this._animate(this.props.active ? 1 : 0);
         }

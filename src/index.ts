@@ -1,6 +1,6 @@
 import Carousel from './carousel/Carousel';
 import Pagination from './pagination/Pagination';
-import ParallaxImage from './parallaximage/ParallaxImage';
+import ParallaxImage, { ParallaxImageStatus } from './parallaximage/ParallaxImage';
 import { getInputRangeFromIndexes } from './utils/animations';
 
 export {
@@ -8,5 +8,6 @@ export {
     Carousel,
     Pagination,
     ParallaxImage,
+    ParallaxImageStatus,
     getInputRangeFromIndexes
 };

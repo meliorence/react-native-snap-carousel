@@ -631,7 +631,7 @@ export class Carousel<TData> extends React.Component<
       );
   }
 
-  _getItemLayout (_: unknown, index: number) {
+  _getItemLayout (_: TData[], index: number) {
       const itemMainDimension = this._getItemMainDimension();
       return {
           index,
@@ -660,7 +660,7 @@ export class Carousel<TData> extends React.Component<
       );
   }
 
-  _getKeyExtractor (_: unknown, index: number) {
+  _getKeyExtractor (_: TData, index: number) {
       return this._needsScrollView() ?
           `scrollview-item-${index}` :
           `flatlist-item-${index}`;
@@ -1312,6 +1312,7 @@ export class Carousel<TData> extends React.Component<
       return {
           ...specificProps,
           ...snapProps,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ref: (c: any) => {
               this._carouselRef = c as FlatList<TData> | ScrollView;
           },
@@ -1351,6 +1352,8 @@ export class Carousel<TData> extends React.Component<
               })}
           </ScrollViewComponent>
       ) : (
+          // @ts-expect-error Seems complicated to make TS 100% happy, while sharing that many things between
+          // flatlist && scrollview implementation. I'll prob try to rewrite parts of the logic to overcome that.
           <Animated.FlatList {...props} />
       );
   }
