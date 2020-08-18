@@ -32,13 +32,6 @@ import type { CarouselProps, CarouselState } from './types';
 
 const IS_ANDROID = Platform.OS === 'android';
 
-// Native driver for scroll events
-// See: https://facebook.github.io/react-native/blog/2017/02/14/using-native-driver-for-animated.html
-const AnimatedFlatList = FlatList ?
-    Animated.createAnimatedComponent(FlatList) :
-    null;
-const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
-
 // React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
 // See https://github.com/facebook/react-native/issues/11960
 // NOTE: the following variable is not declared in the constructor
@@ -72,7 +65,7 @@ export class Carousel<TData> extends React.Component<
       slideStyle: {},
       shouldOptimizeUpdates: true,
       useExperimentalSnap: false,
-      useScrollView: !AnimatedFlatList,
+      useScrollView: !Animated.FlatList,
       vertical: false
   };
 
@@ -399,10 +392,10 @@ export class Carousel<TData> extends React.Component<
       // TODO: a workaround might be to pass the custom animated styles directly to it
       return IS_ANDROID ?
           useScrollView ||
-          !AnimatedFlatList ||
+          !Animated.FlatList ||
           this._shouldUseStackLayout() ||
           this._shouldUseTinderLayout() :
-          useScrollView || !AnimatedFlatList;
+          useScrollView || !Animated.FlatList;
   }
 
   _needsRTLAdaptations () {
@@ -1319,7 +1312,7 @@ export class Carousel<TData> extends React.Component<
       return {
           ...specificProps,
           ...snapProps,
-          ref: (c: unknown) => {
+          ref: (c: any) => {
               this._carouselRef = c as FlatList<TData> | ScrollView;
           },
           contentContainerStyle: contentContainerStyle,
@@ -1349,16 +1342,16 @@ export class Carousel<TData> extends React.Component<
       };
 
       const ScrollViewComponent =
-      typeof useScrollView === 'function' ? useScrollView : AnimatedScrollView;
+      typeof useScrollView === 'function' ? useScrollView : Animated.ScrollView;
 
-      return this._needsScrollView() || !AnimatedFlatList ? (
+      return this._needsScrollView() || !Animated.FlatList ? (
           <ScrollViewComponent {...props}>
               {this._getCustomData().map((item, index) => {
                   return this._renderItem({ item, index });
               })}
           </ScrollViewComponent>
       ) : (
-          <AnimatedFlatList {...props} />
+          <Animated.FlatList {...props} />
       );
   }
 }
