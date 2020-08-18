@@ -13,11 +13,11 @@ import type Carousel from 'src/carousel/Carousel';
 const IS_IOS = Platform.OS === 'ios';
 const IS_RTL = I18nManager.isRTL;
 
-type PaginationProps = {
+type PaginationProps<TData> = {
   activeDotIndex: number;
   dotsLength: number;
   activeOpacity?: number;
-  carouselRef?: Carousel<unknown> | null;
+  carouselRef?: Carousel<TData> | null;
   containerStyle?: StyleProp<ViewStyle>;
   dotColor?: string;
   dotContainerStyle?: StyleProp<ViewStyle>;
@@ -31,7 +31,7 @@ type PaginationProps = {
   renderDots: (
     activeIndex: number,
     length: number,
-    context: Pagination
+    context: Pagination<TData>
   ) => ReactElement;
   tappableDots: boolean;
   vertical: boolean;
@@ -42,7 +42,7 @@ type PaginationProps = {
   delayPressInDot: number;
 };
 
-export default class Pagination extends PureComponent<PaginationProps> {
+export default class Pagination<TData> extends PureComponent<PaginationProps<TData>> {
   static defaultProps = {
       inactiveDotOpacity: 0.5,
       inactiveDotScale: 0.5,
@@ -54,7 +54,7 @@ export default class Pagination extends PureComponent<PaginationProps> {
       delayPressInDot: 0
   };
 
-  constructor (props: PaginationProps) {
+  constructor (props: PaginationProps<TData>) {
       super(props);
 
       // Warnings
