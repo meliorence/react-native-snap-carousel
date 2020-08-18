@@ -4,7 +4,7 @@
     "description": "Swiper/carousel component for React Native with previews, multiple layouts, parallax images, performant handling of huge numbers of items, and more. Compatible with Android & iOS.",
     "main": "lib/commonjs/index",
     "module": "lib/module/index",
-    "types": "lib/typescript/src/index.d.ts",
+    "types": "lib/typescript/index.d.ts",
     "react-native": "src/index",
     "source": "src/index",
     "repository": {
