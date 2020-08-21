@@ -27,8 +27,8 @@ type PaginationProps<TData> = {
   inactiveDotElement?: ReactElement;
   inactiveDotOpacity: number;
   inactiveDotScale: number;
-  inactiveDotStyle: StyleProp<ViewStyle>;
-  renderDots: (
+  inactiveDotStyle?: StyleProp<ViewStyle>;
+  renderDots?: (
     activeIndex: number,
     length: number,
     context: Pagination<TData>
