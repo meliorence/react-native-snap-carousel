@@ -40,15 +40,15 @@ type CarouselBaseProps<TData> = {
   inactiveSlideScale: number;
   inactiveSlideShift: number;
   layout: 'default' | 'stack' | 'tinder';
-  layoutCardOffset: number;
+  layoutCardOffset?: number;
   loop: boolean;
   loopClonesPerSide: number;
   scrollEnabled: boolean;
-  scrollInterpolator: (index: number, props: CarouselBaseProps<TData>) => {
+  scrollInterpolator?: (index: number, props: CarouselBaseProps<TData>) => {
     inputRange: number[];
     outputRange: number[];
   };
-  slideInterpolatedStyle: (
+  slideInterpolatedStyle?: (
     index: number,
     animatedValue: Animated.AnimatedInterpolation,
     props: CarouselBaseProps<TData>
