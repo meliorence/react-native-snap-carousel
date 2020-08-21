@@ -144,7 +144,7 @@ export function stackAnimatedStyles<TData> (
     index: number,
     animatedValue: Animated.AnimatedInterpolation,
     carouselProps: CarouselProps<TData>,
-    cardOffset: number
+    cardOffset?: number
 ) {
     const sizeRef = carouselProps.vertical ?
         carouselProps.itemHeight :
@@ -154,13 +154,13 @@ export function stackAnimatedStyles<TData> (
     const card1Scale = 0.9;
     const card2Scale = 0.8;
 
-    cardOffset = !cardOffset && cardOffset !== 0 ? 18 : cardOffset;
+    const newCardOffset = cardOffset ?? 18;
 
     const getTranslateFromScale = (cardIndex: number, scale: number) => {
         const centerFactor = (1 / scale) * cardIndex;
         const centeredPosition = -Math.round(sizeRef * centerFactor);
         const edgeAlignment = Math.round((sizeRef - sizeRef * scale) / 2);
-        const offset = Math.round((cardOffset * Math.abs(cardIndex)) / scale);
+        const offset = Math.round((newCardOffset * Math.abs(cardIndex)) / scale);
 
         return IS_ANDROID ?
             centeredPosition - edgeAlignment - offset :
@@ -252,7 +252,7 @@ export function tinderAnimatedStyles<TData> (
     index: number,
     animatedValue: Animated.AnimatedInterpolation,
     carouselProps: CarouselProps<TData>,
-    cardOffset: number
+    cardOffset?: number
 ) {
     const sizeRef = carouselProps.vertical ?
         carouselProps.itemHeight :
@@ -270,7 +270,7 @@ export function tinderAnimatedStyles<TData> (
 
     const peekingCardsOpacity = IS_ANDROID ? 0.92 : 1;
 
-    cardOffset = !cardOffset && cardOffset !== 0 ? 9 : cardOffset;
+    const newCardOffset = cardOffset ?? 9;
 
     const getMainTranslateFromScale = (cardIndex: number, scale: number) => {
         const centerFactor = (1 / scale) * cardIndex;
@@ -278,7 +278,7 @@ export function tinderAnimatedStyles<TData> (
     };
 
     const getSecondaryTranslateFromScale = (cardIndex: number, scale: number) => {
-        return Math.round((cardOffset * Math.abs(cardIndex)) / scale);
+        return Math.round((newCardOffset * Math.abs(cardIndex)) / scale);
     };
 
     return IS_ANDROID ?
