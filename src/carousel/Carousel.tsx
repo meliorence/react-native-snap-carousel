@@ -65,8 +65,7 @@ export class Carousel<TData> extends React.Component<
       slideStyle: {},
       shouldOptimizeUpdates: true,
       useExperimentalSnap: false,
-      useScrollView: !Animated.FlatList,
-      vertical: false
+      useScrollView: !Animated.FlatList
   };
 
   _activeItem: number;
@@ -191,11 +190,7 @@ export class Carousel<TData> extends React.Component<
       const { interpolators } = this.state;
       const {
           firstItem,
-          itemHeight,
-          itemWidth,
-          scrollEnabled,
-          sliderHeight,
-          sliderWidth
+          scrollEnabled
       } = this.props;
       const itemsLength = this._getCustomDataLength(this.props);
 
@@ -209,13 +204,16 @@ export class Carousel<TData> extends React.Component<
           this._activeItem :
           nextFirstItem;
 
-      const hasNewSliderWidth =
-      sliderWidth && sliderWidth !== prevProps.sliderWidth;
-      const hasNewSliderHeight =
-      sliderHeight && sliderHeight !== prevProps.sliderHeight;
-      const hasNewItemWidth = itemWidth && itemWidth !== prevProps.itemWidth;
-      const hasNewItemHeight = itemHeight && itemHeight !== prevProps.itemHeight;
-      const hasNewScrollEnabled = scrollEnabled !== prevProps.scrollEnabled;
+      const hasNewSize = this.props.vertical !== prevProps.vertical ||
+       (
+           this.props.vertical && prevProps.vertical && (
+               prevProps.itemHeight !== this.props.itemHeight || prevProps.sliderHeight !== this.props.sliderHeight
+           )
+       ) || (
+          !this.props.vertical && !prevProps.vertical && (
+              prevProps.itemWidth !== this.props.itemWidth || prevProps.sliderWidth !== this.props.sliderWidth
+          )
+      );
 
       // Prevent issues with dynamically removed items
       if (nextActiveItem > itemsLength - 1) {
@@ -223,16 +221,13 @@ export class Carousel<TData> extends React.Component<
       }
 
       // Handle changing scrollEnabled independent of user -> carousel interaction
-      if (hasNewScrollEnabled) {
+      if (scrollEnabled !== prevProps.scrollEnabled) {
           this._setScrollEnabled(scrollEnabled);
       }
 
       if (
           interpolators.length !== itemsLength ||
-      hasNewSliderWidth ||
-      hasNewSliderHeight ||
-      hasNewItemWidth ||
-      hasNewItemHeight
+          hasNewSize
       ) {
           this._activeItem = nextActiveItem;
           this._previousItemsLength = itemsLength;
@@ -246,12 +241,7 @@ export class Carousel<TData> extends React.Component<
               this._hackActiveSlideAnimation(nextActiveItem);
           }
 
-          if (
-              hasNewSliderWidth ||
-        hasNewSliderHeight ||
-        hasNewItemWidth ||
-        hasNewItemHeight
-          ) {
+          if (hasNewSize) {
               this._snapToItem(nextActiveItem, false, false, true);
           }
       } else if (
@@ -1137,15 +1127,8 @@ export class Carousel<TData> extends React.Component<
   _renderItem ({ item, index }: { item: TData; index: number }) {
       const { interpolators } = this.state;
       const {
-          hasParallaxImages,
-          itemWidth,
-          itemHeight,
           keyExtractor,
-          renderItem,
-          sliderHeight,
-          sliderWidth,
-          slideStyle,
-          vertical
+          slideStyle
       } = this.props;
       const animatedValue = interpolators && interpolators[index];
 
@@ -1160,21 +1143,9 @@ export class Carousel<TData> extends React.Component<
           {};
       const dataIndex = this._getDataIndex(index);
 
-      const parallaxProps = hasParallaxImages ?
-          {
-              scrollPosition: this._scrollPos,
-              carouselRef: this._carouselRef,
-              vertical,
-              sliderWidth,
-              sliderHeight,
-              itemWidth,
-              itemHeight
-          } :
-          undefined;
-
-      const mainDimension = vertical ?
-          { height: itemHeight } :
-          { width: itemWidth };
+      const mainDimension = this.props.vertical ?
+          { height: this.props.itemHeight } :
+          { width: this.props.itemWidth };
       const specificProps = this._needsScrollView() ?
           {
               key: keyExtractor ?
@@ -1189,7 +1160,19 @@ export class Carousel<TData> extends React.Component<
             pointerEvents='box-none'
             {...specificProps}
           >
-              {renderItem({ item, index, dataIndex }, parallaxProps)}
+              {this.props.vertical ? this.props.renderItem({ item, index, dataIndex }, {
+                  scrollPosition: this._scrollPos,
+                  carouselRef: this._carouselRef,
+                  vertical: this.props.vertical,
+                  sliderHeight: this.props.sliderHeight,
+                  itemHeight: this.props.itemHeight
+              }) : this.props.renderItem({ item, index, dataIndex }, {
+                  scrollPosition: this._scrollPos,
+                  carouselRef: this._carouselRef,
+                  vertical: !!this.props.vertical,
+                  sliderWidth: this.props.sliderWidth,
+                  itemWidth: this.props.itemWidth
+              })}
           </Component>
       );
   }
@@ -1245,27 +1228,24 @@ export class Carousel<TData> extends React.Component<
           firstItem,
           getItemLayout,
           keyExtractor,
-          sliderWidth,
-          sliderHeight,
           style,
-          useExperimentalSnap,
-          vertical
+          useExperimentalSnap
       } = this.props;
 
       const containerStyle = [
       // { overflow: 'hidden' },
           containerCustomStyle || style || {},
           hideCarousel ? { opacity: 0 } : {},
-          vertical ?
-              { height: sliderHeight, flexDirection: 'column' as const } : // LTR hack; see https://github.com/facebook/react-native/issues/11960
+          this.props.vertical ?
+              { height: this.props.sliderHeight, flexDirection: 'column' as const } : // LTR hack; see https://github.com/facebook/react-native/issues/11960
           // and https://github.com/facebook/react-native/issues/13100#issuecomment-328986423
               {
-                  width: sliderWidth,
+                  width: this.props.sliderWidth,
                   flexDirection: this._needsRTLAdaptations() ? 'row-reverse' as const : 'row' as const
               }
       ];
 
-      const innerMarginStyle = vertical ?
+      const innerMarginStyle = this.props.vertical ?
           {
               paddingTop: this._getContainerInnerMargin(),
               paddingBottom: this._getContainerInnerMargin(true)
@@ -1318,7 +1298,7 @@ export class Carousel<TData> extends React.Component<
           },
           contentContainerStyle: contentContainerStyle,
           data: this._getCustomData(),
-          horizontal: !vertical,
+          horizontal: !this.props.vertical,
           scrollEventThrottle: 1,
           style: containerStyle,
           onLayout: this._onLayout,

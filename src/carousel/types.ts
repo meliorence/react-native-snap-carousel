@@ -12,18 +12,6 @@ import type { ReactNode } from 'react';
 
 type CarouselBaseProps<TData> = {
   data: TData[];
-  renderItem: (
-    baseData: { index: number; dataIndex: number; item: TData },
-    parallaxData?: {
-      scrollPosition: Animated.Value | undefined,
-      carouselRef: ScrollView | FlatList<TData> | null,
-      vertical?: boolean,
-      sliderWidth?: number,
-      sliderHeight?: number,
-      itemWidth?: number,
-      itemHeight?: number
-  }
-  ) => ReactNode;
   activeSlideAlignment: 'center' | 'end' | 'start';
   activeSlideOffset: number;
   apparitionDelay: number;
@@ -35,7 +23,6 @@ type CarouselBaseProps<TData> = {
   contentContainerCustomStyle: StyleProp<ViewStyle>;
   enableSnap: boolean;
   firstItem: number;
-  hasParallaxImages: boolean;
   inactiveSlideOpacity: number;
   inactiveSlideScale: number;
   inactiveSlideShift: number;
@@ -74,24 +61,40 @@ type InheritedPropsFromFlatlist<TData> = Pick<
   | 'style'
 >;
 
-type VerticalCarouselProps = {
+type VerticalCarouselProps<TData> = {
   vertical: true;
-  itemWidth?: number;
   itemHeight: number;
-  sliderWidth?: number;
   sliderHeight: number;
+  renderItem: (
+    baseData: { index: number; dataIndex: number; item: TData },
+    parallaxData: {
+      scrollPosition: Animated.Value | undefined,
+      carouselRef: ScrollView | FlatList<TData> | null,
+      vertical: true,
+      itemHeight: number,
+      sliderHeight: number,
+    }
+  ) => ReactNode;
 };
 
-type HorizontalCarouselProps = {
-  vertical?: false;
+type HorizontalCarouselProps<TData> = {
+  vertical: false | undefined;
   itemWidth: number;
-  itemHeight?: number;
   sliderWidth: number;
-  sliderHeight?: number;
+  renderItem: (
+    baseData: { index: number; dataIndex: number; item: TData },
+    parallaxData: {
+      scrollPosition: Animated.Value | undefined,
+      carouselRef: ScrollView | FlatList<TData> | null,
+      vertical: false,
+      itemWidth: number,
+      sliderWidth: number,
+    }
+  ) => ReactNode;
 };
 
 export type CarouselProps<TData> = CarouselBaseProps<TData> &
-  (VerticalCarouselProps | HorizontalCarouselProps) &
+  (HorizontalCarouselProps<TData> | VerticalCarouselProps<TData>) &
   InheritedPropsFromFlatlist<TData>;
 
 export type CarouselState = {

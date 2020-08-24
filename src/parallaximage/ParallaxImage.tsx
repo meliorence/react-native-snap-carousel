@@ -15,18 +15,23 @@ import {
     ImageErrorEventData
 } from 'react-native';
 import styles from './ParallaxImage.style';
-import type Carousel from 'src/carousel/Carousel';
 
-type ParallaxImageProps<TData> = {
-  carouselRef: Carousel<TData> | null; // passed from <Carousel />
-  itemHeight: number; // passed from <Carousel />
-  itemWidth: number; // passed from <Carousel />
-  scrollPosition: Animated.Value; // passed from <Carousel />
-  sliderHeight: number; // passed from <Carousel />
-  sliderWidth: number; // passed from <Carousel />
-  vertical: boolean; // passed from <Carousel />
+type VerticalProps = {
+    vertical: true;
+    sliderHeight: number; // passed from <Carousel />
+    itemHeight: number; // passed from <Carousel />
+}
+type HorizontalProps = {
+    vertical: false;
+    sliderWidth: number; // passed from <Carousel />
+    itemWidth: number; // passed from <Carousel />
+}
+
+type ParallaxImageProps = {
+  carouselRef: Parameters<typeof findNodeHandle>[0]; // passed from <Carousel />
+  scrollPosition: Animated.Value | undefined; // passed from <Carousel />
   containerStyle: StyleProp<ViewStyle>;
-  dimensions: {
+  dimensions?: {
     width: number;
     height: number;
   };
@@ -35,7 +40,7 @@ type ParallaxImageProps<TData> = {
   showSpinner: boolean;
   spinnerColor: string;
   AnimatedImageComponent: typeof Animated.Image;
-} & ImageProps;
+} & ImageProps & (VerticalProps | HorizontalProps);
 
 export enum ParallaxImageStatus {
     'LOADING' = 1,
@@ -52,8 +57,8 @@ type ParallaxImageState = {
   animOpacity: Animated.Value;
 };
 
-export default class ParallaxImage<TData> extends Component<
-  ParallaxImageProps<TData>,
+export default class ParallaxImage extends Component<
+  ParallaxImageProps,
   ParallaxImageState
 > {
   static defaultProps = {
@@ -68,7 +73,7 @@ export default class ParallaxImage<TData> extends Component<
   _container?: View | null;
   _mounted?: boolean;
 
-  constructor (props: ParallaxImageProps<TData>) {
+  constructor (props: ParallaxImageProps) {
       super(props);
       this.state = {
           offset: 0,
@@ -102,12 +107,7 @@ export default class ParallaxImage<TData> extends Component<
       if (this._container) {
           const {
               dimensions,
-              vertical,
-              carouselRef,
-              sliderWidth,
-              sliderHeight,
-              itemWidth,
-              itemHeight
+              carouselRef
           } = this.props;
 
           const nodeHandle = findNodeHandle(carouselRef);
@@ -116,9 +116,9 @@ export default class ParallaxImage<TData> extends Component<
               this._container.measureLayout(
                   nodeHandle,
                   (x, y, width, height) => {
-                      const offset = vertical ?
-                          y - (sliderHeight - itemHeight) / 2 :
-                          x - (sliderWidth - itemWidth) / 2;
+                      const offset = this.props.vertical ?
+                          y - (this.props.sliderHeight - this.props.itemHeight) / 2 :
+                          x - (this.props.sliderWidth - this.props.itemWidth) / 2;
 
                       this.setState({
                           offset: offset,
@@ -182,35 +182,32 @@ export default class ParallaxImage<TData> extends Component<
           // False positive :( other doesn't have the dimension key
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           dimensions,
-          vertical,
-          sliderWidth,
-          sliderHeight,
           parallaxFactor,
           style,
           AnimatedImageComponent,
           ...other
       } = this.props;
-      const parallaxPadding = (vertical ? height : width) * parallaxFactor;
+      const parallaxPadding = (this.props.vertical ? height : width) * parallaxFactor;
       const requiredStyles = { position: 'relative' as const };
       const dynamicStyles = {
-          width: vertical ? width : width + parallaxPadding * 2,
-          height: vertical ? height + parallaxPadding * 2 : height,
+          width: this.props.vertical ? width : width + parallaxPadding * 2,
+          height: this.props.vertical ? height + parallaxPadding * 2 : height,
           opacity: animOpacity,
           transform: scrollPosition ?
               [
                   {
-                      translateX: !vertical ?
+                      translateX: !this.props.vertical ?
                           scrollPosition.interpolate({
-                              inputRange: [offset - sliderWidth, offset + sliderWidth],
+                              inputRange: [offset - this.props.sliderWidth, offset + this.props.sliderWidth],
                               outputRange: [-parallaxPadding, parallaxPadding],
                               extrapolate: 'clamp'
                           }) :
                           0
                   },
                   {
-                      translateY: vertical ?
+                      translateY: this.props.vertical ?
                           scrollPosition.interpolate({
-                              inputRange: [offset - sliderHeight, offset + sliderHeight],
+                              inputRange: [offset - this.props.sliderHeight, offset + this.props.sliderHeight],
                               outputRange: [-parallaxPadding, parallaxPadding],
                               extrapolate: 'clamp'
                           }) :
