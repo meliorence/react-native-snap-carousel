@@ -9,8 +9,8 @@ export default StyleSheet.create({
     image: {
         position: 'relative',
         resizeMode: 'cover',
-        width: null,
-        height: null
+        width: undefined,
+        height: undefined
     },
     loaderContainer: {
         ...StyleSheet.absoluteFillObject,
