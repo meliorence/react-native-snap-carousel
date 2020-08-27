@@ -1,30 +1,44 @@
-import React, { PureComponent } from 'react';
-import { View, Animated, Easing, TouchableOpacity, ViewPropTypes } from 'react-native';
-import PropTypes from 'prop-types';
+import React, { PureComponent, RefObject } from 'react';
+import {
+    Animated,
+    Easing,
+    TouchableOpacity,
+    StyleProp,
+    ViewStyle
+} from 'react-native';
 import styles from './Pagination.style';
+import type Carousel from 'src/carousel/Carousel';
 
-export default class PaginationDot extends PureComponent {
+type PaginationDotProps<TData> = {
+  inactiveOpacity: number;
+  inactiveScale: number;
+  active?: boolean;
+  activeOpacity?: number;
+  animatedDuration?: number;
+  animatedFriction?: number;
+  animatedTension?: number;
+  carouselRef?: Carousel<TData> | RefObject<Carousel<TData>> | null;
+  color?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  delayPressInDot?: number;
+  inactiveColor?: string;
+  inactiveStyle?: StyleProp<ViewStyle>;
+  index?: number;
+  style?: StyleProp<ViewStyle>;
+  tappable?: boolean;
+};
 
-    static propTypes = {
-        inactiveOpacity: PropTypes.number.isRequired,
-        inactiveScale: PropTypes.number.isRequired,
-        active: PropTypes.bool,
-        activeOpacity: PropTypes.number,
-        animatedDuration: PropTypes.number,
-        animatedFriction: PropTypes.number,
-        animatedTension: PropTypes.number,
-        carouselRef: PropTypes.object,
-        color: PropTypes.string,
-        containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        delayPressInDot: PropTypes.number,
-        inactiveColor: PropTypes.string,
-        inactiveStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        index: PropTypes.number,
-        style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        tappable: PropTypes.bool
-    };
+type PaginationDotState = {
+  animColor: Animated.Value;
+  animOpacity: Animated.Value;
+  animTransform: Animated.Value;
+};
 
-    constructor (props) {
+export default class PaginationDot<TData> extends PureComponent<
+  PaginationDotProps<TData>,
+  PaginationDotState
+> {
+    constructor (props: PaginationDotProps<TData>) {
         super(props);
         this.state = {
             animColor: new Animated.Value(0),
@@ -39,7 +53,7 @@ export default class PaginationDot extends PureComponent {
         }
     }
 
-    componentDidUpdate (prevProps) {
+    componentDidUpdate (prevProps: PaginationDotProps<TData>) {
         if (prevProps.active !== this.props.active) {
             this._animate(this.props.active ? 1 : 0);
         }
@@ -55,7 +69,7 @@ export default class PaginationDot extends PureComponent {
             useNativeDriver: !this._shouldAnimateColor
         };
 
-        let animations = [
+        const animations = [
             Animated.timing(animOpacity, {
                 easing: Easing.linear,
                 duration: animatedDuration,
@@ -69,10 +83,12 @@ export default class PaginationDot extends PureComponent {
         ];
 
         if (this._shouldAnimateColor) {
-            animations.push(Animated.timing(animColor, {
-                easing: Easing.linear,
-                ...commonProperties
-            }));
+            animations.push(
+                Animated.timing(animColor, {
+                    easing: Easing.linear,
+                    ...commonProperties
+                })
+            );
         }
 
         Animated.parallel(animations).start();
@@ -106,19 +122,24 @@ export default class PaginationDot extends PureComponent {
                 inputRange: [0, 1],
                 outputRange: [inactiveOpacity, 1]
             }),
-            transform: [{
-                scale: animTransform.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [inactiveScale, 1]
-                })
-            }]
+            transform: [
+                {
+                    scale: animTransform.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [inactiveScale, 1]
+                    })
+                }
+            ]
         };
-        const animatedColor = this._shouldAnimateColor ? {
-            backgroundColor: animColor.interpolate({
-                inputRange: [0, 1],
-                outputRange: [inactiveColor, color]
-            })
-        } : {};
+        const animatedColor =
+      this._shouldAnimateColor && inactiveColor && color ?
+          {
+              backgroundColor: animColor.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [inactiveColor, color]
+              })
+          } :
+          {};
 
         const dotContainerStyle = [
             styles.sliderPaginationDotContainer,
@@ -133,17 +154,25 @@ export default class PaginationDot extends PureComponent {
             animatedColor
         ];
 
-        const onPress = tappable ? () => {
-            try {
-                const currentRef = carouselRef.current || carouselRef;
-                currentRef._snapToItem(currentRef._getPositionIndex(index));
-            } catch (error) {
-                console.warn(
-                    'react-native-snap-carousel | Pagination: ' +
-                    '`carouselRef` has to be a Carousel ref.\n' + error
-                );
-            }
-        } : undefined;
+        const onPress =
+      tappable && (!!index || index === 0) ?
+          () => {
+              try {
+                  const currentRef =
+                carouselRef && 'current' in carouselRef ?
+                    carouselRef.current :
+                    carouselRef;
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              currentRef!._snapToItem(currentRef!._getPositionIndex(index));
+              } catch (error) {
+                  console.warn(
+                      'react-native-snap-carousel | Pagination: ' +
+                  '`carouselRef` has to be a Carousel ref.\n' +
+                  error
+                  );
+              }
+          } :
+          undefined;
 
         return (
             <TouchableOpacity
