@@ -141,7 +141,7 @@ export default class Pagination<TData> extends PureComponent<PaginationProps<TDa
           />
       );
 
-      const dots = [...Array(dotsLength).keys()].map((i) => {
+      const dots = Array.from({ length: dotsLength }, (_, i) => i).map((i) => {
           const isActive = i === this._activeDotIndex;
           return React.cloneElement(
               (isActive ? dotElement : inactiveDotElement) || DefaultDot,
