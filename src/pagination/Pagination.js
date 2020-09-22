@@ -27,14 +27,22 @@ export default class Pagination extends PureComponent {
         renderDots: PropTypes.func,
         tappableDots: PropTypes.bool,
         vertical: PropTypes.bool,
-        accessibilityLabel: PropTypes.string
+        accessibilityLabel: PropTypes.string,
+        animatedDuration: PropTypes.number,
+        animatedFriction: PropTypes.number,
+        animatedTension: PropTypes.number,
+        delayPressInDot: PropTypes.number,
     };
 
     static defaultProps = {
         inactiveDotOpacity: 0.5,
         inactiveDotScale: 0.5,
         tappableDots: false,
-        vertical: false
+        vertical: false,
+        animatedDuration: 250,
+        animatedFriction: 4,
+        animatedTension: 50,
+        delayPressInDot: 0,
     }
 
     constructor (props) {
@@ -53,7 +61,7 @@ export default class Pagination extends PureComponent {
                 'You need to specify both `dotElement` and `inactiveDotElement`'
             );
         }
-        if (props.tappableDots && !props.carouselRef) {
+        if (props.tappableDots && props.carouselRef === undefined) {
             console.warn(
                 'react-native-snap-carousel | Pagination: ' +
                 'You must specify prop `carouselRef` when setting `tappableDots` to `true`'
@@ -86,7 +94,11 @@ export default class Pagination extends PureComponent {
             inactiveDotScale,
             inactiveDotStyle,
             renderDots,
-            tappableDots
+            tappableDots,
+            animatedDuration,
+            animatedFriction,
+            animatedTension,
+            delayPressInDot,
         } = this.props;
 
         if (renderDots) {
@@ -104,21 +116,23 @@ export default class Pagination extends PureComponent {
           inactiveOpacity={inactiveDotOpacity}
           inactiveScale={inactiveDotScale}
           inactiveStyle={inactiveDotStyle}
+          animatedDuration={animatedDuration}
+          animatedFriction={animatedFriction}
+          animatedTension={animatedTension}
+          delayPressInDot={delayPressInDot}
         />;
 
-        let dots = [];
-
-        for (let i = 0; i < dotsLength; i++) {
+        const dots = [...Array(dotsLength).keys()].map(i => {
             const isActive = i === this._activeDotIndex;
-            dots.push(React.cloneElement(
+            return React.cloneElement(
                 (isActive ? dotElement : inactiveDotElement) || DefaultDot,
                 {
                     key: `pagination-dot-${i}`,
-                    active: i === this._activeDotIndex,
+                    active: isActive,
                     index: i
                 }
-            ));
-        }
+            );
+        });
 
         return dots;
     }

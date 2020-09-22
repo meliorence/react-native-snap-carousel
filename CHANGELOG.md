@@ -1,3 +1,14 @@
+## v3.9.1
+
+* Fix for `getNode()` deprecation warning with RN `0.62+` (thanks [@r0b0t3d](https://github.com/r0b0t3d))
+
+## v3.9.0
+
+* Fix for incorrect snapToItem (thanks [@Romick2005](https://github.com/Romick2005) & [@sergeyzhukov](https://github.com/sergeyzhukov))
+* Fix issue with tappable pagination dots (thanks [@Creskendoll](https://github.com/Creskendoll))
+* Clear all timeouts when stopping autoplay (thanks [@adrianocola](https://github.com/adrianocola))
+* Add props `animatedDuration`, `animatedFriction`, `animatedTension` and `delayPressInDot` to the `Pagination` component (thanks [@muhlenbrock](https://github.com/muhlenbrock))
+
 ## v3.8.4
 
 * Remove TypeScript definitions since they were causing issues (thanks [@radko93](https://github.com/radko93))

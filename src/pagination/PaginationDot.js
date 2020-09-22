@@ -43,10 +43,11 @@ export default class PaginationDot extends PureComponent {
 
     _animate (toValue = 0) {
         const { animColor, animOpacity, animTransform } = this.state;
+        const { animatedDuration, animatedFriction, animatedTension } = this.props
 
         const commonProperties = {
             toValue,
-            duration: 250,
+            duration: animatedDuration,
             isInteraction: false,
             useNativeDriver: !this._shouldAnimateColor
         };
@@ -57,8 +58,8 @@ export default class PaginationDot extends PureComponent {
                 ...commonProperties
             }),
             Animated.spring(animTransform, {
-                friction: 4,
-                tension: 50,
+                friction: animatedFriction,
+                tension: animatedTension,
                 ...commonProperties
             })
         ];
@@ -92,7 +93,8 @@ export default class PaginationDot extends PureComponent {
             inactiveScale,
             index,
             style,
-            tappable
+            tappable,
+            delayPressInDot
         } = this.props;
 
         const animatedStyle = {
@@ -128,7 +130,15 @@ export default class PaginationDot extends PureComponent {
         ];
 
         const onPress = tappable ? () => {
-            carouselRef && carouselRef._snapToItem(carouselRef._getPositionIndex(index));
+            try {
+                const currentRef = carouselRef.current || carouselRef;
+                currentRef._snapToItem(currentRef._getPositionIndex(index));
+            } catch (error) {
+                console.warn(
+                    'react-native-snap-carousel | Pagination: ' +
+                    '`carouselRef` has to be a Carousel ref.\n' + error
+                );
+            }
         } : undefined;
 
         return (
@@ -137,6 +147,7 @@ export default class PaginationDot extends PureComponent {
               style={dotContainerStyle}
               activeOpacity={tappable ? activeOpacity : 1}
               onPress={onPress}
+              delayPressIn={delayPressInDot}
             >
                 <Animated.View style={dotStyle} />
             </TouchableOpacity>
