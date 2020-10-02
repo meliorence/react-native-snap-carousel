@@ -818,7 +818,7 @@ export default class Carousel extends Component {
         }
 
         if (nextActiveItem === this._itemToSnapTo &&
-            scrollOffset === this._scrollOffsetRef) {
+            Math.trunc(scrollOffset) === Math.trunc(this._scrollOffsetRef)) {
             this._repositionScroll(nextActiveItem);
         }
 
