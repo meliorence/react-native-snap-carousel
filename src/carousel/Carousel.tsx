@@ -11,7 +11,9 @@ import {
     NativeScrollEvent,
     LayoutChangeEvent,
     GestureResponderEvent,
-    ViewStyle
+    ViewStyle,
+    FlatListProps,
+    ScrollViewProps,
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import {
@@ -1218,7 +1220,7 @@ export class Carousel<TData> extends React.Component<
       };
   }
 
-  _getComponentStaticProps () {
+  _getComponentStaticProps (): FlatListProps<TData> | ScrollViewProps {
       const { hideCarousel } = this.state;
       const {
           activeSlideAlignment,
@@ -1293,9 +1295,6 @@ export class Carousel<TData> extends React.Component<
           ...specificProps,
           ...snapProps,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ref: (c: any) => {
-              this._carouselRef = c as FlatList<TData> | ScrollView;
-          },
           contentContainerStyle: contentContainerStyle,
           data: this._getCustomData(),
           horizontal: !this.props.vertical,
@@ -1326,7 +1325,11 @@ export class Carousel<TData> extends React.Component<
       typeof useScrollView === 'function' ? useScrollView : Animated.ScrollView;
 
       return this._needsScrollView() || !Animated.FlatList ? (
-          <ScrollViewComponent {...props}>
+          <ScrollViewComponent 
+            ref={(c: any) => {
+              this._carouselRef = c as ScrollView;
+            }}  
+            {...props}>
               {this._getCustomData().map((item, index) => {
                   return this._renderItem({ item, index });
               })}
@@ -1334,7 +1337,12 @@ export class Carousel<TData> extends React.Component<
       ) : (
           // @ts-expect-error Seems complicated to make TS 100% happy, while sharing that many things between
           // flatlist && scrollview implementation. I'll prob try to rewrite parts of the logic to overcome that.
-          <Animated.FlatList {...props} />
+          <Animated.FlatList 
+            ref={(c: any) => {
+                this._carouselRef = c as FlatList<TData>;
+            }}  
+            {...props}
+            />
       );
   }
 }
