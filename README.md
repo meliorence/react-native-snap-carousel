@@ -3,20 +3,24 @@
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-snap-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-snap-carousel)
 [![npm](https://img.shields.io/npm/dm/react-native-snap-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-snap-carousel)
+
 <!-- [![github release](https://img.shields.io/github/release/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/releases) -->
+
 [![github issues](https://img.shields.io/github/issues/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/issues)
 [![github closed issues](https://img.shields.io/github/issues-closed/archriss/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/archriss/react-native-snap-carousel/issues?q=is%3Aissue+is%3Aclosed)
 [![Issue Stats](https://img.shields.io/issuestats/i/github/archriss/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](http://github.com/archriss/react-native-snap-carousel/issues)
 
------
------
+---
+
+---
 
 ## ✨ Some great news for you, fellow plugin user!
 
 ### 💡 **[Head over there now](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/VERSION_4.md)** to learn more about all the goodness that's coming your way.
 
------
------
+---
+
+---
 
 ## Table of contents
 
@@ -78,36 +82,114 @@ $ npm install --save react-native-snap-carousel
 ```
 
 If you're using Typescript you should also install type definitions:
+
 ```bash
 $ npm install --save @types/react-native-snap-carousel
 ```
 
+**Class based usage**
 
 ```javascript
-import Carousel from 'react-native-snap-carousel';
+import Carousel from "react-native-snap-carousel";
 
 export class MyCarousel extends Component {
+  _renderItem = ({ item, index }) => {
+    return (
+      <View style={styles.slide}>
+        <Text style={styles.title}>{item.title}</Text>
+      </View>
+    );
+  };
 
-    _renderItem = ({item, index}) => {
-        return (
-            <View style={styles.slide}>
-                <Text style={styles.title}>{ item.title }</Text>
-            </View>
-        );
-    }
-
-    render () {
-        return (
-            <Carousel
-              ref={(c) => { this._carousel = c; }}
-              data={this.state.entries}
-              renderItem={this._renderItem}
-              sliderWidth={sliderWidth}
-              itemWidth={itemWidth}
-            />
-        );
-    }
+  render() {
+    return (
+      <Carousel
+        ref={(c) => {
+          this._carousel = c;
+        }}
+        data={this.state.entries}
+        renderItem={this._renderItem}
+        sliderWidth={sliderWidth}
+        itemWidth={itemWidth}
+      />
+    );
+  }
 }
+```
+
+**Functional usage**
+
+```javascript
+import React, { useState, useCallback, useRef } from "react";
+import { Text, View, SafeAreaView } from "react-native";
+
+import Carousel from "react-native-snap-carousel";
+
+const exampleItems = [
+  {
+    title: "Item 1",
+    text: "Text 1",
+  },
+  {
+    title: "Item 2",
+    text: "Text 2",
+  },
+  {
+    title: "Item 3",
+    text: "Text 3",
+  },
+  {
+    title: "Item 4",
+    text: "Text 4",
+  },
+  {
+    title: "Item 5",
+    text: "Text 5",
+  },
+];
+
+const CustomCarousel = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [carouselItems, setCarouselItems] = useState(exampleItems);
+  const ref = useRef(null);
+
+  const renderItem = useCallback(
+    ({ item, index }) => (
+      <View
+        style={{
+          backgroundColor: "floralwhite",
+          borderRadius: 5,
+          height: 250,
+          padding: 50,
+          marginLeft: 25,
+          marginRight: 25,
+        }}
+      >
+        <Text style={{ fontSize: 30 }}>{item.title}</Text>
+        <Text>{item.text}</Text>
+      </View>
+    ),
+    []
+  );
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "rebeccapurple", paddingTop: 50 }}>
+      <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
+        <Carousel
+          layout="default"
+          ref={ref}
+          data={carouselItems}
+          sliderWidth={300}
+          itemWidth={300}
+          renderItem={renderItem}
+          onSnapToItem={(index) => setActiveIndex(index)}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default CustomCarousel;
 ```
 
 ## Example
@@ -136,26 +218,30 @@ In version `3.6.0`, we've added two new layouts on top of the original one: the 
 You can choose between the three of them using [the new prop `layout`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation) and you can modify the default card offset in the 'stack' and 'tinder' layouts with [prop `layoutCardOffset`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation).
 
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
+
 ```javascript
-<Carousel layout={'default'} />
+<Carousel layout={"default"} />
 ```
 
 ![react-native-snap-carousel stack layout ios](https://i.imgur.com/c7pU4rT.gif)
 ![react-native-snap-carousel stack layout android](https://i.imgur.com/AnruacR.gif)
+
 ```javascript
-<Carousel layout={'stack'} layoutCardOffset={`18`} />
+<Carousel layout={"stack"} layoutCardOffset={`18`} />
 ```
 
 ![react-native-snap-carousel tinder layout ios](https://i.imgur.com/D9QyTzb.gif)
 ![react-native-snap-carousel tinder layout android](https://i.imgur.com/ab1TI4e.gif)
+
 ```javascript
-<Carousel layout={'tinder'} layoutCardOffset={`9`} />
+<Carousel layout={"tinder"} layoutCardOffset={`9`} />
 ```
 
 A few things worth noting:
-* As you can see, the effect had to be inverted on Android. This has to do with [a really annoying Android-specific bug](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#android).
-* Even though the new layouts have been created with horizontal carousels in mind, they will also work with vertical ones \o/
-* :warning: **You should NOT use `stack` or `tinder` layouts if you have a large data set to display.** In order to avoid rendering issues, the carousel will use a `ScrollView` component rather than a `FlatList` one for those layouts (see [prop `useScrollView`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#behavior)). The tradeof is that you won't benefit from any of `FlatList`'s advanced optimizations. See [this issue](https://github.com/archriss/react-native-snap-carousel/issues/262) for workarounds; or you may want to implement your own [custom interpolation](#custom-interpolations).
+
+- As you can see, the effect had to be inverted on Android. This has to do with [a really annoying Android-specific bug](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#android).
+- Even though the new layouts have been created with horizontal carousels in mind, they will also work with vertical ones \o/
+- :warning: **You should NOT use `stack` or `tinder` layouts if you have a large data set to display.** In order to avoid rendering issues, the carousel will use a `ScrollView` component rather than a `FlatList` one for those layouts (see [prop `useScrollView`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#behavior)). The tradeof is that you won't benefit from any of `FlatList`'s advanced optimizations. See [this issue](https://github.com/archriss/react-native-snap-carousel/issues/262) for workarounds; or you may want to implement your own [custom interpolation](#custom-interpolations).
 
 ### Custom interpolations
 
@@ -201,7 +287,7 @@ We've gathered together all the useful tips and tricks. There is a bunch of them
 
 ![react-native-snap-carousel android](https://i.imgur.com/03iuB2Um.jpg)
 
-Android's debug mode is a mess: timeouts regularly desynchronize and scroll events are fired with some lag, which completely alters the inner logic of the carousel. **On Android, you *will* experience issues with carousel's behavior when JS Dev Mode is enabled, and you *might* have trouble with unreliable callbacks and loop mode when it isn't**. This is unfortunate, but it's rooted in various flaws of `ScrollView`/`FlatList`'s implementation and the miscellaneous workarounds we had to implement to compensate for it.
+Android's debug mode is a mess: timeouts regularly desynchronize and scroll events are fired with some lag, which completely alters the inner logic of the carousel. **On Android, you _will_ experience issues with carousel's behavior when JS Dev Mode is enabled, and you _might_ have trouble with unreliable callbacks and loop mode when it isn't**. This is unfortunate, but it's rooted in various flaws of `ScrollView`/`FlatList`'s implementation and the miscellaneous workarounds we had to implement to compensate for it.
 
 :warning: **Therefore you should always check if the issue you experience also happens in a production environment. This is, sadly, the only way to test the real performance and behavior of the carousel.**
 
@@ -217,11 +303,11 @@ Android's debug mode is a mess: timeouts regularly desynchronize and scroll even
 
 - [ ] Add [more examples](https://github.com/archriss/react-native-snap-carousel/issues/257)
 - [ ] Base the plugin on a component less buggy than `FlatList`
-- [X] Implement different layouts and allow using custom interpolations
-- [X] Implement both `FlatList` and `ScrollView` handling
-- [X] Add the ability to provide custom items animation
-- [X] Implement 'loop' mode
-- [X] Improve Android's behavior
+- [x] Implement different layouts and allow using custom interpolations
+- [x] Implement both `FlatList` and `ScrollView` handling
+- [x] Add the ability to provide custom items animation
+- [x] Implement 'loop' mode
+- [x] Improve Android's behavior
 - [x] Add parallax image component
 - [x] Base the plugin on `FlatList` instead of `ScrollView`
 - [x] Add alignment option
