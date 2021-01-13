@@ -27,14 +27,14 @@ Here are a few good practices to keep in mind when dealing with the component (o
 * If your data set is huge, **consider loading additional chunks of data only when the user has reached the end of the current set**. In order to do this, you'll have to play with `VirtualizedList`'s props `onEndReached` and `onEndReachedThreshold`
 * **Add [prop `removeClippedSubviews`](https://facebook.github.io/react-native/docs/scrollview.html#removeclippedsubviews)** and set it to `true` so that out-of-view items are removed from memory.
 
-Here are a few other tips given by [@pcooney10](https://github.com/pcooney10) in [this thread](https://github.com/archriss/react-native-snap-carousel/issues/247#issuecomment-360276562):
+Here are a few other tips given by [@pcooney10](https://github.com/pcooney10) in [this thread](https://github.com/meliorence/react-native-snap-carousel/issues/247#issuecomment-360276562):
 
 - Make sure there aren't any excessive calls to `this.setState` in the component that renders the carousels and their parents.
 - Properly leverage the `initialNumToRender` and `maxToRenderPerBatch` props inherited from `FlatList`, and `windowSize` inherited from `VirtualizedList`.
 - Utilize [`InteractionManager`](https://facebook.github.io/react-native/docs/interactionmanager.html) to render the Carousels that are "below the fold".
 - Avoid using functions and object literals for props declared on components - this apparently results in "new props" during a re-render.
 
-Lastly, make sure to read [this note](https://github.com/archriss/react-native-snap-carousel#important-note-regarding-android) regarding Android and [this one](https://github.com/archriss/react-native-snap-carousel#important-note-regarding-ios) regarding iOS.
+Lastly, make sure to read [this note](https://github.com/meliorence/react-native-snap-carousel#important-note-regarding-android) regarding Android and [this one](https://github.com/meliorence/react-native-snap-carousel#important-note-regarding-ios) regarding iOS.
 
 ## Momentum
 
@@ -161,13 +161,13 @@ export class MyCarousel extends Component {
 
 **If you are using the plugin without the preview effect (meaning that your slides, as well as your slider, are viewport wide), we do not recommend using this plugin.**
 
-You'll be better off with [`react-native-swiper`](https://github.com/leecade/react-native-swiper) for the simple reason that it implements the `ViewPagerAndroid` component, which provides a way better overall feeling on Android, whereas we must hack our way around [the frustrating limitations of the `ScrollView` component](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#flatlist-and-scrollviews-limitations).
+You'll be better off with [`react-native-swiper`](https://github.com/leecade/react-native-swiper) for the simple reason that it implements the `ViewPagerAndroid` component, which provides a way better overall feeling on Android, whereas we must hack our way around [the frustrating limitations of the `ScrollView` component](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#flatlist-and-scrollviews-limitations).
 
 ## Handling device rotation
 
 Since version 2.2.0, slides will re-center properly if you update slider and/or items' dimensions when `onLayout` is fired.
 
-Here is an example of a working implementation (thanks [@andrewpope](https://github.com/archriss/react-native-snap-carousel/pull/76#issuecomment-306187425)):
+Here is an example of a working implementation (thanks [@andrewpope](https://github.com/meliorence/react-native-snap-carousel/pull/76#issuecomment-306187425)):
 
 ```
 constructor(props) {
@@ -209,9 +209,9 @@ Slides' animations are based on scroll events and have been moved to the native 
 
 ## Implementing navigation
 
-Some users had trouble implementing navigation with the carousel (see [#83](https://github.com/archriss/react-native-snap-carousel/issues/83), [#146](https://github.com/archriss/react-native-snap-carousel/issues/146) and [#212](https://github.com/archriss/react-native-snap-carousel/issues/212)) because they weren't aware of methods' context.
+Some users had trouble implementing navigation with the carousel (see [#83](https://github.com/meliorence/react-native-snap-carousel/issues/83), [#146](https://github.com/meliorence/react-native-snap-carousel/issues/146) and [#212](https://github.com/meliorence/react-native-snap-carousel/issues/212)) because they weren't aware of methods' context.
 
-[jordangrant](https://github.com/jordangrant) was kind enough to share [a comprehensive walkthrough](https://github.com/archriss/react-native-snap-carousel/issues/146#issuecomment-343933652) which is reproduced below. Kuddos to him!
+[jordangrant](https://github.com/jordangrant) was kind enough to share [a comprehensive walkthrough](https://github.com/meliorence/react-native-snap-carousel/issues/146#issuecomment-343933652) which is reproduced below. Kuddos to him!
 
 In your Carousel:
 
@@ -263,7 +263,7 @@ export default class SliderEntry extends Component {
 
 ## Implementing zooming feature
 
-See https://github.com/archriss/react-native-snap-carousel/issues/264#issuecomment-366473756
+See https://github.com/meliorence/react-native-snap-carousel/issues/264#issuecomment-366473756
 
 ## Using a specific commit
 
@@ -271,14 +271,14 @@ This plugin is regularly updated, and new versions are frequently pushed to `npm
 
 This is pretty easy: in your `package.json` file, use the GitHub link instead of a version number, and point to the specific commit using `#`. For example, if the commit reference is `fbdb671`, you would write:
 ```javascript
-"react-native-snap-carousel": "https://github.com/archriss/react-native-snap-carousel#fbdb671"
+"react-native-snap-carousel": "https://github.com/meliorence/react-native-snap-carousel#fbdb671"
 ```
 
 ## Useful threads
 
 Some issues stand above the others because a lot of useful information has been shared.
 
-In order to make it easier for everyone to find them, they are [tagged with an asterisk](https://github.com/archriss/react-native-snap-carousel/issues?q=is%3Aissue+label%3A%2A).
+In order to make it easier for everyone to find them, they are [tagged with an asterisk](https://github.com/meliorence/react-native-snap-carousel/issues?q=is%3Aissue+label%3A%2A).
 
 ## Understanding styles
 
@@ -290,7 +290,7 @@ Here is a screenshot that should help you understand how each of the required va
 
 Slides are no longer appended as direct children of the component since the plugin is now based on `FlatList` instead of `ScrollView`. There are two new props that takes care of their rendering: `data` and `renderItem` (both are inherited from `FlatList`).
 
-> :warning: **Make sure to read about [the recommended React Native version](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#react-native-version) before migrating.**
+> :warning: **Make sure to read about [the recommended React Native version](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#react-native-version) before migrating.**
 
 If you were already looping throught an array of data to populate the carousel, the migration is pretty straightforward. Just pass your slides' data to the `data` prop, convert your slides' getter to a function and pass it to the `renderItem` prop: you're good to go!
 

@@ -4,7 +4,7 @@
 
 ## 💡 Why?
 
-So far, and because of [numerous React Native limitations](https://github.com/archriss/react-native-snap-carousel/issues/203), the entire plugin has basically been based on a pile of hacks and workarounds...
+So far, and because of [numerous React Native limitations](https://github.com/meliorence/react-native-snap-carousel/issues/203), the entire plugin has basically been based on a pile of hacks and workarounds...
 
 With the most recent versions of React Native, a few interesting props have appeared and made me consider the possibility of finally rewriting the inner logic of the carousel.
 
@@ -28,14 +28,14 @@ The first thing you can do is test this new version and let me know how it works
 ### How to test?
 
 - You can find the already published beta versions by running: `npm view react-native-snap-carousel versions --json`
-- [Follow this PR closely](https://github.com/archriss/react-native-snap-carousel/pull/678). **This is where the discussion will take place.**
+- [Follow this PR closely](https://github.com/meliorence/react-native-snap-carousel/pull/678). **This is where the discussion will take place.**
 - And if you like to live on the edge, [try the latest commits](https://stackoverflow.com/a/27630247/) of that same PR ;-)
 
 ### 🦸‍♀️🦸‍♂️ Get your hands dirty!
 
 Then, **if you want to jump in**, I'd be glad if you could help me with the following:
 
-1. **Reducing the number of rerenders** (see [#478](https://github.com/archriss/react-native-snap-carousel/issues/478)). [`why-did-you-render`](https://github.com/welldone-software/why-did-you-render) is going to prove really helpful for that.
+1. **Reducing the number of rerenders** (see [#478](https://github.com/meliorence/react-native-snap-carousel/issues/478)). [`why-did-you-render`](https://github.com/welldone-software/why-did-you-render) is going to prove really helpful for that.
 2. **Finding a way to make the experimental snap feature work even with the last items** (see "New props" below for more details on this feature).
 
 Let's finish that together and make sure this plugin remains absolutely awesome!

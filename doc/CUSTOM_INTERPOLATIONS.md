@@ -11,7 +11,7 @@
 
 ## Preview
 
-Version `3.6.0` introduced a new cool feature: layouts. On top of the default one, we've implemented two other ways of stacking and animating items in the carousel. You can choose between these with [prop `layout`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation). Here how each one looks like (the reason why iOS and Android are differents [will be explained later](#caveats)):
+Version `3.6.0` introduced a new cool feature: layouts. On top of the default one, we've implemented two other ways of stacking and animating items in the carousel. You can choose between these with [prop `layout`](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation). Here how each one looks like (the reason why iOS and Android are differents [will be explained later](#caveats)):
 
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
 ```javascript
@@ -37,7 +37,7 @@ We are able to do all this thanks to React Native's great [Animated API](https:/
 ![react-native-snap-carousel custom layout](https://i.imgur.com/Nht4w9D.gif)
 ![react-native-snap-carousel custom layout](https://i.imgur.com/kDx3xTc.gif)
 
-We've decided to expose a way for users to provide their own interpolators, customize their carousels and create awesome animations! Note that you can find the source code of the built-in layouts [here](https://github.com/archriss/react-native-snap-carousel/blob/master/src/utils/animations.js) and the source code of the custom examples [here](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js). Taking a look at these is a very good way to understand how it works.
+We've decided to expose a way for users to provide their own interpolators, customize their carousels and create awesome animations! Note that you can find the source code of the built-in layouts [here](https://github.com/meliorence/react-native-snap-carousel/blob/master/src/utils/animations.js) and the source code of the custom examples [here](https://github.com/meliorence/react-native-snap-carousel/blob/master/example/src/utils/animations.js). Taking a look at these is a very good way to understand how it works.
 
 ## Usage
 
@@ -69,7 +69,7 @@ This prop will be used to interpolate the scroll position. Particularly, this me
 
 > :warning: **Both arrays must have the same length**, otherwise you'll get an error.
 
-Since it can be pretty difficult to determine the adequate `inputRange` we've created a helper for you: [`getInputRangeFromIndexes(range, index, carouselProps)`](https://github.com/archriss/react-native-snap-carousel/blob/master/src/utils/animations.js#L5:L24). You only need to determine the range of items **relative to the active one** you'd like to animate at the same time. The current item will be zero-indexed in this function. For example, using a range of `[1, 0, -1]` means that you will be able to animate the current active item (`0`), the previous one (`-1)` and the next one (`1`).
+Since it can be pretty difficult to determine the adequate `inputRange` we've created a helper for you: [`getInputRangeFromIndexes(range, index, carouselProps)`](https://github.com/meliorence/react-native-snap-carousel/blob/master/src/utils/animations.js#L5:L24). You only need to determine the range of items **relative to the active one** you'd like to animate at the same time. The current item will be zero-indexed in this function. For example, using a range of `[1, 0, -1]` means that you will be able to animate the current active item (`0`), the previous one (`-1)` and the next one (`1`).
 
 > :warning: As you might have noticed, **when using `getInputRangeFromIndexes()` you need to declare your range in a reverse order**. While this is pretty counter-intuitive, you'll otherwise get an error because `"inputRange must be monotonically increasing"`.
 
@@ -106,7 +106,7 @@ When you scroll, items' opacity will progressively animate from one value to the
 
 ## Step-by-step example
 
-It is recommended to take a look at [the source code of the built-in layouts](https://github.com/archriss/react-native-snap-carousel/blob/master/src/utils/animations.js) and at [the source code the custom examples](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js); you'll learn a lot!
+It is recommended to take a look at [the source code of the built-in layouts](https://github.com/meliorence/react-native-snap-carousel/blob/master/src/utils/animations.js) and at [the source code the custom examples](https://github.com/meliorence/react-native-snap-carousel/blob/master/example/src/utils/animations.js); you'll learn a lot!
 
 For those who want to follow through a step-by-step tutorial, the following is for you.
 
@@ -138,7 +138,7 @@ function scrollInterpolator (index, carouselProps) {
 
 This is where the fun begins!
 
-The first trick is **to ensure that the active item will always sit on top of the next ones**. By default, an item with a higher index will also have a higher `zIndex`. To counteract this, you can use the following. :warning: **Currently, this can lead to swipe/click events being missed!** See [this issue](https://github.com/archriss/react-native-snap-carousel/issues/262) for more info.
+The first trick is **to ensure that the active item will always sit on top of the next ones**. By default, an item with a higher index will also have a higher `zIndex`. To counteract this, you can use the following. :warning: **Currently, this can lead to swipe/click events being missed!** See [this issue](https://github.com/meliorence/react-native-snap-carousel/issues/262) for more info.
 
 ```javascript
 {
@@ -251,7 +251,7 @@ export default class MyCustomCarousel extends PureComponent {
 }
 ```
 
-Here is the result, which you can try live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example):
+Here is the result, which you can try live in [the provided example](https://github.com/meliorence/react-native-snap-carousel/tree/master/example):
 
 ![react-native-snap-carousel custom layout](https://i.imgur.com/slnTbyG.gif)
 

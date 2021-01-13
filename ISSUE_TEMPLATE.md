@@ -23,29 +23,29 @@
 
 (Check the step you've followed - put an `x` character between the square brackets (`[]`).)
 
-- [] I have read [the guidelines regarding bug report](https://github.com/archriss/react-native-snap-carousel/blob/master/CONTRIBUTING.md).
-- [] I have reviewed [the documentation](https://github.com/archriss/react-native-snap-carousel/blob/master/README.md) in its entirety, including the dedicated documentations :books:.
-- [] I have searched for [existing issues](https://github.com/archriss/react-native-snap-carousel/issues) and made sure that the problem hasn't already been reported.
-- [] I am using [the latest plugin version](https://github.com/archriss/react-native-snap-carousel/releases).
-- [] I am following [the issue template](https://raw.githubusercontent.com/archriss/react-native-snap-carousel/master/ISSUE_TEMPLATE.md) closely in order to produce a useful bug report.
+- [] I have read [the guidelines regarding bug report](https://github.com/meliorence/react-native-snap-carousel/blob/master/CONTRIBUTING.md).
+- [] I have reviewed [the documentation](https://github.com/meliorence/react-native-snap-carousel/blob/master/README.md) in its entirety, including the dedicated documentations :books:.
+- [] I have searched for [existing issues](https://github.com/meliorence/react-native-snap-carousel/issues) and made sure that the problem hasn't already been reported.
+- [] I am using [the latest plugin version](https://github.com/meliorence/react-native-snap-carousel/releases).
+- [] I am following [the issue template](https://raw.githubusercontent.com/meliorence/react-native-snap-carousel/master/ISSUE_TEMPLATE.md) closely in order to produce a useful bug report.
 
 <!--
   Please DO NOT go futher if you've not followed ALL of the above steps.
   Failing to do so will result in your issue getting closed without warning.
 -->
 
-### Have you made sure that it wasn't a [React Native bug](https://github.com/archriss/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)?
+### Have you made sure that it wasn't a [React Native bug](https://github.com/meliorence/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)?
 
 (Write your answer here.)
 
 <!--
   Steps you should take:
 
-    1. Take a look at plugin's issues that are [labelled `react-native bug`](https://github.com/archriss/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)
+    1. Take a look at plugin's issues that are [labelled `react-native bug`](https://github.com/meliorence/react-native-snap-carousel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22react-native+bug%22+)
 
     2. Search [React Native issues](https://github.com/facebook/react-native/issues)
 
-    3. Read the following sections of the doc again: ["Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md), ["Important note regarding Android"](https://github.com/archriss/react-native-snap-carousel#important-note-regarding-android), and ["Custom interpolations caveats"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#caveats).
+    3. Read the following sections of the doc again: ["Known issues"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md), ["Important note regarding Android"](https://github.com/meliorence/react-native-snap-carousel#important-note-regarding-android), and ["Custom interpolations caveats"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#caveats).
  -->
 
 ### Is the bug specific to iOS or Android? Or can it be reproduced on both platforms?
@@ -57,7 +57,7 @@
 (Write your answer here.)
 
 <!--
-  If you haven't been able to reproduce the bug in production mode, it probably has to do with React Native's limitations (see ["Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md)). Chances are we won't be able to do anything about it.
+  If you haven't been able to reproduce the bug in production mode, it probably has to do with React Native's limitations (see ["Known issues"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md)). Chances are we won't be able to do anything about it.
 -->
 
 ### Environment
