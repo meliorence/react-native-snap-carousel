@@ -1085,18 +1085,18 @@ export class Carousel<TData> extends React.Component<
       this.pauseAutoPlay();
   }
 
-  snapToItem (index: number, animated = true, fireCallback = true) {
+  snapToItem (index: number, animated = true, fireCallback = true, force = false) {
       if (!index || index < 0) {
           index = 0;
       }
 
       const positionIndex = this._getPositionIndex(index);
 
-      if (positionIndex === this._activeItem) {
+      if (!force && positionIndex === this._activeItem) {
           return;
       }
 
-      this._snapToItem(positionIndex, animated, fireCallback);
+      this._snapToItem(positionIndex, animated, fireCallback, force);
   }
 
   snapToNext (animated = true, fireCallback = true) {
