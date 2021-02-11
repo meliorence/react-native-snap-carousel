@@ -9,6 +9,7 @@
 1. [Unreliable first item](#unreliable-first-item)
 1. [Error with Jest](#error-with-jest)
 1. [RTL support (experimental)](#rtl-support-experimental)
+1. [Carousel is not visible until you start swiping](#carousel-initially-not-visible)
 
 ## `FlatList` and `ScrollView`'s limitations
 
@@ -73,3 +74,16 @@ The easiest workaround is to add `jest.unmock('ScrollView')` before importing th
 Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`. As such, this feature should be considered experimental since it might break with newer versions of React Native.
 
 Note that you may want to reverse the order of your data array for your items to be displayed in the proper RTL order. We've tried implementing it internally, but this led to numerous and unnecessary issues. You'll just have to do something as simple as `myCustomData.reverse()`.
+
+## Carousel is not visible until you start swiping
+
+There's a known issue where the Carousel will not be visible on the screen and will only show up after you start swiping. [This issue has been reported a few times](https://github.com/meliorence/react-native-snap-carousel/issues/238#issuecomment-354536859) and is caused by a [known React Native bug in the FlatList component](https://github.com/facebook/react-native/issues/1831). 
+
+It may be solved using one these three possible workarounds:
+
+- [Adding removeClippedSubviews={false} to the Carousel element](https://github.com/meliorence/react-native-snap-carousel/issues/238#issuecomment-354528113): Note that this will disable all optimizations from the FlatList Component.
+- [Adding useScrollView to the Carousel element](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md): Similar solution to the one provided above. Replaces FlatList component with ScrollView, only recommended for small sets of data.
+- [As of version 3.5.0, you may use the triggerRenderingHack() method](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#available-methods): This hacky solution was specifically implemented for this bug, allowing you to keep the FlatList component). [Note: This is recommended if you need the performance optimizations that FlatList provides).
+
+
+
