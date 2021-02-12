@@ -572,7 +572,7 @@ export default class Carousel extends Component {
     }
 
     _initPositionsAndInterpolators (props = this.props) {
-        const { data, itemWidth, itemHeight, scrollInterpolator, vertical } = props;
+	    const { data, itemWidth, itemHeight, scrollInterpolator, vertical, activeSlideAlignment, loop, sliderWidth, lastItemOffsetWidth } = props;
         const sizeRef = vertical ? itemHeight : itemWidth;
 
         if (!data || !data.length) {
@@ -586,10 +586,19 @@ export default class Carousel extends Component {
             const _index = this._getCustomIndex(index, props);
             let animatedValue;
 
-            this._positions[index] = {
-                start: index * sizeRef,
-                end: index * sizeRef + sizeRef
-            };
+            if(this._getCustomData(props).length-1 == index && activeSlideAlignment=='start' && !loop){
+                var offset=lastItemOffsetWidth;
+                if(offset==undefined) offset=0;
+                this._positions[index] = {
+                    start: index * sizeRef - (sliderWidth - (sizeRef + offset)),
+                    end: index * sizeRef - (sliderWidth - (sizeRef + offset)) + sizeRef
+                };
+            }else{
+                this._positions[index] = {
+                    start: index * sizeRef,
+                    end: index * sizeRef + sizeRef
+                };
+            }
 
             if (!this._shouldAnimateSlides(props)) {
                 animatedValue = new Animated.Value(1);
@@ -649,7 +658,8 @@ export default class Carousel extends Component {
                 { ...animationCommonOptions }
             )
         ]);
-    }
+		}
+		
 
     _playCustomSlideAnimation (current, next) {
         const { interpolators } = this.state;
