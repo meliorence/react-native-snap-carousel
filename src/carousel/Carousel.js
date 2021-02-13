@@ -295,7 +295,7 @@ export default class Carousel extends Component {
       // Native driver for scroll events
       const scrollEventConfig = {
         listener: this._onScroll,
-        useNativeDriver: true,
+        useNativeDriver: !IS_IOS && IS_RTL ? false : true,
       };
       this._scrollPos = new Animated.Value(0);
       const argMapping = props.vertical
@@ -883,10 +883,17 @@ export default class Carousel extends Component {
 
     // Used when `enableMomentum` is DISABLED
     _onScrollEndDrag (event) {
-        const { onScrollEndDrag } = this.props;
+        const { onScrollEndDrag, enableSnap } = this.props;
 
         if (this._carouselRef) {
             this._onScrollEnd && this._onScrollEnd();
+
+            /**
+             * When scroll in a right position after calling this._onScrollEnd() and slide is changed,
+             * We will not receive *required onScroll events.
+             * So we can call it now, to make sure sync is completed.
+             */
+            if(enableSnap) this._onScroll(event)
         }
 
         if (onScrollEndDrag) {
@@ -1232,7 +1239,6 @@ export default class Carousel extends Component {
         const specificProps = this._needsScrollView() ? {
             key: keyExtractor ? keyExtractor(item, index) : this._getKeyExtractor(item, index)
         } : {};
-
         return (
             <Component style={[mainDimension, slideStyle, animatedStyle]} pointerEvents={'box-none'} {...specificProps}>
                 { renderItem({ item, index }, parallaxProps) }
@@ -1277,6 +1283,7 @@ export default class Carousel extends Component {
             scrollsToTop: false,
             removeClippedSubviews: !this._needsScrollView(),
             inverted: this._needsRTLAdaptations(),
+            disableVirtualization: this._needsRTLAdaptations(), // until issue will be fixed in react-native: https://github.com/facebook/react-native/issues/19150
             // renderToHardwareTextureAndroid: true,
             ...specificProps
         };
