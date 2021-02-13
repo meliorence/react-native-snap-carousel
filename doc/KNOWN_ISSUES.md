@@ -9,7 +9,7 @@
 1. [Unreliable first item](#unreliable-first-item)
 1. [Error with Jest](#error-with-jest)
 1. [RTL support (experimental)](#rtl-support-experimental)
-1. [Carousel is not visible until you start swiping](#carousel-initially-not-visible)
+1. [Carousel is not visible until you start swiping](#carousel-is-not-visible-until-you-start-swiping)
 
 ## `FlatList` and `ScrollView`'s limitations
 
