@@ -27,6 +27,7 @@ export function getInputRangeFromIndexes (range, index, carouselProps) {
 // Scale and/or opacity effect
 // Based on props 'inactiveSlideOpacity' and 'inactiveSlideScale'
 export function defaultScrollInterpolator (index, carouselProps) {
+
     const range = [1, 0, -1];
     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
     const outputRange = [0, 1, 0];
@@ -98,6 +99,8 @@ export function shiftAnimatedStyles (index, animatedValue, carouselProps) {
             })
         };
     }
+    else
+        return false
 
     return {
         ...animatedOpacity,
