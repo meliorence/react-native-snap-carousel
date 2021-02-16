@@ -128,6 +128,8 @@ export default class Carousel extends Component {
         this._lastScrollDate = 0; // used to work around a FlatList bug
         this._scrollEnabled = props.scrollEnabled !== false;
 
+        this._animatedSlideComponent = props.slideComponent ? Animated.createAnimatedComponent(props.slideComponent) : null;
+
         this._initPositionsAndInterpolators = this._initPositionsAndInterpolators.bind(this);
         this._renderItem = this._renderItem.bind(this);
         this._onSnap = this._onSnap.bind(this);
@@ -1205,7 +1207,8 @@ export default class Carousel extends Component {
             sliderHeight,
             sliderWidth,
             slideStyle,
-            vertical
+            vertical,
+            slideComponent
         } = this.props;
 
         const animatedValue = interpolators && interpolators[index];
@@ -1215,7 +1218,7 @@ export default class Carousel extends Component {
         }
 
         const animate = this._shouldAnimateSlides();
-        const Component = animate ? Animated.View : View;
+        const Component = slideComponent ? (animate ? this._animatedSlideComponent : slideComponent) : (animate ? Animated.View : View);
         const animatedStyle = animate ? this._getSlideInterpolatedStyle(index, animatedValue) : {};
 
         const parallaxProps = hasParallaxImages ? {
