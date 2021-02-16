@@ -25,51 +25,7 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 // otherwise it is undefined at init, which messes with custom indexes
 const IS_RTL = I18nManager.isRTL;
 
-export default class Carousel extends Component {
-
-    static propTypes = {
-        data: PropTypes.array.isRequired,
-        renderItem: PropTypes.func.isRequired,
-        itemWidth: PropTypes.number, // required for horizontal carousel
-        itemHeight: PropTypes.number, // required for vertical carousel
-        sliderWidth: PropTypes.number, // required for horizontal carousel
-        sliderHeight: PropTypes.number, // required for vertical carousel
-        activeAnimationType: PropTypes.string,
-        activeAnimationOptions: PropTypes.object,
-        activeSlideAlignment: PropTypes.oneOf(['center', 'end', 'start']),
-        activeSlideOffset: PropTypes.number,
-        apparitionDelay: PropTypes.number,
-        autoplay: PropTypes.bool,
-        autoplayDelay: PropTypes.number,
-        autoplayInterval: PropTypes.number,
-        callbackOffsetMargin: PropTypes.number,
-        containerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        contentContainerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        enableMomentum: PropTypes.bool,
-        enableSnap: PropTypes.bool,
-        firstItem: PropTypes.number,
-        hasParallaxImages: PropTypes.bool,
-        inactiveSlideOpacity: PropTypes.number,
-        inactiveSlideScale: PropTypes.number,
-        inactiveSlideShift: PropTypes.number,
-        layout: PropTypes.oneOf(['default', 'stack', 'tinder']),
-        layoutCardOffset: PropTypes.number,
-        lockScrollTimeoutDuration: PropTypes.number,
-        lockScrollWhileSnapping: PropTypes.bool,
-        loop: PropTypes.bool,
-        loopClonesPerSide: PropTypes.number,
-        scrollEnabled: PropTypes.bool,
-        scrollInterpolator: PropTypes.func,
-        slideInterpolatedStyle: PropTypes.func,
-        slideStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        shouldOptimizeUpdates: PropTypes.bool,
-        swipeThreshold: PropTypes.number,
-        useScrollView: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-        vertical: PropTypes.bool,
-        onBeforeSnapToItem: PropTypes.func,
-        onSnapToItem: PropTypes.func
-    };
-
+class Carousel extends Component {
     static defaultProps = {
         activeAnimationType: 'timing',
         activeAnimationOptions: null,
@@ -1369,3 +1325,50 @@ export default class Carousel extends Component {
         );
     }
 }
+
+if (process.env.NODE_ENV !== 'production') {
+    Carousel.propTypes = {
+        data: PropTypes.array.isRequired,
+        renderItem: PropTypes.func.isRequired,
+        itemWidth: PropTypes.number, // required for horizontal carousel
+        itemHeight: PropTypes.number, // required for vertical carousel
+        sliderWidth: PropTypes.number, // required for horizontal carousel
+        sliderHeight: PropTypes.number, // required for vertical carousel
+        activeAnimationType: PropTypes.string,
+        activeAnimationOptions: PropTypes.object,
+        activeSlideAlignment: PropTypes.oneOf(['center', 'end', 'start']),
+        activeSlideOffset: PropTypes.number,
+        apparitionDelay: PropTypes.number,
+        autoplay: PropTypes.bool,
+        autoplayDelay: PropTypes.number,
+        autoplayInterval: PropTypes.number,
+        callbackOffsetMargin: PropTypes.number,
+        containerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        contentContainerCustomStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        enableMomentum: PropTypes.bool,
+        enableSnap: PropTypes.bool,
+        firstItem: PropTypes.number,
+        hasParallaxImages: PropTypes.bool,
+        inactiveSlideOpacity: PropTypes.number,
+        inactiveSlideScale: PropTypes.number,
+        inactiveSlideShift: PropTypes.number,
+        layout: PropTypes.oneOf(['default', 'stack', 'tinder']),
+        layoutCardOffset: PropTypes.number,
+        lockScrollTimeoutDuration: PropTypes.number,
+        lockScrollWhileSnapping: PropTypes.bool,
+        loop: PropTypes.bool,
+        loopClonesPerSide: PropTypes.number,
+        scrollEnabled: PropTypes.bool,
+        scrollInterpolator: PropTypes.func,
+        slideInterpolatedStyle: PropTypes.func,
+        slideStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        shouldOptimizeUpdates: PropTypes.bool,
+        swipeThreshold: PropTypes.number,
+        useScrollView: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+        vertical: PropTypes.bool,
+        onBeforeSnapToItem: PropTypes.func,
+        onSnapToItem: PropTypes.func
+    };
+}
+
+export default Carousel

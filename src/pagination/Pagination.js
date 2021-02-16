@@ -7,32 +7,7 @@ import styles from './Pagination.style';
 const IS_IOS = Platform.OS === 'ios';
 const IS_RTL = I18nManager.isRTL;
 
-export default class Pagination extends PureComponent {
-
-    static propTypes = {
-        activeDotIndex: PropTypes.number.isRequired,
-        dotsLength: PropTypes.number.isRequired,
-        activeOpacity: PropTypes.number,
-        carouselRef: PropTypes.object,
-        containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        dotColor: PropTypes.string,
-        dotContainerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        dotElement: PropTypes.element,
-        dotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        inactiveDotColor: PropTypes.string,
-        inactiveDotElement: PropTypes.element,
-        inactiveDotOpacity: PropTypes.number,
-        inactiveDotScale: PropTypes.number,
-        inactiveDotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
-        renderDots: PropTypes.func,
-        tappableDots: PropTypes.bool,
-        vertical: PropTypes.bool,
-        accessibilityLabel: PropTypes.string,
-        animatedDuration: PropTypes.number,
-        animatedFriction: PropTypes.number,
-        animatedTension: PropTypes.number,
-        delayPressInDot: PropTypes.number,
-    };
+class Pagination extends PureComponent {
 
     static defaultProps = {
         inactiveDotOpacity: 0.5,
@@ -165,3 +140,32 @@ export default class Pagination extends PureComponent {
         );
     }
 }
+
+if (process.env.NODE_ENV !== 'production') {
+    Pagination.propTypes = {
+        activeDotIndex: PropTypes.number.isRequired,
+        dotsLength: PropTypes.number.isRequired,
+        activeOpacity: PropTypes.number,
+        carouselRef: PropTypes.object,
+        containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        dotColor: PropTypes.string,
+        dotContainerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        dotElement: PropTypes.element,
+        dotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        inactiveDotColor: PropTypes.string,
+        inactiveDotElement: PropTypes.element,
+        inactiveDotOpacity: PropTypes.number,
+        inactiveDotScale: PropTypes.number,
+        inactiveDotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        renderDots: PropTypes.func,
+        tappableDots: PropTypes.bool,
+        vertical: PropTypes.bool,
+        accessibilityLabel: PropTypes.string,
+        animatedDuration: PropTypes.number,
+        animatedFriction: PropTypes.number,
+        animatedTension: PropTypes.number,
+        delayPressInDot: PropTypes.number,
+    }
+}
+
+export default Pagination
