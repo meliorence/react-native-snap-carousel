@@ -1,0 +1,28 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "scripts": {
+    "start": "react-native-scripts start",
+    "startRes": "yarn start —- --reset-cache",
+    "eject": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios"
+  },
+  "dependencies": {
+    "expo": "^25.0.0",
+    "react": "16.2.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
+    "react-native-linear-gradient": "^2.4.0",
+    "react-native-scripts": "^1.11.1",
+    "react-native-snap-carousel": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-jest": "^22.2.2",
+    "babel-preset-react-native": "^4.0.0",
+    "jest": "^22.3.0",
+    "react-test-renderer": "^16.2.0"
+  },
+  "jest": {
+    "preset": "Expo"
+  }
+}
