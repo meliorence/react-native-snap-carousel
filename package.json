@@ -7,6 +7,9 @@
         "type": "git",
         "url": "github.com/meliorence/react-native-snap-carousel"
     },
+    "scripts" : {
+  	    "postinstall" : "echo 'Do you want an even better plugin? Vote for React Native s feature requests(https://github.com/archriss/react-native-snap-carousel/issues/203) to let the Facebook team know what they need to improve!'"
+    },
     "keywords": [
         "react",
         "native",
