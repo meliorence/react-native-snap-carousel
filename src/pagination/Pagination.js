@@ -32,6 +32,7 @@ export default class Pagination extends PureComponent {
         animatedFriction: PropTypes.number,
         animatedTension: PropTypes.number,
         delayPressInDot: PropTypes.number,
+        renderSingleDot: PropTypes.bool
     };
 
     static defaultProps = {
@@ -43,6 +44,7 @@ export default class Pagination extends PureComponent {
         animatedFriction: 4,
         animatedTension: 50,
         delayPressInDot: 0,
+        renderSingleDot:false
     }
 
     constructor (props) {
@@ -138,9 +140,9 @@ export default class Pagination extends PureComponent {
     }
 
     render () {
-        const { dotsLength, containerStyle, vertical, accessibilityLabel } = this.props;
+        const { dotsLength, containerStyle, vertical, accessibilityLabel,renderSingleDot } = this.props;
 
-        if (!dotsLength || dotsLength < 2) {
+        if (!dotsLength || dotsLength < (renderSingleDot ? 1 : 2)) {
             return false;
         }
 

@@ -35,6 +35,7 @@ Prop | Description | Type | Default
 `animatedFriction` | Controls "bounciness"/overshoot on dot animation | Number | `4`
 `animatedTension` | Controls speed dot animation | Number | `50`
 `delayPressInDot` | Delay in ms, from the start of the touch, before onPressIn is called on dot | Number | `0`
+`renderSingleDot` | Ability to render single dot | Boolean | `false`
 
 ## Note on dots' colors
 If your active and inactive dots aren't of the same color, you have a choice to make:
