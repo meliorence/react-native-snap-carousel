@@ -89,7 +89,7 @@ export default class MyCarousel extends Component {
                   renderItem={this._renderItem}
                   onSnapToItem={(index) => this.setState({ activeSlide: index }) }
                 />
-                { this.pagination }
+                { this.pagination() }
             </View>
         );
     }
