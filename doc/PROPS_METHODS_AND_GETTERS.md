@@ -104,11 +104,23 @@ And here are some useful ones for **performance optimizations and rendering**: `
 In order to use the following methods, you need to create a reference to the carousel's instance. There are two ways of doing it.
 
 #### ref as a callback attribute (**recommended**)
+** class-based **
 ```javascript
 <Carousel
   // other props
   ref={(c) => { this._carousel = c; }}
 />
+
+** funtional-component **
+```javascript
+const carouselRef = useRef(null);
+<Carousel
+  // other props
+  ref={carouselRef}}
+/>
+
+// methods can then be called this way
+onPress={() => { this._carousel.snapToNext(); }}
 
 // methods can then be called this way
 onPress={() => { this._carousel.snapToNext(); }}
