@@ -84,7 +84,7 @@ Based on the range you declared in `scrollInterpolator`, you can now interpolate
 Consider the following:
 
 ```javascript
-function animatedStyle = (index, animatedValue, carouselProps) => {
+const animatedStyle = (index, animatedValue, carouselProps) => {
     return {
         opacity: animatedValue.interpolate({
             inputRange: [-1, 0, 1],
