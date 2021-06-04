@@ -1,3 +1,7 @@
+## v3.9.2
+
+* Fix IOS and Android loop infinite scrolling issue
+
 ## v3.9.1
 
 * Fix for `getNode()` deprecation warning with RN `0.62+` (thanks [@r0b0t3d](https://github.com/r0b0t3d))
