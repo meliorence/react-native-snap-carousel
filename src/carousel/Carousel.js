@@ -67,7 +67,17 @@ export default class Carousel extends Component {
         useScrollView: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
         vertical: PropTypes.bool,
         onBeforeSnapToItem: PropTypes.func,
-        onSnapToItem: PropTypes.func
+        onSnapToItem: PropTypes.func,
+        onScroll: PropTypes.func,
+        onStartShouldSetResponderCapture: PropTypes.func,
+        onTouchStart: PropTypes.func,
+        onTouchEnd: PropTypes.func,
+        onScrollBeginDrag: PropTypes.func,
+        onScrollEndDrag: PropTypes.func,
+        onMomentumScrollEnd: PropTypes.func,
+        onLayout: PropTypes.func,
+        keyExtractor: PropTypes.func,
+        style: PropTypes.any
     };
 
     static defaultProps = {
@@ -163,9 +173,11 @@ export default class Carousel extends Component {
         if (props.apparitionDelay && !IS_IOS && !props.useScrollView) {
             console.warn('react-native-snap-carousel: Using `apparitionDelay` on Android is not recommended since it can lead to rendering issues');
         }
+        // eslint-disable-next-line react/prop-types
         if (props.customAnimationType || props.customAnimationOptions) {
             console.warn('react-native-snap-carousel: Props `customAnimationType` and `customAnimationOptions` have been renamed to `activeAnimationType` and `activeAnimationOptions`');
         }
+        // eslint-disable-next-line react/prop-types
         if (props.onScrollViewScroll) {
             console.error('react-native-snap-carousel: Prop `onScrollViewScroll` has been removed. Use `onScroll` instead');
         }
@@ -263,7 +275,7 @@ export default class Carousel extends Component {
         }
 
         if (this.props.onScroll !== prevProps.onScroll) {
-          this._setScrollHandler(this.props);
+            this._setScrollHandler(this.props);
         }
     }
 
@@ -291,34 +303,34 @@ export default class Carousel extends Component {
         return this._currentContentOffset;
     }
 
-    _setScrollHandler(props) {
-      // Native driver for scroll events
-      const scrollEventConfig = {
-        listener: this._onScroll,
-        useNativeDriver: true,
-      };
-      this._scrollPos = new Animated.Value(0);
-      const argMapping = props.vertical
-        ? [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }]
-        : [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }];
+    _setScrollHandler (props) {
+        // Native driver for scroll events
+        const scrollEventConfig = {
+            listener: this._onScroll,
+            useNativeDriver: true
+        };
+        this._scrollPos = new Animated.Value(0);
+        const argMapping = props.vertical ?
+            [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }] :
+            [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }];
 
-      if (props.onScroll && Array.isArray(props.onScroll._argMapping)) {
+        if (props.onScroll && Array.isArray(props.onScroll._argMapping)) {
         // Because of a react-native issue https://github.com/facebook/react-native/issues/13294
-        argMapping.pop();
-        const [ argMap ] = props.onScroll._argMapping;
-        if (argMap && argMap.nativeEvent && argMap.nativeEvent.contentOffset) {
-          // Shares the same animated value passed in props
-          this._scrollPos =
+            argMapping.pop();
+            const [ argMap ] = props.onScroll._argMapping;
+            if (argMap && argMap.nativeEvent && argMap.nativeEvent.contentOffset) {
+                // Shares the same animated value passed in props
+                this._scrollPos =
             argMap.nativeEvent.contentOffset.x ||
             argMap.nativeEvent.contentOffset.y ||
             this._scrollPos;
+            }
+            argMapping.push(...props.onScroll._argMapping);
         }
-        argMapping.push(...props.onScroll._argMapping);
-      }
-      this._onScrollHandler = Animated.event(
-        argMapping,
-        scrollEventConfig
-      );
+        this._onScrollHandler = Animated.event(
+            argMapping,
+            scrollEventConfig
+        );
     }
 
     _needsScrollView () {
@@ -818,11 +830,11 @@ export default class Carousel extends Component {
         }
 
         if (nextActiveItem === this._itemToSnapTo &&
-            scrollOffset === this._scrollOffsetRef) {
+            Math.abs(scrollOffset - this._scrollOffsetRef) <= 1.0) {
             this._repositionScroll(nextActiveItem);
         }
 
-        if (typeof onScroll === "function" && event) {
+        if (typeof onScroll === 'function' && event) {
             onScroll(event);
         }
     }
@@ -838,7 +850,7 @@ export default class Carousel extends Component {
     }
 
     _onTouchStart () {
-        const { onTouchStart } = this.props
+        const { onTouchStart } = this.props;
 
         // `onTouchStart` is fired even when `scrollEnabled` is set to `false`
         if (this._getScrollEnabled() !== false && this._autoplaying) {
@@ -846,12 +858,12 @@ export default class Carousel extends Component {
         }
 
         if (onTouchStart) {
-            onTouchStart()
+            onTouchStart();
         }
     }
 
     _onTouchEnd () {
-        const { onTouchEnd } = this.props
+        const { onTouchEnd } = this.props;
 
         if (this._getScrollEnabled() !== false && this._autoplay && !this._autoplaying) {
             // This event is buggy on Android, so a fallback is provided in _onScrollEnd()
@@ -859,7 +871,7 @@ export default class Carousel extends Component {
         }
 
         if (onTouchEnd) {
-            onTouchEnd()
+            onTouchEnd();
         }
     }
 
@@ -1322,6 +1334,7 @@ export default class Carousel extends Component {
         } : {};
 
         return {
+            // eslint-disable-next-line no-return-assign
             ref: c => this._carouselRef = c,
             data: this._getCustomData(),
             style: containerStyle,
@@ -1354,7 +1367,7 @@ export default class Carousel extends Component {
             ...this._getComponentStaticProps()
         };
 
-        const ScrollViewComponent = typeof useScrollView === 'function' ? useScrollView : AnimatedScrollView
+        const ScrollViewComponent = typeof useScrollView === 'function' ? useScrollView : AnimatedScrollView;
 
         return this._needsScrollView() ? (
             <ScrollViewComponent {...props}>
