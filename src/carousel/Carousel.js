@@ -141,7 +141,7 @@ export default class Carousel extends Component {
         this._onTouchStart = this._onTouchStart.bind(this);
         this._onTouchEnd = this._onTouchEnd.bind(this);
         this._onTouchRelease = this._onTouchRelease.bind(this);
-
+        this._animated = false;
         this._getKeyExtractor = this._getKeyExtractor.bind(this);
 
         this._setScrollHandler(props);
@@ -758,11 +758,15 @@ export default class Carousel extends Component {
             animated
         };
 
-        if (this._needsScrollView()) {
-            wrappedRef.scrollTo(options);
-        } else {
-            wrappedRef.scrollToOffset(options);
-        }
+        setTimeout(() => {
+            if (this._needsScrollView()) {
+                wrappedRef.scrollTo(options);
+            } else {
+                wrappedRef.scrollToOffset(options);
+            }
+        }, (!animated && this._animated) ? 200 : 0);
+
+        this._animated = animated;  
     }
 
     _onScroll (event) {
@@ -818,8 +822,8 @@ export default class Carousel extends Component {
         }
 
         if (nextActiveItem === this._itemToSnapTo &&
-            scrollOffset === this._scrollOffsetRef) {
-            this._repositionScroll(nextActiveItem);
+            Math.abs(scrollOffset - this._scrollOffsetRef) <= 1.0) {
+                this._repositionScroll(nextActiveItem);
         }
 
         if (typeof onScroll === "function" && event) {
