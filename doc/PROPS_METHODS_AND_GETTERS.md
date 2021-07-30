@@ -101,7 +101,7 @@ And here are some useful ones for **performance optimizations and rendering**: `
 
 ### Reference to the component
 
-In order to use the following methods, you need to create a reference to the carousel's instance. There are two ways of doing it.
+In order to use the following methods, you need to create a reference to the carousel's instance. There are three ways of doing it.
 
 #### ref as a callback attribute (**recommended**)
 ```javascript
@@ -124,6 +124,19 @@ onPress={() => { this._carousel.snapToNext(); }}
 // methods can then be called this way
 onPress={() => { this.refs.carousel.snapToNext(); }}
 ```
+
+You can also do this with function based components:
+
+```javascript
+import React, { useRef } from 'react'
+const isCarousel = useRef('')
+<Carousel
+  ref={isCarousel}
+/>
+// methods can then be called this way
+onPress={() => isCarousel.current.snapToPrev()}
+```
+
 
 ### Available methods
 
