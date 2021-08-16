@@ -65,6 +65,7 @@ export class Carousel<TData> extends React.Component<
       slideStyle: {},
       shouldOptimizeUpdates: true,
       useExperimentalSnap: false,
+      allowCrossItem: true,
       useScrollView: !Animated.FlatList
   };
 
@@ -1229,7 +1230,8 @@ export class Carousel<TData> extends React.Component<
           getItemLayout,
           keyExtractor,
           style,
-          useExperimentalSnap
+          useExperimentalSnap,
+          allowCrossItem
       } = this.props;
 
       const containerStyle = [
@@ -1266,7 +1268,8 @@ export class Carousel<TData> extends React.Component<
       // - Slide animations will be off
       // - Last items won't be set as active (no `onSnapToItem` callback)
       // Recommended only with large slides and `activeSlideAlignment` set to `start` for the time being
-      const snapProps = useExperimentalSnap ?
+      const snapProps = allowCrossItem ? 
+        useExperimentalSnap ?
           {
           // disableIntervalMomentum: true, // Slide ± one item at a time
               snapToAlignment: activeSlideAlignment,
@@ -1274,7 +1277,8 @@ export class Carousel<TData> extends React.Component<
           } :
           {
               snapToOffsets: this._getSnapOffsets()
-          };
+          } 
+        : {};
 
       // Flatlist specifics
       const specificProps = !this._needsScrollView() ?
