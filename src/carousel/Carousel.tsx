@@ -1283,7 +1283,6 @@ export class Carousel<TData> extends React.Component<
           } :
           {
               snapToOffsets: this._getSnapOffsets()
-          } 
         : {};
 
       // Flatlist specifics
