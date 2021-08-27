@@ -65,6 +65,7 @@ export class Carousel<TData> extends React.Component<
       slideStyle: {},
       shouldOptimizeUpdates: true,
       useExperimentalSnap: false,
+      pagingEnabled: false,
       useScrollView: !Animated.FlatList
   };
 
@@ -1218,6 +1219,13 @@ export class Carousel<TData> extends React.Component<
       };
   }
 
+  _isAllowCrossItem() {
+    // Note: Vertical pagination is not supported on Android by ( https://reactnative.dev/docs/scrollview#pagingenabled )
+    // if (this.props.pagingEnabled && IS_ANDROID && this.props.vertical) return false;
+    // For pagingEnabled and Vertical property works well in Android 0.62.2
+    return !this.props.pagingEnabled;
+  }
+
   _getComponentStaticProps () {
       const { hideCarousel } = this.state;
       const {
@@ -1266,7 +1274,8 @@ export class Carousel<TData> extends React.Component<
       // - Slide animations will be off
       // - Last items won't be set as active (no `onSnapToItem` callback)
       // Recommended only with large slides and `activeSlideAlignment` set to `start` for the time being
-      const snapProps = useExperimentalSnap ?
+      const snapProps = this._isAllowCrossItem() ? 
+        useExperimentalSnap ?
           {
           // disableIntervalMomentum: true, // Slide ± one item at a time
               snapToAlignment: activeSlideAlignment,
@@ -1274,7 +1283,7 @@ export class Carousel<TData> extends React.Component<
           } :
           {
               snapToOffsets: this._getSnapOffsets()
-          };
+        : {};
 
       // Flatlist specifics
       const specificProps = !this._needsScrollView() ?

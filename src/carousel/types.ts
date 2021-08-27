@@ -43,6 +43,7 @@ type CarouselBaseProps<TData> = {
   slideStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   shouldOptimizeUpdates: boolean;
   useExperimentalSnap: boolean;
+  pagingEnabled: boolean;
   useScrollView: boolean | React.ComponentType<unknown>;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onScrollIndexChanged?: (index: number) => void;
