@@ -93,4 +93,5 @@ export default class MyCarousel extends Component {
             </View>
         );
     }
+}
 ```
