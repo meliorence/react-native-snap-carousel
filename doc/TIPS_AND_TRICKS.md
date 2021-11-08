@@ -25,13 +25,13 @@ Here are a few good practices to keep in mind when dealing with the component (o
 * **Implement `shouldComponentUpdate`** (see [the `shallowCompare` addon](https://www.npmjs.com/package/react-addons-shallow-compare`)) for every carousel children (in `renderItem()`) or **make it a `PureComponent`** (some users report that `shouldComponentUpdate` is faster, but you should try both and decide for yourself).
 * Make sure the carousel **isn't a child of a `ScrollView`** (this includes `FlatList`, `VirtualizedList` and many plugins). Apparently, it would render all child components, even those currently off-screen.
 * If your data set is huge, **consider loading additional chunks of data only when the user has reached the end of the current set**. In order to do this, you'll have to play with `VirtualizedList`'s props `onEndReached` and `onEndReachedThreshold`
-* **Add [prop `removeClippedSubviews`](https://facebook.github.io/react-native/docs/scrollview.html#removeclippedsubviews)** and set it to `true` so that out-of-view items are removed from memory.
+* **Add [prop `removeClippedSubviews`](https://reactnative.dev/docs/scrollview#removeclippedsubviews)** and set it to `true` so that out-of-view items are removed from memory.
 
 Here are a few other tips given by [@pcooney10](https://github.com/pcooney10) in [this thread](https://github.com/meliorence/react-native-snap-carousel/issues/247#issuecomment-360276562):
 
 - Make sure there aren't any excessive calls to `this.setState` in the component that renders the carousels and their parents.
 - Properly leverage the `initialNumToRender` and `maxToRenderPerBatch` props inherited from `FlatList`, and `windowSize` inherited from `VirtualizedList`.
-- Utilize [`InteractionManager`](https://facebook.github.io/react-native/docs/interactionmanager.html) to render the Carousels that are "below the fold".
+- Utilize [`InteractionManager`](https://reactnative.dev/docs/interactionmanager) to render the Carousels that are "below the fold".
 - Avoid using functions and object literals for props declared on components - this apparently results in "new props" during a re-render.
 
 Lastly, make sure to read [this note](https://github.com/meliorence/react-native-snap-carousel#important-note-regarding-android) regarding Android and [this one](https://github.com/meliorence/react-native-snap-carousel#important-note-regarding-ios) regarding iOS.
@@ -40,7 +40,7 @@ Lastly, make sure to read [this note](https://github.com/meliorence/react-native
 
 Since version `1.5.0`, the snapping effect can be based on momentum (by setting `enableMomentum` to `true`) instead of when you're releasing your finger. It means that the component will wait until the `ScrollView` isn't moving anymore to snap.
 
-By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long. You can adjust this value to your needs thanks to [this prop](https://facebook.github.io/react-native/docs/scrollview.html#decelerationrate).
+By default, the inertia isn't too high on Android. However, we had to tweak the default iOS value a bit to make sure the snapping isn't delayed for too long. You can adjust this value to your needs thanks to [this prop](https://reactnative.dev/docs/scrollview#decelerationrate).
 
 If momentum is disabled (default behavior), make sure to play with prop `scrollEndDragDebounceValue` since it can help achieving a better snap feeling.
 

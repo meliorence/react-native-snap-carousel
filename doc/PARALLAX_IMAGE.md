@@ -9,14 +9,14 @@ Version `3.0.0` introduced a `<ParallaxImage />` component, an image component a
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 `containerStyle` | Optional style for image's container | View Style Object | `{}`
-`dimensions` | Optional on-screen dimensions of the image, as measured with [native methods](https://facebook.github.io/react-native/docs/direct-manipulation.html#other-native-methods). This allows for a bit of optimization, but it's sometimes tricky to get these in responsive layouts. | `{ width: number, height: number }` | `undefined`
+`dimensions` | Optional on-screen dimensions of the image, as measured with [native methods](https://reactnative.dev/docs/direct-manipulation#other-native-methods). This allows for a bit of optimization, but it's sometimes tricky to get these in responsive layouts. | `{ width: number, height: number }` | `undefined`
 `fadeDuration` | Duration of the fade-in effect when image is loaded | Number | `500`
 `parallaxFactor` | Speed of the parallax effect. Be aware that the bigger the value, the more image will appear "zoomed in". | Number | `0.3`
 `showSpinner` | Whether to display a spinner while image is loading or not | Boolean | `true`
 `spinnerColor` | Color of the spinner | String | 'rgba(0, 0, 0, 0.4)'
 `AnimatedImageComponent` | Custom animated image component | Function Object | `Animated.Image`
 
-All [`<Image />` props](https://facebook.github.io/react-native/docs/image.html#props) are also inherited, **particularly `source` which is required**.
+All [`<Image />` props](https://reactnative.dev/docs/image#props) are also inherited, **particularly `source` which is required**.
 
 ## Usage
 
