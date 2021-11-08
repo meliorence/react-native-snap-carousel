@@ -35,7 +35,7 @@ Prop | Description | Type | Default
 `callbackOffsetMargin` | Scroll events might not be triggered often enough to get a precise measure and, therefore, to provide a reliable callback. This usually is an Android issue, which might be linked to the version of React Native you're using (see ["Unreliable callbacks"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#unreliable-callbacks)). To work around this, you can define a small margin that will increase the "sweet spot"'s width. The default value should cover most cases, but **you will want to increase it if you experience missed callbacks**. | Number | `5`
 `enableMomentum` | See [momentum](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md#momentum) | Boolean | `false`
 `enableSnap` | If enabled, releasing the touch will scroll to the center of the nearest/active item | Boolean | `true`
-`firstItem` | Index of the first item to display. :warning: **Make sure to use inherited props [`getItemLayout`](https://facebook.github.io/react-native/docs/flatlist#getitemlayout) & [`initialScrollIndex`](https://facebook.github.io/react-native/docs/flatlist#initialscrollindex) if the prop doesn't seem to work**. | Number | `0`
+`firstItem` | Index of the first item to display. :warning: **Make sure to use inherited props [`getItemLayout`](https://reactnative.dev/docs/flatlist#getitemlayout) & [`initialScrollIndex`](https://reactnative.dev/docs/flatlist#initialscrollindex) if the prop doesn't seem to work**. | Number | `0`
 `hasParallaxImages` | Whether the carousel contains `<ParallaxImage />` components or not. Required for specific data to be passed to children. | Boolean | `false`
 `lockScrollTimeoutDuration` | This prop works in conjunction with `lockScrollWhileSnapping`. When scroll is locked, a timer is created in order to release the scroll if something goes wrong with the regular callback handling. **Normally, you shouldn't have to use this prop.** | Number | `1000`
 `lockScrollWhileSnapping` | Prevent the user from swiping again while the carousel is snapping to a position. This prevents miscellaneous minor issues (inadvertently tapping an item while scrolling, stopping the scrolling animation if the carousel is tapped in the middle of a snap, clunky behavior on Android when short snapping quickly in opposite directions). The only drawback is that enabling the prop hinders the ability to swipe quickly between items as a little pause between swipes is needed. **Note that the prop won't have any effect if `enableMomentum` is set to `true`, since it would otherwise impede the natural and expected behavior.** | Boolean | `false`
@@ -65,7 +65,7 @@ Prop | Description | Type | Default
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 `activeAnimationOptions` | Custom animation options. Note that `useNativeDriver` will be enabled by default and that opacity's easing will always be kept linear. **Setting this prop to something other than `null` will trigger custom animations and will completely change the way items are animated**: rather than having their opacity and scale interpolated based the scroll value (default behavior), they will now play the custom animation you provide as soon as they become active. **This means you cannot use props `layout`, `scrollInterpolator` or `slideInterpolatedStyle` in conjunction with `activeAnimationOptions`.** | Object | `null`
-`activeAnimationType` | Custom [animation type](https://facebook.github.io/react-native/docs/animated.html#configuring-animations): either `'decay`, `'spring'` or `'timing'`. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around). | String | `'timing'`
+`activeAnimationType` | Custom [animation type](https://reactnative.dev/docs/animated#configuring-animations): either `'decay`, `'spring'` or `'timing'`. Note that it will only be applied to the scale animation since opacity's animation type will always be set to `timing` (no one wants the opacity to 'bounce' around). | String | `'timing'`
 `activeSlideAlignment` | Determine active slide's alignment relative to the carousel. Possible values are: `'start'`, `'center'` and `'end'`. **It is not recommended to use this prop in conjunction with the `layout` one.** | String | `'center'`
 `containerCustomStyle` | Optional styles for Scrollview's global wrapper | View Style Object | `{}`
 `contentContainerCustomStyle` | Optional styles for Scrollview's items container | View Style Object | `{}`
@@ -89,13 +89,13 @@ Prop | Description | Type | Default
 
 ### Inherited props
 
-The component is built on top of the `FlatList` component, meaning it inherits from [`FlatList`](https://facebook.github.io/react-native/docs/flatlist.html), [`VirtualizedList`](https://facebook.github.io/react-native/docs/virtualizedlist.html), and [`ScrollView`](https://facebook.github.io/react-native/docs/scrollview.html).
+The component is built on top of the `FlatList` component, meaning it inherits from [`FlatList`](https://reactnative.dev/docs/flatlist), [`VirtualizedList`](https://reactnative.dev/docs/virtualizedlist), and [`ScrollView`](https://reactnative.dev/docs/scrollview).
 
 You can use almost all props from this three components, but some of them can't be overriden because it would mess with our implementation's logic.
 
 Here are a few useful props regarding carousel's **style and "feeling"**: `scrollEnabled` (if you want to disable user scrolling while still being able to use `Carousel`'s methods), `showsHorizontalScrollIndicator`, `overScrollMode` (android), `bounces` (ios), `decelerationRate` (ios), `scrollEventThrottle` (ios).
 
-And here are some useful ones for **performance optimizations and rendering**: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `extraData`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://facebook.github.io/react-native/docs/flatlist.html#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your needs.
+And here are some useful ones for **performance optimizations and rendering**: `initialNumToRender`, `maxToRenderPerBatch`, `windowSize`, `updateCellsBatchingPeriod`, `extraData`, `removeClippedSubviews` (the latter may have bugs, as stated in [RN's doc](https://reactnative.dev/docs/flatlist#removeclippedsubviews)). The first three are already implemented with default parameters, but you can override them if they don't suit your needs.
 
 ## Methods
 
