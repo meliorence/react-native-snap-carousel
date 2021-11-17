@@ -956,8 +956,10 @@ export class Carousel<TData> extends React.Component<
       // WARNING: everything in this condition will probably need to be called on _snapToItem as well because:
       // 1. `onMomentumScrollEnd` won't be called if the scroll isn't animated
       // 2. `onMomentumScrollEnd` won't be called at all on Android when scrolling programmatically
-      if (nextActiveItem !== this._activeItem) {
+      if (nextActiveItem !== this._activeItem && this._currentScrollOffset !== this._lastScrollOffset) {
           this._activeItem = nextActiveItem;
+          this._lastScrollOffset = scrollOffset;
+          this._currentScrollOffset = scrollOffset;
           onSnapToItem && onSnapToItem(this._getDataIndex(nextActiveItem));
 
           if (hasSnapped) {
@@ -1024,14 +1026,16 @@ export class Carousel<TData> extends React.Component<
 
       this._scrollTo({ offset, animated });
 
+      this._activeItem = index;
+      this._lastScrollOffset = offset;
+      this._currentScrollOffset = offset;
+
       // On both platforms, `onMomentumScrollEnd` won't be triggered if the scroll isn't animated
       // so we need to trigger the callback manually
       // On Android `onMomentumScrollEnd` won't be triggered when scrolling programmatically
       // Therefore everything critical needs to be manually called here as well, even though the timing might be off
       const requiresManualTrigger = !animated || IS_ANDROID;
       if (requiresManualTrigger) {
-          this._activeItem = index;
-
           if (fireCallback) {
               onSnapToItem && onSnapToItem(this._getDataIndex(index));
           }
@@ -1039,6 +1043,7 @@ export class Carousel<TData> extends React.Component<
           // Repositioning on Android
           if (IS_ANDROID && this._shouldRepositionScroll(index)) {
               if (animated) {
+                  clearTimeout(this._androidRepositioningTimeout);
                   this._androidRepositioningTimeout = setTimeout(() => {
                       // Without scroll animation, the behavior is completely buggy...
                       this._repositionScroll(index, true);
