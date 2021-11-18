@@ -84,9 +84,9 @@
             "typescript"
         ]
     },
-    "homepage": "https://github.com/archriss/react-native-snap-carousel",
+    "homepage": "https://github.com/meliorence/react-native-snap-carousel",
     "bugs": {
-        "url": "https://github.com/archriss/react-native-snap-carousel/issues"
+        "url": "https://github.com/meliorence/react-native-snap-carousel/issues"
     },
     "readmeFilename": "README.md"
 }

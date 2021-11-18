@@ -75,6 +75,7 @@ export class Carousel<TData> extends React.Component<
   _mounted: boolean;
   _positions: { start: number; end: number }[];
   _currentScrollOffset: number;
+  _lastScrollOffset: number;
   _scrollEnabled: boolean;
 
   _initTimeout?: ReturnType<typeof setTimeout>;
@@ -118,6 +119,7 @@ export class Carousel<TData> extends React.Component<
       this._mounted = false;
       this._positions = [];
       this._currentScrollOffset = 0; // Store ScrollView's scroll position
+      this._lastScrollOffset = 0; // Store ScrollView's last scroll position to compare with _currentScrollOffset to see if there was actual move
       this._scrollEnabled = props.scrollEnabled !== false;
 
       this._getCellRendererComponent = this._getCellRendererComponent.bind(this);
@@ -1043,6 +1045,7 @@ export class Carousel<TData> extends React.Component<
           // Repositioning on Android
           if (IS_ANDROID && this._shouldRepositionScroll(index)) {
               if (animated) {
+                  // @ts-expect-error setTimeout / clearTiemout is buggy :/
                   clearTimeout(this._androidRepositioningTimeout);
                   this._androidRepositioningTimeout = setTimeout(() => {
                       // Without scroll animation, the behavior is completely buggy...
