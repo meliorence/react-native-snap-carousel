@@ -739,7 +739,7 @@ export default class Carousel extends Component {
         this._snapToItem(repositionTo, false, false, false, false);
     }
 
-    _scrollTo (offset, animated = true) {
+    _scrollTo (offset, animated = true,index = -1) {
         const { vertical } = this.props;
         const wrappedRef = this._getWrappedRef();
 
@@ -761,7 +761,12 @@ export default class Carousel extends Component {
         if (this._needsScrollView()) {
             wrappedRef.scrollTo(options);
         } else {
-            wrappedRef.scrollToOffset(options);
+            if(index >= 0){
+                wrappedRef.scrollToIndex({viewPosition:0.5,index:index});
+            }else{
+                wrappedRef.scrollToOffset(options);
+            }
+           
         }
     }
 
