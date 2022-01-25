@@ -45,7 +45,7 @@
     "license": "BSD-3-Clause",
     "dependencies": {
         "@types/react-addons-shallow-compare": "^0.14.22",
-        "react-addons-shallow-compare": "15.6.2"
+        "react-addons-shallow-compare": "15.6.3"
     },
     "peerDependencies": {
         "react": ">=16.0.0",
