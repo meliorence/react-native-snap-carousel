@@ -1,6 +1,6 @@
 {
     "name": "react-native-snap-carousel",
-    "version": "4.0.0-beta.6",
+    "version": "4.0.0-beta.7",
     "description": "Swiper/carousel component for React Native with previews, multiple layouts, parallax images, performant handling of huge numbers of items, and more. Compatible with Android & iOS.",
     "main": "lib/commonjs/index",
     "module": "lib/module/index",
@@ -45,7 +45,7 @@
     "license": "BSD-3-Clause",
     "dependencies": {
         "@types/react-addons-shallow-compare": "^0.14.22",
-        "react-addons-shallow-compare": "15.6.2"
+        "react-addons-shallow-compare": "15.6.3"
     },
     "peerDependencies": {
         "react": ">=16.0.0",
@@ -53,7 +53,7 @@
     },
     "devDependencies": {
         "@react-native-community/bob": "0.16.2",
-        "@types/react": "^16.9.46",
+        "@types/react": "^17.0.38",
         "@types/react-native": "^0.63.4",
         "@typescript-eslint/eslint-plugin": "3.8.0",
         "@typescript-eslint/parser": "3.8.0",
@@ -67,7 +67,7 @@
         "eslint-plugin-react": "7.20.5",
         "eslint-plugin-standard": "4.0.1",
         "react": "16.13.1",
-        "react-native": "0.63.2",
+        "react-native": "^0.67.2",
         "typescript": "3.9.7"
     },
     "eslintIgnore": [
