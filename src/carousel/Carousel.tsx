@@ -263,19 +263,12 @@ export class Carousel<TData> extends React.Component<
   componentWillUnmount () {
       this._mounted = false;
       this.stopAutoplay();
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._initTimeout);
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._apparitionTimeout);
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._hackSlideAnimationTimeout);
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._enableAutoplayTimeout);
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._autoplayTimeout);
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._snapNoMomentumTimeout);
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._androidRepositioningTimeout);
   }
 
@@ -302,11 +295,10 @@ export class Carousel<TData> extends React.Component<
           [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }] :
           [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }];
 
-      // @ts-expect-error Let's ignore for now that trick
       if (props.onScroll && Array.isArray(props.onScroll._argMapping)) {
       // Because of a react-native issue https://github.com/facebook/react-native/issues/13294
           argMapping.pop();
-          // @ts-expect-error Let's ignore for now that trick
+
           const [argMap] = props.onScroll._argMapping;
           if (argMap && argMap.nativeEvent && argMap.nativeEvent.contentOffset) {
               // Shares the same animated value passed in props
@@ -315,7 +307,7 @@ export class Carousel<TData> extends React.Component<
           argMap.nativeEvent.contentOffset.y ||
           this._scrollPos;
           }
-          // @ts-expect-error Let's ignore for now that trick
+
           argMapping.push(...props.onScroll._argMapping);
       }
       this._onScrollHandler = Animated.event<NativeScrollEvent>(
@@ -588,11 +580,9 @@ export class Carousel<TData> extends React.Component<
       // https://github.com/facebook/react-native/issues/10635
       // https://stackoverflow.com/a/48786374/8412141
       return (
-          this._carouselRef &&
-      // @ts-expect-error This is for before 0.62
-      this._carouselRef.getNode &&
-      // @ts-expect-error This is for before 0.62
-      this._carouselRef.getNode()
+        this._carouselRef &&
+        this._carouselRef.getNode &&
+        this._carouselRef.getNode()
       );
   }
 
@@ -824,7 +814,6 @@ export class Carousel<TData> extends React.Component<
 
       this._scrollTo({ offset: offset + scrollDelta, animated: false });
 
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._hackSlideAnimationTimeout);
       this._hackSlideAnimationTimeout = setTimeout(() => {
           this._scrollTo({ offset, animated: false });
@@ -974,7 +963,6 @@ export class Carousel<TData> extends React.Component<
       // The touchEnd event is buggy on Android, so this will serve as a fallback whenever needed
       // https://github.com/facebook/react-native/issues/9439
       if (IS_ANDROID && this._autoplay && !this._autoplaying) {
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
           clearTimeout(this._enableAutoplayTimeout);
           this._enableAutoplayTimeout = setTimeout(() => {
               this.startAutoplay();
@@ -1045,7 +1033,6 @@ export class Carousel<TData> extends React.Component<
           // Repositioning on Android
           if (IS_ANDROID && this._shouldRepositionScroll(index)) {
               if (animated) {
-                  // @ts-expect-error setTimeout / clearTiemout is buggy :/
                   clearTimeout(this._androidRepositioningTimeout);
                   this._androidRepositioningTimeout = setTimeout(() => {
                       // Without scroll animation, the behavior is completely buggy...
@@ -1066,7 +1053,6 @@ export class Carousel<TData> extends React.Component<
           return;
       }
 
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._autoplayTimeout);
       this._autoplayTimeout = setTimeout(() => {
           this._autoplaying = true;
@@ -1080,11 +1066,8 @@ export class Carousel<TData> extends React.Component<
 
   pauseAutoPlay () {
       this._autoplaying = false;
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._autoplayTimeout);
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearTimeout(this._enableAutoplayTimeout);
-      // @ts-expect-error setTimeout / clearTiemout is buggy :/
       clearInterval(this._autoplayInterval);
   }
 
@@ -1340,8 +1323,6 @@ export class Carousel<TData> extends React.Component<
               })}
           </ScrollViewComponent>
       ) : (
-          // @ts-expect-error Seems complicated to make TS 100% happy, while sharing that many things between
-          // flatlist && scrollview implementation. I'll prob try to rewrite parts of the logic to overcome that.
           <Animated.FlatList {...props} />
       );
   }
