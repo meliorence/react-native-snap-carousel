@@ -81,8 +81,7 @@
         "output": "lib",
         "targets": [
             "commonjs",
-            "module",
-            "typescript"
+            "module"
         ]
     },
     "homepage": "https://github.com/meliorence/react-native-snap-carousel",
