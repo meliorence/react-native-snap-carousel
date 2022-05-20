@@ -18,9 +18,9 @@ export function getInputRangeFromIndexes<TData> (
     index: number,
     carouselProps: CarouselProps<TData>
 ) {
-    const sizeRef = carouselProps.vertical ?
-        carouselProps.itemHeight :
-        carouselProps.itemWidth;
+    const sizeRef = carouselProps.vertical
+        ? carouselProps.itemHeight
+        : carouselProps.itemWidth;
     const inputRange = [];
 
     for (let i = 0; i < range.length; i++) {
@@ -146,9 +146,9 @@ export function stackAnimatedStyles<TData> (
     carouselProps: CarouselProps<TData>,
     cardOffset?: number
 ) {
-    const sizeRef = carouselProps.vertical ?
-        carouselProps.itemHeight :
-        carouselProps.itemWidth;
+    const sizeRef = carouselProps.vertical
+        ? carouselProps.itemHeight
+        : carouselProps.itemWidth;
     const translateProp = carouselProps.vertical ? 'translateY' : 'translateX';
 
     const card1Scale = 0.9;
@@ -162,16 +162,16 @@ export function stackAnimatedStyles<TData> (
         const edgeAlignment = Math.round((sizeRef - sizeRef * scale) / 2);
         const offset = Math.round((newCardOffset * Math.abs(cardIndex)) / scale);
 
-        return IS_ANDROID ?
-            centeredPosition - edgeAlignment - offset :
-            centeredPosition + edgeAlignment + offset;
+        return IS_ANDROID
+            ? centeredPosition - edgeAlignment - offset
+            : centeredPosition + edgeAlignment + offset;
     };
 
     const opacityOutputRange =
     carouselProps.inactiveSlideOpacity === 1 ? [1, 1, 1, 0] : [1, 0.75, 0.5, 0];
 
-    return IS_ANDROID ?
-        {
+    return IS_ANDROID
+        ? {
         // elevation: carouselProps.data.length - index, // fix zIndex bug visually, but not from a logic point of view
             opacity: animatedValue.interpolate({
                 inputRange: [-3, -2, -1, 0],
@@ -200,8 +200,8 @@ export function stackAnimatedStyles<TData> (
                     })
                 }
             ]
-        } :
-        {
+        }
+        : {
             zIndex: carouselProps.data.length - index,
             opacity: animatedValue.interpolate({
                 inputRange: [0, 1, 2, 3],
@@ -254,15 +254,15 @@ export function tinderAnimatedStyles<TData> (
     carouselProps: CarouselProps<TData>,
     cardOffset?: number
 ) {
-    const sizeRef = carouselProps.vertical ?
-        carouselProps.itemHeight :
-        carouselProps.itemWidth;
-    const mainTranslateProp = carouselProps.vertical ?
-        'translateY' :
-        'translateX';
-    const secondaryTranslateProp = carouselProps.vertical ?
-        'translateX' :
-        'translateY';
+    const sizeRef = carouselProps.vertical
+        ? carouselProps.itemHeight
+        : carouselProps.itemWidth;
+    const mainTranslateProp = carouselProps.vertical
+        ? 'translateY'
+        : 'translateX';
+    const secondaryTranslateProp = carouselProps.vertical
+        ? 'translateX'
+        : 'translateY';
 
     const card1Scale = 0.96;
     const card2Scale = 0.92;
@@ -281,8 +281,8 @@ export function tinderAnimatedStyles<TData> (
         return Math.round((newCardOffset * Math.abs(cardIndex)) / scale);
     };
 
-    return IS_ANDROID ?
-        {
+    return IS_ANDROID
+        ? {
         // elevation: carouselProps.data.length - index, // fix zIndex bug visually, but not from a logic point of view
             opacity: animatedValue.interpolate({
                 inputRange: [-3, -2, -1, 0, 1],
@@ -330,8 +330,8 @@ export function tinderAnimatedStyles<TData> (
                     })
                 }
             ]
-        } :
-        {
+        }
+        : {
             zIndex: carouselProps.data.length - index,
             opacity: animatedValue.interpolate({
                 inputRange: [-1, 0, 1, 2, 3],

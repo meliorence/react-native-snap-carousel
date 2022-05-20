@@ -43,152 +43,152 @@ type PaginationProps<TData> = {
 };
 
 export default class Pagination<TData> extends PureComponent<PaginationProps<TData>> {
-  static defaultProps = {
-      inactiveDotOpacity: 0.5,
-      inactiveDotScale: 0.5,
-      tappableDots: false,
-      vertical: false,
-      animatedDuration: 250,
-      animatedFriction: 4,
-      animatedTension: 50,
-      delayPressInDot: 0
-  };
+    static defaultProps = {
+        inactiveDotOpacity: 0.5,
+        inactiveDotScale: 0.5,
+        tappableDots: false,
+        vertical: false,
+        animatedDuration: 250,
+        animatedFriction: 4,
+        animatedTension: 50,
+        delayPressInDot: 0
+    };
 
-  constructor (props: PaginationProps<TData>) {
-      super(props);
+    constructor (props: PaginationProps<TData>) {
+        super(props);
 
-      // Warnings
-      if (
-          (props.dotColor && !props.inactiveDotColor) ||
+        // Warnings
+        if (
+            (props.dotColor && !props.inactiveDotColor) ||
       (!props.dotColor && props.inactiveDotColor)
-      ) {
-          console.warn(
-              'react-native-snap-carousel | Pagination: ' +
+        ) {
+            console.warn(
+                'react-native-snap-carousel | Pagination: ' +
           'You need to specify both `dotColor` and `inactiveDotColor`'
-          );
-      }
-      if (
-          (props.dotElement && !props.inactiveDotElement) ||
+            );
+        }
+        if (
+            (props.dotElement && !props.inactiveDotElement) ||
       (!props.dotElement && props.inactiveDotElement)
-      ) {
-          console.warn(
-              'react-native-snap-carousel | Pagination: ' +
+        ) {
+            console.warn(
+                'react-native-snap-carousel | Pagination: ' +
           'You need to specify both `dotElement` and `inactiveDotElement`'
-          );
-      }
-      if (props.tappableDots && props.carouselRef === undefined) {
-          console.warn(
-              'react-native-snap-carousel | Pagination: ' +
+            );
+        }
+        if (props.tappableDots && props.carouselRef === undefined) {
+            console.warn(
+                'react-native-snap-carousel | Pagination: ' +
           'You must specify prop `carouselRef` when setting `tappableDots` to `true`'
-          );
-      }
-  }
+            );
+        }
+    }
 
-  _needsRTLAdaptations () {
-      const { vertical } = this.props;
-      return IS_RTL && !IS_IOS && !vertical;
-  }
+    _needsRTLAdaptations () {
+        const { vertical } = this.props;
+        return IS_RTL && !IS_IOS && !vertical;
+    }
 
-  get _activeDotIndex () {
-      const { activeDotIndex, dotsLength } = this.props;
-      return this._needsRTLAdaptations() ?
-          dotsLength - activeDotIndex - 1 :
-          activeDotIndex;
-  }
+    get _activeDotIndex () {
+        const { activeDotIndex, dotsLength } = this.props;
+        return this._needsRTLAdaptations()
+            ? dotsLength - activeDotIndex - 1
+            : activeDotIndex;
+    }
 
-  get dots () {
-      const {
-          activeOpacity,
-          carouselRef,
-          dotsLength,
-          dotColor,
-          dotContainerStyle,
-          dotElement,
-          dotStyle,
-          inactiveDotColor,
-          inactiveDotElement,
-          inactiveDotOpacity,
-          inactiveDotScale,
-          inactiveDotStyle,
-          renderDots,
-          tappableDots,
-          animatedDuration,
-          animatedFriction,
-          animatedTension,
-          delayPressInDot
-      } = this.props;
+    get dots () {
+        const {
+            activeOpacity,
+            carouselRef,
+            dotsLength,
+            dotColor,
+            dotContainerStyle,
+            dotElement,
+            dotStyle,
+            inactiveDotColor,
+            inactiveDotElement,
+            inactiveDotOpacity,
+            inactiveDotScale,
+            inactiveDotStyle,
+            renderDots,
+            tappableDots,
+            animatedDuration,
+            animatedFriction,
+            animatedTension,
+            delayPressInDot
+        } = this.props;
 
-      if (renderDots) {
-          return renderDots(this._activeDotIndex, dotsLength, this);
-      }
+        if (renderDots) {
+            return renderDots(this._activeDotIndex, dotsLength, this);
+        }
 
-      const DefaultDot = (
-          <PaginationDot
-            carouselRef={carouselRef}
-            tappable={tappableDots && typeof carouselRef !== 'undefined'}
-            activeOpacity={activeOpacity}
-            color={dotColor}
-            containerStyle={dotContainerStyle}
-            style={dotStyle}
-            inactiveColor={inactiveDotColor}
-            inactiveOpacity={inactiveDotOpacity}
-            inactiveScale={inactiveDotScale}
-            inactiveStyle={inactiveDotStyle}
-            animatedDuration={animatedDuration}
-            animatedFriction={animatedFriction}
-            animatedTension={animatedTension}
-            delayPressInDot={delayPressInDot}
-          />
-      );
+        const DefaultDot = (
+            <PaginationDot
+                carouselRef={carouselRef}
+                tappable={tappableDots && typeof carouselRef !== 'undefined'}
+                activeOpacity={activeOpacity}
+                color={dotColor}
+                containerStyle={dotContainerStyle}
+                style={dotStyle}
+                inactiveColor={inactiveDotColor}
+                inactiveOpacity={inactiveDotOpacity}
+                inactiveScale={inactiveDotScale}
+                inactiveStyle={inactiveDotStyle}
+                animatedDuration={animatedDuration}
+                animatedFriction={animatedFriction}
+                animatedTension={animatedTension}
+                delayPressInDot={delayPressInDot}
+            />
+        );
 
-      const dots = [...Array(dotsLength).keys()].map((i) => {
-          const isActive = i === this._activeDotIndex;
-          return React.cloneElement(
-              (isActive ? dotElement : inactiveDotElement) || DefaultDot,
-              {
-                  key: `pagination-dot-${i}`,
-                  active: isActive,
-                  index: i
-              }
-          );
-      });
+        const dots = [...Array(dotsLength).keys()].map((i) => {
+            const isActive = i === this._activeDotIndex;
+            return React.cloneElement(
+                (isActive ? dotElement : inactiveDotElement) || DefaultDot,
+                {
+                    key: `pagination-dot-${i}`,
+                    active: isActive,
+                    index: i
+                }
+            );
+        });
 
-      return dots;
-  }
+        return dots;
+    }
 
-  render () {
-      const {
-          dotsLength,
-          containerStyle,
-          vertical,
-          accessibilityLabel
-      } = this.props;
+    render () {
+        const {
+            dotsLength,
+            containerStyle,
+            vertical,
+            accessibilityLabel
+        } = this.props;
 
-      if (!dotsLength || dotsLength < 2) {
-          return false;
-      }
+        if (!dotsLength || dotsLength < 2) {
+            return false;
+        }
 
-      const style = [
-          styles.sliderPagination,
-          {
-              flexDirection: vertical ?
-                  ('column' as const) :
-                  this._needsRTLAdaptations() ?
-                      ('row-reverse' as const) :
-                      ('row' as const)
-          },
-          containerStyle || {}
-      ];
+        const style = [
+            styles.sliderPagination,
+            {
+                flexDirection: vertical
+                    ? ('column' as const)
+                    : this._needsRTLAdaptations()
+                        ? ('row-reverse' as const)
+                        : ('row' as const)
+            },
+            containerStyle || {}
+        ];
 
-      return (
-          <View
-            pointerEvents='box-none'
-            style={style}
-            accessible={!!accessibilityLabel}
-            accessibilityLabel={accessibilityLabel}
-          >
-              {this.dots}
-          </View>
-      );
-  }
+        return (
+            <View
+                pointerEvents={'box-none'}
+                style={style}
+                accessible={!!accessibilityLabel}
+                accessibilityLabel={accessibilityLabel}
+            >
+                {this.dots}
+            </View>
+        );
+    }
 }

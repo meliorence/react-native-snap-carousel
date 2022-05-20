@@ -132,14 +132,14 @@ export default class PaginationDot<TData> extends PureComponent<
             ]
         };
         const animatedColor =
-      this._shouldAnimateColor && inactiveColor && color ?
-          {
+      this._shouldAnimateColor && inactiveColor && color
+          ? {
               backgroundColor: animColor.interpolate({
                   inputRange: [0, 1],
                   outputRange: [inactiveColor, color]
               })
-          } :
-          {};
+          }
+          : {};
 
         const dotContainerStyle = [
             styles.sliderPaginationDotContainer,
@@ -155,13 +155,13 @@ export default class PaginationDot<TData> extends PureComponent<
         ];
 
         const onPress =
-      tappable && (!!index || index === 0) ?
-          () => {
+      tappable && (!!index || index === 0)
+          ? () => {
               try {
                   const currentRef =
-                carouselRef && 'current' in carouselRef ?
-                    carouselRef.current :
-                    carouselRef;
+                carouselRef && 'current' in carouselRef
+                    ? carouselRef.current
+                    : carouselRef;
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               currentRef!._snapToItem(currentRef!._getPositionIndex(index));
               } catch (error) {
@@ -171,16 +171,16 @@ export default class PaginationDot<TData> extends PureComponent<
                   error
                   );
               }
-          } :
-          undefined;
+          }
+          : undefined;
 
         return (
             <TouchableOpacity
-              accessible={false}
-              style={dotContainerStyle}
-              activeOpacity={tappable ? activeOpacity : 1}
-              onPress={onPress}
-              delayPressIn={delayPressInDot}
+                accessible={false}
+                style={dotContainerStyle}
+                activeOpacity={tappable ? activeOpacity : 1}
+                onPress={onPress}
+                delayPressIn={delayPressInDot}
             >
                 <Animated.View style={dotStyle} />
             </TouchableOpacity>
