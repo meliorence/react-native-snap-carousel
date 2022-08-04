@@ -37,6 +37,7 @@
     "author": "Meliorence <contact@meliorence.com> (github.com/meliorence)",
     "license": "BSD-3-Clause",
     "dependencies": {
+        "deprecated-react-native-prop-types": "^2.3.0",
         "prop-types": "^15.6.1",
         "react-addons-shallow-compare": "15.6.2"
     },
