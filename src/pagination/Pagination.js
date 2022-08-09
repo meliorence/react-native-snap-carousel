@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { I18nManager, Platform, View, ViewPropTypes } from 'react-native';
+import { I18nManager, Platform, View } from 'react-native';
 import PropTypes from 'prop-types';
 import PaginationDot from './PaginationDot';
 import styles from './Pagination.style';
@@ -14,16 +14,16 @@ export default class Pagination extends PureComponent {
         dotsLength: PropTypes.number.isRequired,
         activeOpacity: PropTypes.number,
         carouselRef: PropTypes.object,
-        containerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        containerStyle: PropTypes.object,
         dotColor: PropTypes.string,
-        dotContainerStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        dotContainerStyle: PropTypes.object,
         dotElement: PropTypes.element,
-        dotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        dotStyle: PropTypes.object,
         inactiveDotColor: PropTypes.string,
         inactiveDotElement: PropTypes.element,
         inactiveDotOpacity: PropTypes.number,
         inactiveDotScale: PropTypes.number,
-        inactiveDotStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
+        inactiveDotStyle: PropTypes.object,
         renderDots: PropTypes.func,
         tappableDots: PropTypes.bool,
         vertical: PropTypes.bool,
