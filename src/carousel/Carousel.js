@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
-import { Animated, Easing, FlatList, I18nManager, Platform, ScrollView, View, ViewPropTypes } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
+import { Animated, Easing, FlatList, I18nManager, Platform, ScrollView, View } from 'react-native';
 import {
-    defaultScrollInterpolator,
-    stackScrollInterpolator,
-    tinderScrollInterpolator,
-    defaultAnimatedStyles,
-    shiftAnimatedStyles,
-    stackAnimatedStyles,
-    tinderAnimatedStyles
+    defaultAnimatedStyles, defaultScrollInterpolator, shiftAnimatedStyles,
+    stackAnimatedStyles, stackScrollInterpolator, tinderAnimatedStyles, tinderScrollInterpolator
 } from '../utils/animations';
 
 const IS_IOS = Platform.OS === 'ios';
@@ -263,7 +259,7 @@ export default class Carousel extends Component {
         }
 
         if (this.props.onScroll !== prevProps.onScroll) {
-          this._setScrollHandler(this.props);
+            this._setScrollHandler(this.props);
         }
     }
 
@@ -291,34 +287,34 @@ export default class Carousel extends Component {
         return this._currentContentOffset;
     }
 
-    _setScrollHandler(props) {
-      // Native driver for scroll events
-      const scrollEventConfig = {
-        listener: this._onScroll,
-        useNativeDriver: true,
-      };
-      this._scrollPos = new Animated.Value(0);
-      const argMapping = props.vertical
-        ? [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }]
-        : [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }];
+    _setScrollHandler (props) {
+        // Native driver for scroll events
+        const scrollEventConfig = {
+            listener: this._onScroll,
+            useNativeDriver: true
+        };
+        this._scrollPos = new Animated.Value(0);
+        const argMapping = props.vertical ?
+            [{ nativeEvent: { contentOffset: { y: this._scrollPos } } }] :
+            [{ nativeEvent: { contentOffset: { x: this._scrollPos } } }];
 
-      if (props.onScroll && Array.isArray(props.onScroll._argMapping)) {
+        if (props.onScroll && Array.isArray(props.onScroll._argMapping)) {
         // Because of a react-native issue https://github.com/facebook/react-native/issues/13294
-        argMapping.pop();
-        const [ argMap ] = props.onScroll._argMapping;
-        if (argMap && argMap.nativeEvent && argMap.nativeEvent.contentOffset) {
-          // Shares the same animated value passed in props
-          this._scrollPos =
+            argMapping.pop();
+            const [ argMap ] = props.onScroll._argMapping;
+            if (argMap && argMap.nativeEvent && argMap.nativeEvent.contentOffset) {
+                // Shares the same animated value passed in props
+                this._scrollPos =
             argMap.nativeEvent.contentOffset.x ||
             argMap.nativeEvent.contentOffset.y ||
             this._scrollPos;
+            }
+            argMapping.push(...props.onScroll._argMapping);
         }
-        argMapping.push(...props.onScroll._argMapping);
-      }
-      this._onScrollHandler = Animated.event(
-        argMapping,
-        scrollEventConfig
-      );
+        this._onScrollHandler = Animated.event(
+            argMapping,
+            scrollEventConfig
+        );
     }
 
     _needsScrollView () {
@@ -822,7 +818,7 @@ export default class Carousel extends Component {
             this._repositionScroll(nextActiveItem);
         }
 
-        if (typeof onScroll === "function" && event) {
+        if (typeof onScroll === 'function' && event) {
             onScroll(event);
         }
     }
@@ -838,7 +834,7 @@ export default class Carousel extends Component {
     }
 
     _onTouchStart () {
-        const { onTouchStart } = this.props
+        const { onTouchStart } = this.props;
 
         // `onTouchStart` is fired even when `scrollEnabled` is set to `false`
         if (this._getScrollEnabled() !== false && this._autoplaying) {
@@ -846,12 +842,12 @@ export default class Carousel extends Component {
         }
 
         if (onTouchStart) {
-            onTouchStart()
+            onTouchStart();
         }
     }
 
     _onTouchEnd () {
-        const { onTouchEnd } = this.props
+        const { onTouchEnd } = this.props;
 
         if (this._getScrollEnabled() !== false && this._autoplay && !this._autoplaying) {
             // This event is buggy on Android, so a fallback is provided in _onScrollEnd()
@@ -859,7 +855,7 @@ export default class Carousel extends Component {
         }
 
         if (onTouchEnd) {
-            onTouchEnd()
+            onTouchEnd();
         }
     }
 
@@ -1354,7 +1350,7 @@ export default class Carousel extends Component {
             ...this._getComponentStaticProps()
         };
 
-        const ScrollViewComponent = typeof useScrollView === 'function' ? useScrollView : AnimatedScrollView
+        const ScrollViewComponent = typeof useScrollView === 'function' ? useScrollView : AnimatedScrollView;
 
         return this._needsScrollView() ? (
             <ScrollViewComponent {...props}>
