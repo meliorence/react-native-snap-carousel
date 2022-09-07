@@ -1,8 +1,9 @@
 // Parallax effect inspired by https://github.com/oblador/react-native-parallax/
 
-import React, { Component } from 'react';
-import { View, ViewPropTypes, Image, Animated, Easing, ActivityIndicator, findNodeHandle } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { ActivityIndicator, Animated, Easing, findNodeHandle, Image, View } from 'react-native';
 import styles from './ParallaxImage.style';
 
 export default class ParallaxImage extends Component {
