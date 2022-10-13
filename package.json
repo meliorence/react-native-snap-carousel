@@ -46,6 +46,7 @@
     },
     "devDependencies": {
         "babel-eslint": "^8.2.2",
+        "deprecated-react-native-prop-types": "^2.3.0",
         "eslint": "^4.19.1",
         "eslint-config-standard": "^10.2.1",
         "eslint-config-standard-react": "^5.0.0",
