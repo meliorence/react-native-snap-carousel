@@ -38,6 +38,7 @@
     "license": "BSD-3-Clause",
     "dependencies": {
         "prop-types": "^15.6.1",
+         "deprecated-react-native-prop-types": "^2.3.0",
         "react-addons-shallow-compare": "15.6.2"
     },
     "peerDependencies": {
