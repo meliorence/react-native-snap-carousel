@@ -3,17 +3,17 @@
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
 [![npm](https://img.shields.io/npm/v/react-native-snap-carousel.svg?style=flat-square)](https://www.npmjs.com/package/react-native-snap-carousel)
 [![npm](https://img.shields.io/npm/dm/react-native-snap-carousel.svg?style=flat-square&colorB=007ec6)](https://www.npmjs.com/package/react-native-snap-carousel)
-<!-- [![github release](https://img.shields.io/github/release/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/releases) -->
-[![github issues](https://img.shields.io/github/issues/archriss/react-native-snap-carousel.svg?style=flat-square)](https://github.com/archriss/react-native-snap-carousel/issues)
-[![github closed issues](https://img.shields.io/github/issues-closed/archriss/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/archriss/react-native-snap-carousel/issues?q=is%3Aissue+is%3Aclosed)
-[![Issue Stats](https://img.shields.io/issuestats/i/github/archriss/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](http://github.com/archriss/react-native-snap-carousel/issues)
+<!-- [![github release](https://img.shields.io/github/release/meliorence/react-native-snap-carousel.svg?style=flat-square)](https://github.com/meliorence/react-native-snap-carousel/releases) -->
+[![github issues](https://img.shields.io/github/issues/meliorence/react-native-snap-carousel.svg?style=flat-square)](https://github.com/meliorence/react-native-snap-carousel/issues)
+[![github closed issues](https://img.shields.io/github/issues-closed/meliorence/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](https://github.com/meliorence/react-native-snap-carousel/issues?q=is%3Aissue+is%3Aclosed)
+[![Issue Stats](https://img.shields.io/issuestats/i/github/meliorence/react-native-snap-carousel.svg?style=flat-square&colorB=44cc11)](http://github.com/meliorence/react-native-snap-carousel/issues)
 
 -----
 -----
 
 ## ✨ Some great news for you, fellow plugin user!
 
-### 💡 **[Head over there now](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/VERSION_4.md)** to learn more about all the goodness that's coming your way.
+### 💡 **[Head over there now](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/VERSION_4.md)** to learn more about all the goodness that's coming your way.
 
 -----
 -----
@@ -48,8 +48,8 @@
 
 These are live apps we've created that make heavy use of the plugin. Don't be shy, share yours if you've done something awesome with it!
 
-![react-native-snap-carousel archriss aix](https://i.imgur.com/pPm0csc.gif)
-![react-native-snap-carousel archriss aix](https://i.imgur.com/UFsPlz2.gif)
+![react-native-snap-carousel aix](https://i.imgur.com/pPm0csc.gif)
+![react-native-snap-carousel aix](https://i.imgur.com/UFsPlz2.gif)
 
 ![react-native-snap-carousel](https://i.imgur.com/Fope3uj.gif)
 ![react-native-snap-carousel](https://i.imgur.com/WNOBYfl.gif)
@@ -65,7 +65,7 @@ Creating and maintaining this plugin has been a fun ride that started in 2016. W
 
 Put simply, we love this project. However we currently aren't able to give it the love it deserves and the care it requires. **If you have enough time and knowledge, and want to become a maintainer, please let us know**.
 
-### 💡 **[Just head there if you're interested](https://github.com/archriss/react-native-snap-carousel/issues/632).**
+### 💡 **[Just head there if you're interested](https://github.com/meliorence/react-native-snap-carousel/issues/632).**
 
 We're not abandoning the ship, but we need more people to help us keep it alive and well!
 
@@ -117,7 +117,7 @@ Here are simple examples that can be edited in real time in your browser:
 - https://snack.expo.io/@vitkor/carousel-simple-example
 - https://snack.expo.io/@bd-arc/react-native-snap-carousel-%7C-example-with-custom-interpolations
 
-You can also find a more in-depth (read "complex") one in the [`/example` folder](https://github.com/archriss/react-native-snap-carousel/tree/master/example).
+You can also find a more in-depth (read "complex") one in the [`/example` folder](https://github.com/meliorence/react-native-snap-carousel/tree/master/example).
 
 ![react-native-snap-carousel](https://i.imgur.com/pZincya.gif)
 
@@ -125,7 +125,7 @@ You can also find a more in-depth (read "complex") one in the [`/example` folder
 
 In order to let you to create mighty carousels and to keep up with your requests, we add new features on a regular basis. Consequently, the list of available props has become really huge and deserves a documentation of its own.
 
-### :books: [Documentation for "Props, methods and getters"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md)
+### :books: [Documentation for "Props, methods and getters"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md)
 
 ## Layouts and custom interpolations
 
@@ -133,7 +133,7 @@ In order to let you to create mighty carousels and to keep up with your requests
 
 In version `3.6.0`, we've added two new layouts on top of the original one: the first one is called 'stack' since it mimics a stack of cards, and the other one is called 'tinder' since it provides a Tinder-like animation.
 
-You can choose between the three of them using [the new prop `layout`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation) and you can modify the default card offset in the 'stack' and 'tinder' layouts with [prop `layoutCardOffset`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation).
+You can choose between the three of them using [the new prop `layout`](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation) and you can modify the default card offset in the 'stack' and 'tinder' layouts with [prop `layoutCardOffset`](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#style-and-animation).
 
 ![react-native-snap-carousel default layout](https://i.imgur.com/e1WbZcu.gif)
 ```javascript
@@ -153,17 +153,17 @@ You can choose between the three of them using [the new prop `layout`](https://g
 ```
 
 A few things worth noting:
-* As you can see, the effect had to be inverted on Android. This has to do with [a really annoying Android-specific bug](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#android).
+* As you can see, the effect had to be inverted on Android. This has to do with [a really annoying Android-specific bug](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md#android).
 * Even though the new layouts have been created with horizontal carousels in mind, they will also work with vertical ones \o/
-* :warning: **You should NOT use `stack` or `tinder` layouts if you have a large data set to display.** In order to avoid rendering issues, the carousel will use a `ScrollView` component rather than a `FlatList` one for those layouts (see [prop `useScrollView`](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#behavior)). The tradeof is that you won't benefit from any of `FlatList`'s advanced optimizations. See [this issue](https://github.com/archriss/react-native-snap-carousel/issues/262) for workarounds; or you may want to implement your own [custom interpolation](#custom-interpolations).
+* :warning: **You should NOT use `stack` or `tinder` layouts if you have a large data set to display.** In order to avoid rendering issues, the carousel will use a `ScrollView` component rather than a `FlatList` one for those layouts (see [prop `useScrollView`](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#behavior)). The tradeof is that you won't benefit from any of `FlatList`'s advanced optimizations. See [this issue](https://github.com/meliorence/react-native-snap-carousel/issues/262) for workarounds; or you may want to implement your own [custom interpolation](#custom-interpolations).
 
 ### Custom interpolations
 
 On top of the new layouts, we've exposed the logic we used so that users can create their own awesome layouts! If you're interested, take a deep breath and dive into the dedicated documentation.
 
-### :books: [Documentation for "Custom interpolations"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md)
+### :books: [Documentation for "Custom interpolations"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/CUSTOM_INTERPOLATIONS.md)
 
-Here are a few examples of what can easily be achieved (you can explore [the source code](https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/utils/animations.js) and try it live in [the provided example](https://github.com/archriss/react-native-snap-carousel/tree/master/example)):
+Here are a few examples of what can easily be achieved (you can explore [the source code](https://github.com/meliorence/react-native-snap-carousel/blob/master/example/src/utils/animations.js) and try it live in [the provided example](https://github.com/meliorence/react-native-snap-carousel/tree/master/example)):
 
 ![react-native-snap-carousel custom layout](https://i.imgur.com/OrdLsCM.gif)
 ![react-native-snap-carousel custom layout](https://i.imgur.com/slnTbyG.gif)
@@ -173,7 +173,7 @@ Here are a few examples of what can easily be achieved (you can explore [the sou
 
 Version `3.0.0` introduced a `<ParallaxImage />` component, an image component aware of carousel's current scroll position and therefore able to display a nice parallax effect (powered by the native driver to ensure top-notch performance).
 
-### :books: [Documentation for "`ParallaxImage` component"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PARALLAX_IMAGE.md)
+### :books: [Documentation for "`ParallaxImage` component"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PARALLAX_IMAGE.md)
 
 ![react-native-snap-carousel parallax image](https://i.imgur.com/6iIb4SR.gif)
 
@@ -181,7 +181,7 @@ Version `3.0.0` introduced a `<ParallaxImage />` component, an image component a
 
 Starting with version `2.4.0`, a customizable `<Pagination />` component has been added. You can see below how it looks like with its default configuration.
 
-### :books: [Documentation for "`Pagination` component"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/PAGINATION.md)
+### :books: [Documentation for "`Pagination` component"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PAGINATION.md)
 
 ![react-native-snap-carousel pagination](https://i.imgur.com/FLQcGGL.gif)
 
@@ -189,13 +189,13 @@ Starting with version `2.4.0`, a customizable `<Pagination />` component has bee
 
 We've gathered together all the useful tips and tricks. There is a bunch of them, which makes **this section a must-read!**
 
-### :books: [Documentation for "Tips and tricks"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md)
+### :books: [Documentation for "Tips and tricks"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md)
 
 ## Known issues
 
 **Make sure to read about the known issues before opening a new one**; you may find something useful.
 
-### :books: [Documentation for "Known issues"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md)
+### :books: [Documentation for "Known issues"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md)
 
 ## Important note regarding Android
 
@@ -205,7 +205,7 @@ Android's debug mode is a mess: timeouts regularly desynchronize and scroll even
 
 :warning: **Therefore you should always check if the issue you experience also happens in a production environment. This is, sadly, the only way to test the real performance and behavior of the carousel.**
 
-> For more information, you can read the following notes: ["Android performance"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#android-performance) and ["Unreliable callbacks"](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#unreliable-callbacks).
+> For more information, you can read the following notes: ["Android performance"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#android-performance) and ["Unreliable callbacks"](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/KNOWN_ISSUES.md#unreliable-callbacks).
 
 ## Important note regarding iOS
 
@@ -215,7 +215,7 @@ Android's debug mode is a mess: timeouts regularly desynchronize and scroll even
 
 ## Roadmap
 
-- [ ] Add [more examples](https://github.com/archriss/react-native-snap-carousel/issues/257)
+- [ ] Add [more examples](https://github.com/meliorence/react-native-snap-carousel/issues/257)
 - [ ] Base the plugin on a component less buggy than `FlatList`
 - [X] Implement different layouts and allow using custom interpolations
 - [X] Implement both `FlatList` and `ScrollView` handling
@@ -227,7 +227,7 @@ Android's debug mode is a mess: timeouts regularly desynchronize and scroll even
 - [x] Add alignment option
 - [x] Add pagination component
 - [x] Add vertical implementation
-- [x] Handle device orientation event (see [this note](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md#handling-device-rotation))
+- [x] Handle device orientation event (see [this note](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md#handling-device-rotation))
 - [x] Add RTL support
 - [x] Improve momemtum handling
 - [x] Improve snap on Android
@@ -237,4 +237,4 @@ Android's debug mode is a mess: timeouts regularly desynchronize and scroll even
 ## Credits
 
 Written by [Benoît Delmaire](https://fr.linkedin.com/in/benoitdelmaire) ([bd-arc](https://github.com/bd-arc)) and [Maxime Bertonnier](https://fr.linkedin.com/in/maxime-bertonnier-744351aa) ([Exilz](https://github.com/Exilz)) at
-[Archriss](http://www.archriss.com/).
+[Meliorence](https://www.meliorence.com/).

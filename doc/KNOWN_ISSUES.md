@@ -9,6 +9,7 @@
 1. [Unreliable first item](#unreliable-first-item)
 1. [Error with Jest](#error-with-jest)
 1. [RTL support (experimental)](#rtl-support-experimental)
+1. [Carousel is not visible until you start swiping](#carousel-initially-not-visible)
 
 ## `FlatList` and `ScrollView`'s limitations
 
@@ -28,7 +29,7 @@ We're trying to work around these issues, but the result is not always as smooth
 - [Bring ios only methods to Android ScrollView](https://react-native.canny.io/feature-requests/p/bring-ios-only-methods-to-android-scrollview)
 - [ScrollView Animation Events (e.g. onScrollAnimationEnd)](https://react-native.canny.io/feature-requests/p/scrollview-animation-events-eg-onscrollanimationend)
 
-Remember that every vote counts and take a look at [#203](https://github.com/archriss/react-native-snap-carousel/issues/203) for more info!
+Remember that every vote counts and take a look at [#203](https://github.com/meliorence/react-native-snap-carousel/issues/203) for more info!
 
 ## React Native version
 
@@ -42,11 +43,11 @@ Bear in mind that we follow RN evolutions closely, which means newer versions of
 
 It can take user experience from "crappy and sluggish" to "pretty good" - it's Android though, so nothing like "perfect" or "incredibly smooth"...
 
-Also, make sure to implement all the recommendations listed [here](https://github.com/archriss/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md#optimizing-performance).
+Also, make sure to implement all the recommendations listed [here](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/TIPS_AND_TRICKS.md#optimizing-performance).
 
 ## Unreliable callbacks
 
-When `enableMomentum` is disabled (default behavior), providing a reliable callback is really tricky since no `scrollEnd` event has been exposed yet for the `ScrollView` component. We can only rely on the `scrollEndDrag` event, which comes with a huge bunch of issues. See [#34](https://github.com/archriss/react-native-snap-carousel/issues/34) for more information.
+When `enableMomentum` is disabled (default behavior), providing a reliable callback is really tricky since no `scrollEnd` event has been exposed yet for the `ScrollView` component. We can only rely on the `scrollEndDrag` event, which comes with a huge bunch of issues. See [#34](https://github.com/meliorence/react-native-snap-carousel/issues/34) for more information.
 
 Version 2.3.0 tackled these issues with all sorts of flags and hacks. But you could still be facing the following one: **when you build a debug version of your app without enabling JS remote debugging, timers may desynchronize and cause a complete callback mess**. Try to either enable remote debugging or build a production version of your app, and everything should get back to normal.
 
@@ -73,3 +74,16 @@ The easiest workaround is to add `jest.unmock('ScrollView')` before importing th
 Since version 2.1.0, the plugin is compatible with RTL layouts. Our implementation relies on miscellaneous hacks that work around a [React Native bug](https://github.com/facebook/react-native/issues/11960) with horizontal `ScrollView`. As such, this feature should be considered experimental since it might break with newer versions of React Native.
 
 Note that you may want to reverse the order of your data array for your items to be displayed in the proper RTL order. We've tried implementing it internally, but this led to numerous and unnecessary issues. You'll just have to do something as simple as `myCustomData.reverse()`.
+
+## Carousel is not visible until you start swiping
+
+There's a known issue where the Carousel will not be visible on the screen and will only show up after you start swiping. [This issue has been reported a few times](https://github.com/meliorence/react-native-snap-carousel/issues/238#issuecomment-354536859) and is caused by a [known React Native bug in the FlatList component](https://github.com/facebook/react-native/issues/1831). 
+
+It may be solved using one these three possible workarounds:
+
+- [Adding removeClippedSubviews={false} to the Carousel element](https://github.com/meliorence/react-native-snap-carousel/issues/238#issuecomment-354528113): Note that this will disable all optimizations from the FlatList Component.
+- [Adding useScrollView to the Carousel element](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md): Similar solution to the one provided above. Replaces FlatList component with ScrollView, only recommended for small sets of data.
+- [As of version 3.5.0, you may use the triggerRenderingHack() method](https://github.com/meliorence/react-native-snap-carousel/blob/master/doc/PROPS_METHODS_AND_GETTERS.md#available-methods): This hacky solution was specifically implemented for this bug, allowing you to keep the FlatList component). [Note: This is recommended if you need the performance optimizations that FlatList provides).
+
+
+

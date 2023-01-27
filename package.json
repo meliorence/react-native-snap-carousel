@@ -5,7 +5,7 @@
     "main": "src/index.js",
     "repository": {
         "type": "git",
-        "url": "github.com/archriss/react-native-snap-carousel"
+        "url": "github.com/meliorence/react-native-snap-carousel"
     },
     "keywords": [
         "react",
@@ -34,7 +34,7 @@
         "component",
         "rtl"
     ],
-    "author": "Archriss <contact@archriss.com> (github.com/archriss)",
+    "author": "Meliorence <contact@meliorence.com> (github.com/meliorence)",
     "license": "BSD-3-Clause",
     "dependencies": {
         "prop-types": "^15.6.1",
@@ -55,9 +55,9 @@
         "eslint-plugin-react": "^7.7.0",
         "eslint-plugin-standard": "^3.0.1"
     },
-    "homepage": "https://github.com/archriss/react-native-snap-carousel",
+    "homepage": "https://github.com/meliorence/react-native-snap-carousel",
     "bugs": {
-        "url": "https://github.com/archriss/react-native-snap-carousel/issues"
+        "url": "https://github.com/meliorence/react-native-snap-carousel/issues"
     },
     "readmeFilename": "README.md"
 }
