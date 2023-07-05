@@ -31,6 +31,7 @@ import type { CarouselProps, CarouselState } from './types';
 // import RN_PACKAGE from '../../../react-native/package.json';
 
 const IS_ANDROID = Platform.OS === 'android';
+const IS_WEB = Platform.OS === 'web';
 
 // React Native automatically handles RTL layouts; unfortunately, it's buggy with horizontal ScrollView
 // See https://github.com/facebook/react-native/issues/11960
@@ -998,7 +999,6 @@ export class Carousel<TData> extends React.Component<
       fireCallback = true,
       forceScrollTo = false
   ) {
-      const { onSnapToItem } = this.props;
       const itemsLength = this._getCustomDataLength();
       const wrappedRef = this._getWrappedRef();
 
@@ -1028,26 +1028,35 @@ export class Carousel<TData> extends React.Component<
       // so we need to trigger the callback manually
       // On Android `onMomentumScrollEnd` won't be triggered when scrolling programmatically
       // Therefore everything critical needs to be manually called here as well, even though the timing might be off
-      const requiresManualTrigger = !animated || IS_ANDROID;
+
+      // By adding check for web platform issue with not firing onSnapToItem on web is gone and 
+      // this works same as on Android platform.
+      const requiresManualTrigger = !animated || IS_ANDROID || IS_WEB;
       if (requiresManualTrigger) {
-          this._activeItem = index;
-
-          if (fireCallback) {
-              onSnapToItem && onSnapToItem(this._getDataIndex(index));
-          }
-
-          // Repositioning on Android
-          if (IS_ANDROID && this._shouldRepositionScroll(index)) {
-              if (animated) {
-                  this._androidRepositioningTimeout = setTimeout(() => {
-                      // Without scroll animation, the behavior is completely buggy...
-                      this._repositionScroll(index, true);
-                  }, 400); // Approximate scroll duration on Android
-              } else {
-                  this._repositionScroll(index);
-              }
-          }
+          this.performManualTrigger(animated, fireCallback, index);
       }
+
+  }
+
+  performManualTrigger(animated: boolean, fireCallback: boolean, index: number) {
+    const { onSnapToItem } = this.props;
+    this._activeItem = index;
+
+    if (fireCallback) {
+        onSnapToItem && onSnapToItem(this._getDataIndex(index));
+    }
+
+    // Repositioning on Android/Web
+    if (IS_ANDROID || IS_WEB && this._shouldRepositionScroll(index)) {
+        if (animated) {
+            this._androidRepositioningTimeout = setTimeout(() => {
+                // Without scroll animation, the behavior is completely buggy...
+                this._repositionScroll(index, true);
+            }, 400); // Approximate scroll duration on Android/Web
+        } else {
+            this._repositionScroll(index);
+        }
+    }
   }
 
   startAutoplay () {
