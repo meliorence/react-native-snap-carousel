@@ -774,6 +774,8 @@ export default class Carousel extends Component {
         const scrollConditions =
             scrollOffset >= this._scrollOffsetRef - callbackOffsetMargin &&
             scrollOffset <= this._scrollOffsetRef + callbackOffsetMargin;
+        const isSameItem = nextActiveItem === this._itemToSnapTo;
+        const isSameScrollOffset = scrollOffset === this._scrollOffsetRef || Math.abs(scrollOffset - this._scrollOffsetRef) <= 1.0 ;
 
         this._currentContentOffset = scrollOffset;
         this._onScrollTriggered = true;
@@ -817,8 +819,7 @@ export default class Carousel extends Component {
             }
         }
 
-        if (nextActiveItem === this._itemToSnapTo &&
-            scrollOffset === this._scrollOffsetRef) {
+        if (isSameItem && isSameScrollOffset) {
             this._repositionScroll(nextActiveItem);
         }
 
